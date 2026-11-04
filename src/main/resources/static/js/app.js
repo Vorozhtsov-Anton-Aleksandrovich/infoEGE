@@ -14,3 +14,10 @@ document.addEventListener('submit', function (event) {
         event.preventDefault();
     }
 });
+
+// Поле со ссылкой-приглашением выделяется целиком, чтобы его было удобно скопировать.
+document.addEventListener('focusin', function (event) {
+    if (event.target.matches && event.target.matches('[data-select-on-focus]')) {
+        event.target.select();
+    }
+});

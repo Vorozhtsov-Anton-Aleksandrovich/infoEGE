@@ -39,6 +39,8 @@ management:
       show-details: never
 
 app:
+  # Часовой пояс для показа и ввода дат (дедлайны).
+  time-zone: ${APP_TIMEZONE:Europe/Moscow}
   teacher:
     login: ${TEACHER_LOGIN:}
     password: ${TEACHER_PASSWORD:}

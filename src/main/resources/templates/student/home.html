@@ -6,6 +6,23 @@
 <main>
     <h1>Мои работы</h1>
     <p>Здравствуйте, <span sec:authentication="principal.displayName">Имя</span>.</p>
+
+    <p th:if="${assignments.isEmpty()}">Пока вам ничего не назначено.</p>
+    <div class="cards" th:unless="${assignments.isEmpty()}">
+        <article class="card" th:each="a : ${assignments}">
+            <h2 th:text="${a.taskSet.title}">Название</h2>
+            <p class="hint">
+                <span th:text="${a.taskSet.type.name() == 'VARIANT'} ? 'Вариант' : 'Подборка'">Подборка</span>
+                · заданий: <span th:text="${a.taskSet.items.size()}">0</span>
+                <th:block th:if="${a.taskSet.timeLimitMinutes != null}">
+                    · время: <span th:text="${a.taskSet.timeLimitMinutes}">0</span> мин
+                </th:block>
+            </p>
+            <p th:if="${a.taskSet.description}" th:text="${a.taskSet.description}">Описание</p>
+            <p>Срок: <span th:text="${a.deadlineAt == null} ? 'без срока' : ${@dates.format(a.deadlineAt)}">дата</span></p>
+            <p class="badge">не начато</p>
+        </article>
+    </div>
 </main>
 </body>
 </html>

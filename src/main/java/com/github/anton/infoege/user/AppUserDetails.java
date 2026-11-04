@@ -59,4 +59,15 @@ public class AppUserDetails implements UserDetails {
     public boolean isEnabled() {
         return active;
     }
+
+    /** Сравнение по id: на нём основан поиск сессий пользователя в SessionRegistry. */
+    @Override
+    public boolean equals(Object o) {
+        return o instanceof AppUserDetails other && id.equals(other.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
 }

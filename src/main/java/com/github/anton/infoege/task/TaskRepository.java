@@ -10,4 +10,7 @@ public interface TaskRepository extends JpaRepository<Task, Long>, JpaSpecificat
 
     @Query("select distinct t.topic from Task t where t.topic is not null order by t.topic")
     List<String> findAllTopics();
+
+    @Query(value = "select exists(select 1 from task_set_item where task_id = :id)", nativeQuery = true)
+    boolean isUsed(Long id);
 }

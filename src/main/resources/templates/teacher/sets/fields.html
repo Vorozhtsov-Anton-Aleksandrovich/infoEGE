@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<body>
+<!-- Поля подборки, общие для создания и редактирования. Ожидает th:object="${form}" у формы. -->
+<th:block th:fragment="fields">
+    <div class="form-row">
+        <label>Тип
+            <select th:field="*{type}">
+                <option value="COLLECTION">Подборка (свой порядок)</option>
+                <option value="VARIANT">Вариант (по номерам, с лимитом)</option>
+            </select>
+        </label>
+        <label class="grow">Название
+            <input type="text" th:field="*{title}" maxlength="300" required>
+            <span class="field-error" th:errors="*{title}"></span>
+        </label>
+        <label>Лимит времени, мин
+            <input type="number" min="1" max="600" th:field="*{timeLimitMinutes}">
+            <span class="field-error" th:errors="*{timeLimitMinutes}"></span>
+        </label>
+    </div>
+    <label>Описание для ученика
+        <textarea th:field="*{description}" rows="3"></textarea>
+    </label>
+</th:block>
+</body>
+</html>

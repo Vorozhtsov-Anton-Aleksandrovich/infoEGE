@@ -18,9 +18,4 @@ public class HomeController {
     public String teacherHome() {
         return "teacher/home";
     }
-
-    @GetMapping("/student")
-    public String studentHome() {
-        return "student/home";
-    }
 }

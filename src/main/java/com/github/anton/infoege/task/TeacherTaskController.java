@@ -91,9 +91,12 @@ public class TeacherTaskController {
 
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable Long id, RedirectAttributes redirect) {
-        taskService.delete(id);
-        redirect.addFlashAttribute("message", "Задание удалено.");
-        return "redirect:/teacher/tasks";
+        if (taskService.delete(id)) {
+            redirect.addFlashAttribute("message", "Задание удалено.");
+            return "redirect:/teacher/tasks";
+        }
+        redirect.addFlashAttribute("message", "Задание входит в подборки, поэтому не удалено, а перенесено в архив.");
+        return "redirect:/teacher/tasks/" + id + "/edit";
     }
 
     /** Предпросмотр так, как задание увидит ученик. Разбор показывается ниже отдельно, только преподавателю. */

@@ -3,11 +3,17 @@
 <body>
 <div th:fragment="flash">
     <p class="alert alert-info" th:if="${message}" th:text="${message}">Сообщение</p>
+    <p class="alert alert-error" th:if="${error}" th:text="${error}">Ошибка</p>
     <div class="alert alert-error" th:if="${fileErrors}">
         <p>Не все файлы загружены:</p>
         <ul>
-            <li th:each="error : ${fileErrors}" th:text="${error}">Ошибка</li>
+            <li th:each="e : ${fileErrors}" th:text="${e}">Ошибка</li>
         </ul>
+    </div>
+    <div class="alert alert-info invite-link" th:if="${inviteLink}">
+        <p>Одноразовая ссылка (<span th:text="${inviteLabel}">ученик</span>), действует 7 дней.
+            Скопируйте её сейчас: больше она показана не будет.</p>
+        <input type="text" readonly th:value="${inviteLink}" class="mono" data-select-on-focus>
     </div>
 </div>
 </body>

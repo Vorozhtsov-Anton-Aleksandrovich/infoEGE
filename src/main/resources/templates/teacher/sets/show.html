@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(${set.title})}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main th:with="variant=${set.type.name() == 'VARIANT'}">
+    <div class="page-title">
+        <h1><span th:text="${variant} ? 'Вариант' : 'Подборка'">Подборка</span>: <span th:text="${set.title}">Название</span></h1>
+        <div class="actions">
+            <form method="post" th:action="@{/teacher/sets/{id}/copy(id=${set.id})}">
+                <button type="submit">Копировать как шаблон</button>
+            </form>
+            <form method="post" th:action="@{/teacher/sets/{id}/delete(id=${set.id})}" data-confirm="Удалить работу?">
+                <button type="submit" class="danger-button">Удалить</button>
+            </form>
+        </div>
+    </div>
+    <div th:replace="~{fragments/messages :: flash}"></div>
+
+    <form class="form panel" method="post" th:action="@{/teacher/sets/{id}(id=${set.id})}" th:object="${form}">
+        <th:block th:replace="~{teacher/sets/fields :: fields}"></th:block>
+        <div class="actions"><button type="submit">Сохранить</button></div>
+    </form>
+
+    <section class="panel">
+        <h2>Задания (<span th:text="${set.items.size()}">0</span>)</h2>
+        <p class="hint" th:if="${variant}">В варианте задания всегда идут по возрастанию номера ЕГЭ.</p>
+        <p th:if="${set.items.isEmpty()}">Заданий пока нет, добавьте их из банка ниже.</p>
+        <table class="table" th:unless="${set.items.isEmpty()}">
+            <thead><tr><th>#</th><th>№ ЕГЭ</th><th>Задание</th><th>Баллы</th><th></th></tr></thead>
+            <tbody>
+            <tr th:each="item, st : ${set.items}">
+                <td th:text="${st.count}">1</td>
+                <td th:text="${item.task.egeNumber}">1</td>
+                <td>
+                    <a th:href="@{/teacher/tasks/{id}/preview(id=${item.task.id})}" th:text="${item.task.title}">Задание</a>
+                    <span class="badge" th:if="${item.task.archived}">архив</span>
+                </td>
+                <td th:text="${item.task.maxPoints}">1</td>
+                <td class="actions">
+                    <th:block th:unless="${variant}">
+                        <form method="post" th:action="@{/teacher/sets/{id}/tasks/{t}/move(id=${set.id}, t=${item.task.id})}" th:unless="${st.first}">
+                            <input type="hidden" name="delta" value="-1">
+                            <button type="submit" class="link-button" title="Выше">↑</button>
+                        </form>
+                        <form method="post" th:action="@{/teacher/sets/{id}/tasks/{t}/move(id=${set.id}, t=${item.task.id})}" th:unless="${st.last}">
+                            <input type="hidden" name="delta" value="1">
+                            <button type="submit" class="link-button" title="Ниже">↓</button>
+                        </form>
+                    </th:block>
+                    <form method="post" th:action="@{/teacher/sets/{id}/tasks/{t}/remove(id=${set.id}, t=${item.task.id})}">
+                        <button type="submit" class="link-button danger">Убрать</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section class="panel" id="bank">
+        <h2>Добавить из банка</h2>
+        <form class="filters" method="get" th:action="@{/teacher/sets/{id}(id=${set.id})}">
+            <label>Номер
+                <input type="number" name="egeNumber" min="1" th:value="${bankEgeNumber}">
+            </label>
+            <label>Тема
+                <select name="topic">
+                    <option value="">Все</option>
+                    <option th:each="t : ${topics}" th:value="${t}" th:text="${t}" th:selected="${t == bankTopic}">Тема</option>
+                </select>
+            </label>
+            <button type="submit">Показать</button>
+        </form>
+        <p th:if="${bank.isEmpty()}">Подходящих заданий нет.</p>
+        <form method="post" th:action="@{/teacher/sets/{id}/tasks(id=${set.id})}" th:unless="${bank.isEmpty()}">
+            <table class="table">
+                <thead><tr><th></th><th>№</th><th>Задание</th><th>Тема</th><th>Сложность</th></tr></thead>
+                <tbody>
+                <tr th:each="t : ${bank}">
+                    <td><input type="checkbox" name="taskIds" th:value="${t.id}" th:id="'task-' + ${t.id}"></td>
+                    <td th:text="${t.egeNumber}">1</td>
+                    <td><label th:for="'task-' + ${t.id}" th:text="${t.title}">Задание</label></td>
+                    <td th:text="${t.topic}">Тема</td>
+                    <td th:text="${t.difficulty}">3</td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="actions"><button type="submit">Добавить отмеченные</button></div>
+        </form>
+    </section>
+
+    <section class="panel" id="assignments">
+        <h2>Назначить ученикам</h2>
+        <p th:if="${students.isEmpty()}">Нет активных учеников. <a th:href="@{/teacher/students}">Пригласить</a></p>
+        <form class="form" method="post" th:action="@{/teacher/sets/{id}/assign(id=${set.id})}" th:object="${assignForm}"
+              th:unless="${students.isEmpty()}">
+            <p class="field-error" th:if="${#fields.hasGlobalErrors()}" th:errors="*{global}"></p>
+            <div class="checkbox-list">
+                <label th:each="s : ${students}">
+                    <input type="checkbox" th:field="*{studentIds}" th:value="${s.id}">
+                    <span th:text="${s.displayName}">Имя</span>
+                </label>
+            </div>
+            <span class="field-error" th:errors="*{studentIds}"></span>
+            <div class="form-row">
+                <label>Срок (необязательно)
+                    <input type="datetime-local" th:field="*{deadline}">
+                    <span class="field-error" th:errors="*{deadline}"></span>
+                </label>
+                <label>Когда показать результаты ученику
+                    <select th:field="*{showResultsMode}">
+                        <option value="AFTER_FINISH">Сразу после завершения</option>
+                        <option value="AFTER_DEADLINE">После срока</option>
+                        <option value="TEACHER_ONLY">Только преподавателю</option>
+                    </select>
+                </label>
+            </div>
+            <div class="actions"><button type="submit">Назначить</button></div>
+        </form>
+
+        <h2 class="spaced">Кому назначено</h2>
+        <p th:if="${assignments.isEmpty()}">Пока никому.</p>
+        <table class="table" th:unless="${assignments.isEmpty()}">
+            <thead><tr><th>Ученик</th><th>Назначено</th><th>Срок</th><th>Результаты</th><th></th></tr></thead>
+            <tbody>
+            <tr th:each="a : ${assignments}">
+                <td><a th:href="@{/teacher/students/{id}(id=${a.student.id})}" th:text="${a.student.displayName}">Имя</a></td>
+                <td th:text="${@dates.format(a.assignedAt)}">дата</td>
+                <td th:text="${a.deadlineAt == null} ? 'без срока' : ${@dates.format(a.deadlineAt)}">дата</td>
+                <td th:switch="${a.showResultsMode.name()}">
+                    <span th:case="'AFTER_FINISH'">после завершения</span>
+                    <span th:case="'AFTER_DEADLINE'">после срока</span>
+                    <span th:case="*">только преподавателю</span>
+                </td>
+                <td>
+                    <form method="post" th:action="@{/teacher/sets/{id}/assignments/{a}/delete(id=${set.id}, a=${a.id})}"
+                          data-confirm="Снять назначение?">
+                        <button type="submit" class="link-button danger">Снять</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+</main>
+</body>
+</html>

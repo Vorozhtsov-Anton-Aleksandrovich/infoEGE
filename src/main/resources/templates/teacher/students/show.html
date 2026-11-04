@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(${student.displayName})}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main>
+    <div class="page-title">
+        <h1 th:text="${student.displayName}">Ученик</h1>
+        <a th:href="@{/teacher/students}">Все ученики</a>
+    </div>
+    <div th:replace="~{fragments/messages :: flash}"></div>
+
+    <p>Логин: <strong th:text="${student.login}">login</strong>.
+        Статус: <span th:text="${student.active} ? 'активен' : 'деактивирован'">активен</span>.</p>
+
+    <div class="actions">
+        <form method="post" th:action="@{/teacher/students/{id}/reset-link(id=${student.id})}"
+              data-confirm="Выдать ссылку для сброса пароля? Предыдущие неиспользованные ссылки перестанут работать.">
+            <button type="submit">Ссылка для сброса пароля</button>
+        </form>
+        <form method="post" th:action="@{/teacher/students/{id}/active(id=${student.id})}"
+              th:attr="data-confirm=${student.active} ? 'Деактивировать ученика? Он не сможет войти.' : null">
+            <input type="hidden" name="active" th:value="${!student.active}">
+            <button type="submit" th:classappend="${student.active} ? 'danger-button'"
+                    th:text="${student.active} ? 'Деактивировать' : 'Активировать'">Деактивировать</button>
+        </form>
+    </div>
+
+    <section class="panel">
+        <h2>Назначенные работы</h2>
+        <p th:if="${assignments.isEmpty()}">Нет назначенных работ.</p>
+        <table class="table" th:unless="${assignments.isEmpty()}">
+            <thead><tr><th>Работа</th><th>Назначено</th><th>Срок</th></tr></thead>
+            <tbody>
+            <tr th:each="a : ${assignments}">
+                <td><a th:href="@{/teacher/sets/{id}(id=${a.taskSet.id})}" th:text="${a.taskSet.title}">Работа</a></td>
+                <td th:text="${@dates.format(a.assignedAt)}">дата</td>
+                <td th:text="${a.deadlineAt == null} ? 'без срока' : ${@dates.format(a.deadlineAt)}">дата</td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+</main>
+</body>
+</html>

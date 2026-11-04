@@ -71,17 +71,23 @@ public class TaskService {
     }
 
     /**
-     * Физически удаляет задание вместе с файлами.
-     * Задания, которые уже используются в подборках и попытках, удалять нельзя, только архивировать:
-     * эта проверка добавляется вместе с подборками (этап 3) и попытками (этап 4).
+     * Физически удаляет задание вместе с файлами. Задание, которое уже входит в подборки,
+     * только архивируется, чтобы не менять собранные работы.
+     *
+     * @return true, если удалено; false, если вместо удаления перенесено в архив
      */
     @Transactional
-    public void delete(Long id) {
+    public boolean delete(Long id) {
         Task task = get(id);
+        if (taskRepository.isUsed(id)) {
+            task.setArchived(true);
+            return false;
+        }
         List<TaskFile> files = fileRepository.findByTaskIdOrderById(id);
         fileRepository.deleteAll(files);
         taskRepository.delete(task);
         files.forEach(this::deleteStoredQuietly);
+        return true;
     }
 
     @Transactional(readOnly = true)

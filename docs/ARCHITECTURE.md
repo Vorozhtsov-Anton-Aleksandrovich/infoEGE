@@ -80,7 +80,7 @@ task_set
   type                varchar(16) NOT NULL                  -- COLLECTION | VARIANT
   title               varchar(300) NOT NULL
   description         text NULL
-  time_limit_minutes  int NULL
+  time_limit_minutes  int NULL                              -- у VARIANT обязателен (CHECK)
   created_at          timestamptz NOT NULL
 
 task_set_item
@@ -96,6 +96,7 @@ assignment
   assigned_at         timestamptz NOT NULL
   deadline_at         timestamptz NULL
   show_results_mode   varchar(16) NOT NULL                  -- AFTER_FINISH | AFTER_DEADLINE | TEACHER_ONLY
+                                                            -- AFTER_DEADLINE требует deadline_at (CHECK)
 
 attempt
   id                  bigserial PK

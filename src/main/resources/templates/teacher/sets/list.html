@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Подборки и варианты')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main>
+    <div class="page-title">
+        <h1>Подборки и варианты</h1>
+        <div class="actions">
+            <a class="button" th:href="@{/teacher/sets/new(type='COLLECTION')}">Новая подборка</a>
+            <a class="button" th:href="@{/teacher/sets/new(type='VARIANT')}">Новый вариант</a>
+        </div>
+    </div>
+    <div th:replace="~{fragments/messages :: flash}"></div>
+
+    <p th:if="${sets.isEmpty()}">Пока ничего не создано.</p>
+    <table class="table" th:unless="${sets.isEmpty()}">
+        <thead><tr><th>Название</th><th>Тип</th><th>Заданий</th><th>Лимит времени</th><th>Создано</th></tr></thead>
+        <tbody>
+        <tr th:each="s : ${sets}">
+            <td><a th:href="@{/teacher/sets/{id}(id=${s.id})}" th:text="${s.title}">Название</a></td>
+            <td th:text="${s.type.name() == 'VARIANT'} ? 'вариант' : 'подборка'">подборка</td>
+            <td th:text="${s.items.size()}">0</td>
+            <td th:text="${s.timeLimitMinutes == null} ? 'нет' : ${s.timeLimitMinutes} + ' мин'">нет</td>
+            <td th:text="${@dates.format(s.createdAt)}">дата</td>
+        </tr>
+        </tbody>
+    </table>
+</main>
+</body>
+</html>

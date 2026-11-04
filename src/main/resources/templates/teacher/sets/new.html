@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Новая работа')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main>
+    <h1 th:text="${form.type.name() == 'VARIANT'} ? 'Новый вариант' : 'Новая подборка'">Новая подборка</h1>
+    <form class="form" method="post" th:action="@{/teacher/sets}" th:object="${form}">
+        <th:block th:replace="~{teacher/sets/fields :: fields}"></th:block>
+        <div class="actions">
+            <button type="submit">Создать и перейти к заданиям</button>
+            <a th:href="@{/teacher/sets}">Отмена</a>
+        </div>
+    </form>
+</main>
+</body>
+</html>
