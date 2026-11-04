@@ -3,3 +3,9 @@ target
 .idea
 *.iml
 HELP.md
+.env
+.env.*
+!.env.example
+data
+backups
+.github

@@ -10,6 +10,7 @@
         <span th:case="*">Что-то пошло не так</span>
     </h1>
     <p th:if="${status == 413}" th:text="${message}">Сообщение</p>
+    <p th:if="${errorId}">Номер ошибки для преподавателя: <code th:text="${errorId}">id</code></p>
     <p><a th:href="@{/}">На главную</a></p>
 </main>
 </body>

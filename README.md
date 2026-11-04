@@ -76,3 +76,136 @@ TEACHER_LOGIN=teacher TEACHER_PASSWORD=teacher ./mvnw spring-boot:run
   ручная корректировка итогового балла с комментарием.
 - Страница ученика у преподавателя: сводка по сданным работам и по номерам ЕГЭ.
 - Ученик видит результаты по настройке назначения: сразу, после срока или никогда (только преподаватель).
+
+## Безопасность
+- Вход: не больше 5 неудачных попыток на пару «логин + IP» и 30 на IP за 15 минут, затем вход
+  с этого адреса блокируется на 15 минут. Счётчики в памяти, перезапуск приложения их сбрасывает.
+- Cookie сессии: `HttpOnly`, `SameSite=Lax`, в prod `Secure`. CSRF на всех формах и запросах тренажёра.
+- Заголовки: строгий CSP (только свои скрипты и стили), `X-Frame-Options: DENY`, `Referrer-Policy: same-origin`,
+  `X-Content-Type-Options: nosniff`, HSTS (Caddy).
+- Ошибки 5xx пишутся в лог со стеком, адресом, пользователем и коротким номером; номер показывается на странице ошибки.
+  Логи: `docker compose -f docker-compose.prod.yml logs app` (ротация json-file: 5 файлов по 20 МБ).
+
+---
+
+# Продакшен
+
+Схема: VPS с Docker → Caddy (HTTPS, Let's Encrypt) → приложение → PostgreSQL.
+Наружу открыты только порты 80 и 443. Образ собирает GitHub Actions и кладёт в GitHub Container Registry.
+
+Файлы: `Dockerfile`, `docker-compose.prod.yml`, `Caddyfile`, `.env.example`, `scripts/backup.sh`, `scripts/restore.sh`,
+`.github/workflows/deploy.yml`.
+
+## 1. Сервер (Ubuntu 24.04, 2 ГБ RAM достаточно)
+
+```bash
+# под root
+apt update && apt upgrade -y
+curl -fsSL https://get.docker.com | sh
+adduser --disabled-password --gecos "" deploy
+usermod -aG docker deploy
+ufw allow OpenSSH && ufw allow 80/tcp && ufw allow 443/tcp && ufw allow 443/udp && ufw enable
+
+mkdir -p /opt/infoege/scripts /var/backups/infoege
+chown -R deploy:deploy /opt/infoege /var/backups/infoege
+```
+
+Вход по SSH только по ключу: в `/etc/ssh/sshd_config` `PasswordAuthentication no`, затем `systemctl restart ssh`.
+
+## 2. Домен
+A-запись (и AAAA, если есть IPv6) домена на IP сервера. Caddy получит сертификат сам при первом запуске,
+когда домен уже указывает на сервер и порты 80/443 открыты.
+
+## 3. Конфигурация на сервере (под пользователем deploy)
+
+```bash
+cd /opt/infoege
+# скопируйте с компьютера: docker-compose.prod.yml, Caddyfile, .env.example, scripts/*.sh
+#   scp docker-compose.prod.yml Caddyfile .env.example deploy@SERVER:/opt/infoege/
+#   scp scripts/*.sh deploy@SERVER:/opt/infoege/scripts/
+cp .env.example .env && chmod 600 .env
+nano .env        # DOMAIN, ACME_EMAIL, IMAGE, пароли (openssl rand -base64 24)
+chmod +x scripts/*.sh
+```
+
+Если пакет образа в GHCR приватный (по умолчанию), один раз войдите в реестр токеном
+с правом `read:packages` (GitHub → Settings → Developer settings → Personal access tokens):
+
+```bash
+echo "<TOKEN>" | docker login ghcr.io -u <github-login> --password-stdin
+```
+
+## 4. Деплой через GitHub Actions
+В репозитории: Settings → Secrets and variables → Actions.
+
+| Тип | Имя | Значение |
+|---|---|---|
+| variable | `DEPLOY_HOST` | IP или имя сервера |
+| variable | `DEPLOY_USER` | `deploy` |
+| variable | `DEPLOY_PATH` | `/opt/infoege` |
+| variable | `DEPLOY_DOMAIN` | домен сайта (для проверки health) |
+| secret | `DEPLOY_SSH_KEY` | приватный ключ, публичная часть в `~deploy/.ssh/authorized_keys` |
+| secret | `DEPLOY_KNOWN_HOSTS` | вывод `ssh-keyscan <сервер>` |
+
+Ключ для деплоя: `ssh-keygen -t ed25519 -f deploy_key -N ""`.
+
+После каждого зелёного CI на `main` workflow «Deploy»:
+1. собирает образ и публикует `ghcr.io/<owner>/infoege:<sha>` и `:latest`;
+2. копирует на сервер `docker-compose.prod.yml`, `Caddyfile`, скрипты;
+3. делает бэкап (если БД уже запущена), прописывает версию в `.env`, `docker compose pull && up -d`;
+4. ждёт `https://<домен>/actuator/health` = `UP`.
+
+Пока `DEPLOY_HOST` не задан, workflow пропускается. Запустить вручную: Actions → Deploy → Run workflow.
+
+Первый запуск вручную (если ещё не настроен Actions):
+
+```bash
+cd /opt/infoege
+docker compose -f docker-compose.prod.yml --env-file .env up -d
+docker compose -f docker-compose.prod.yml --env-file .env logs -f app   # «Teacher account ... created»
+curl https://<домен>/actuator/health
+```
+
+Откат на предыдущую версию: `IMAGE_TAG=<старый sha>` в `.env` и `docker compose ... up -d`.
+Миграции БД необратимы: если новая версия уже изменила схему, откатывайтесь восстановлением бэкапа,
+сделанного перед деплоем.
+
+## 5. Бэкапы
+
+`scripts/backup.sh` делает `pg_dump` (формат custom) и архив файлов заданий в один
+`infoege-ГГГГММДД-ЧЧММСС.tar` (права 600) с `.sha256`, удаляет архивы старше `BACKUP_KEEP_DAYS` (14 дней).
+
+```bash
+crontab -e   # под deploy
+30 3 * * * /opt/infoege/scripts/backup.sh >> /var/backups/infoege/backup.log 2>&1
+```
+
+Бэкап на том же сервере не спасает от потери сервера: копируйте архивы наружу, например
+`rclone copy /var/backups/infoege remote:infoege-backups` следующей строкой в cron или
+снимками диска у хостера.
+
+## 6. Восстановление и его проверка
+
+```bash
+cd /opt/infoege
+scripts/restore.sh /var/backups/infoege/infoege-20261104-033000.tar
+```
+
+Скрипт проверяет контрольную сумму, просит подтверждения, останавливает приложение, пересоздаёт схему БД,
+загружает дамп, заменяет файлы заданий и запускает приложение (Flyway докатит миграции,
+если бэкап старше текущей версии).
+
+Проверять восстановление стоит регулярно (раз в месяц) и не на боевом сервере:
+
+1. На отдельной машине с Docker положите `docker-compose.prod.yml`, `Caddyfile`, `scripts/`
+   и `.env` с `DOMAIN=localhost` и тем же `IMAGE`.
+2. `docker compose -f docker-compose.prod.yml --env-file .env up -d`, дождитесь `https://localhost/actuator/health`
+   (сертификат локальный: `curl -k`).
+3. `scripts/restore.sh <архив> --yes`.
+4. Войдите преподавателем: в банке те же задания, файлы скачиваются, в «Результатах» те же попытки.
+   Быстрая сверка: `docker compose ... exec db psql -U infoege -c "select count(*) from task; select count(*) from attempt;"`
+   на обеих машинах.
+5. `docker compose ... down -v` на проверочной машине.
+
+Такая проверка выполнена при разработке: задание с файлом → бэкап → `down -v` → чистый запуск → restore →
+задание, правильный ответ и содержимое файла на месте.

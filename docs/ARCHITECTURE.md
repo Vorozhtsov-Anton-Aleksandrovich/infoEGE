@@ -157,3 +157,16 @@ attempt_answer
   округление вниз. Всё считается по снимкам из attempt_answer.
 - Итоговый балл = manual_score, если преподаватель его выставил, иначе score.
 - Результаты ученику: только своё назначение и только когда разрешает show_results_mode, иначе 404.
+
+## Продакшен (этап 6)
+
+```
+Интернет ──443/80──► Caddy (TLS, HSTS, gzip) ──► app:8080 (Spring Boot, prod) ──► db:5432 (PostgreSQL 16)
+                                                    │
+                                                    └── volume app-files (файлы заданий)
+```
+
+- IP клиента для ограничения входа берётся из X-Forwarded-For через Tomcat RemoteIpValve
+  (`server.forward-headers-strategy: native`); доверяются только внутренние адреса (сеть Docker).
+- Тома: `db-data`, `app-files`, `caddy-data` (сертификаты), `caddy-config`.
+- Бэкап: `pg_dump --format=custom` + tar тома файлов в один архив; восстановление пересоздаёт схему `public`.

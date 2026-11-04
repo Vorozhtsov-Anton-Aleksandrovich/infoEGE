@@ -1,0 +1,23 @@
+# Caddy сам получает и продлевает сертификат Let's Encrypt для {$DOMAIN}
+# и перенаправляет HTTP на HTTPS. Для локальной проверки DOMAIN=localhost даёт локальный сертификат.
+{
+	email {$ACME_EMAIL}
+}
+
+{$DOMAIN} {
+	encode zstd gzip
+
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		-Server
+	}
+
+	# Наружу из actuator нужен только health (остальное приложение и так не открывает).
+	@actuator {
+		path /actuator/*
+		not path /actuator/health
+	}
+	respond @actuator 404
+
+	reverse_proxy app:8080
+}

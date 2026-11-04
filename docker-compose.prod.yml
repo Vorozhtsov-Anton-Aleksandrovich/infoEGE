@@ -1,0 +1,72 @@
+# Продакшен на VPS: docker compose -f docker-compose.prod.yml --env-file .env up -d
+# Наружу открыты только 80 и 443 (Caddy). БД и приложение доступны лишь внутри сети Docker.
+name: infoege
+
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: "20m"
+    max-file: "5"
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    logging: *logging
+
+  app:
+    image: ${IMAGE:-ghcr.io/owner/infoege}:${IMAGE_TAG:-latest}
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      DB_URL: jdbc:postgresql://db:5432/${POSTGRES_DB}
+      DB_USER: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      TEACHER_LOGIN: ${TEACHER_LOGIN}
+      TEACHER_PASSWORD: ${TEACHER_PASSWORD}
+      TEACHER_NAME: ${TEACHER_NAME:-Преподаватель}
+      APP_TIMEZONE: ${APP_TIMEZONE:-Europe/Moscow}
+      MAX_FILE_SIZE: ${MAX_FILE_SIZE:-20MB}
+    volumes:
+      - app-files:/app/data
+    expose:
+      - "8080"
+    logging: *logging
+
+  caddy:
+    image: caddy:2.8-alpine
+    restart: unless-stopped
+    depends_on:
+      - app
+    environment:
+      DOMAIN: ${DOMAIN}
+      ACME_EMAIL: ${ACME_EMAIL}
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    logging: *logging
+
+volumes:
+  db-data:
+  app-files:
+  caddy-data:
+  caddy-config:
