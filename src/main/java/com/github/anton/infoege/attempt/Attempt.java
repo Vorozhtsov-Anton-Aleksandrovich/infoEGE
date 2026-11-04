@@ -49,6 +49,13 @@ public class Attempt {
 
     private Instant lastHeartbeatAt;
 
+    /** Балл, выставленный преподавателем вручную; заменяет автоматический score. */
+    private Integer manualScore;
+
+    private String manualComment;
+
+    private Instant manualUpdatedAt;
+
     protected Attempt() {
     }
 
@@ -79,6 +86,23 @@ public class Attempt {
             return null;
         }
         return Math.max(0, Duration.between(now, expiresAt).toSeconds());
+    }
+
+    /** Итоговый балл: ручной, если выставлен, иначе автоматический. */
+    public Integer getFinalScore() {
+        return manualScore != null ? manualScore : score;
+    }
+
+    public void setManualScore(Integer manualScore, String comment, Instant now) {
+        this.manualScore = manualScore;
+        this.manualComment = comment;
+        this.manualUpdatedAt = now;
+    }
+
+    /** Общее время: от старта до завершения, для незавершённой попытки до текущего момента. */
+    public long totalSeconds(Instant now) {
+        Instant end = finishedAt != null ? finishedAt : now;
+        return Math.max(0, Duration.between(startedAt, end).toSeconds());
     }
 
     public boolean isInProgress() {
@@ -115,6 +139,18 @@ public class Attempt {
 
     public void setScore(Integer score) {
         this.score = score;
+    }
+
+    public Integer getManualScore() {
+        return manualScore;
+    }
+
+    public String getManualComment() {
+        return manualComment;
+    }
+
+    public Instant getManualUpdatedAt() {
+        return manualUpdatedAt;
     }
 
     public Instant getLastHeartbeatAt() {

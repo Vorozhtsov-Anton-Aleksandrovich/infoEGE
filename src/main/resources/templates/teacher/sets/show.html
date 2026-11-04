@@ -119,28 +119,14 @@
         </form>
 
         <h2 class="spaced">Кому назначено</h2>
-        <p th:if="${assignments.isEmpty()}">Пока никому.</p>
-        <table class="table" th:unless="${assignments.isEmpty()}">
-            <thead><tr><th>Ученик</th><th>Назначено</th><th>Срок</th><th>Результаты</th><th></th></tr></thead>
-            <tbody>
-            <tr th:each="a : ${assignments}">
-                <td><a th:href="@{/teacher/students/{id}(id=${a.student.id})}" th:text="${a.student.displayName}">Имя</a></td>
-                <td th:text="${@dates.format(a.assignedAt)}">дата</td>
-                <td th:text="${a.deadlineAt == null} ? 'без срока' : ${@dates.format(a.deadlineAt)}">дата</td>
-                <td th:switch="${a.showResultsMode.name()}">
-                    <span th:case="'AFTER_FINISH'">после завершения</span>
-                    <span th:case="'AFTER_DEADLINE'">после срока</span>
-                    <span th:case="*">только преподавателю</span>
-                </td>
-                <td>
-                    <form method="post" th:action="@{/teacher/sets/{id}/assignments/{a}/delete(id=${set.id}, a=${a.id})}"
-                          data-confirm="Снять назначение?">
-                        <button type="submit" class="link-button danger">Снять</button>
-                    </form>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+        <p th:if="${results.isEmpty()}">Пока никому.</p>
+        <th:block th:unless="${results.isEmpty()}">
+            <table th:replace="~{fragments/results :: table(${results}, true, false, true)}"></table>
+            <p class="actions">
+                <a th:href="@{/teacher/results.csv(setId=${set.id})}">CSV: сводка</a>
+                <a th:href="@{/teacher/results/tasks.csv(setId=${set.id})}">CSV: по заданиям</a>
+            </p>
+        </th:block>
     </section>
 </main>
 </body>

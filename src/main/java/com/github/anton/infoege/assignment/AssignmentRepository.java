@@ -19,6 +19,14 @@ public interface AssignmentRepository extends JpaRepository<Assignment, Long> {
     @Query("select a from Assignment a where a.student.id = :studentId order by a.assignedAt desc, a.id desc")
     List<Assignment> findByStudentId(Long studentId);
 
+    @EntityGraph(attributePaths = {"student", "taskSet"})
+    @Query("select a from Assignment a order by a.assignedAt desc, a.id desc")
+    List<Assignment> findAllWithStudentAndSet();
+
+    @EntityGraph(attributePaths = {"student", "taskSet"})
+    @Query("select a from Assignment a where a.id = :id")
+    Optional<Assignment> findWithStudentAndSetById(Long id);
+
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("select a from Assignment a where a.id = :id")
     Optional<Assignment> findForUpdate(Long id);

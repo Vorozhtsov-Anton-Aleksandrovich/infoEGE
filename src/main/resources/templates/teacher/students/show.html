@@ -26,19 +26,41 @@
         </form>
     </div>
 
+    <section class="panel" th:with="sm=${summary}">
+        <h2>Сводка</h2>
+        <ul class="facts">
+            <li>Назначено работ: <span th:text="${sm.results.size()}">0</span>, сдано: <span th:text="${sm.closed}">0</span></li>
+            <li th:if="${sm.closed > 0}">Баллы по сданным работам: <strong th:text="${sm.points}">0</strong> из <span th:text="${sm.maxPoints}">0</span>
+                <th:block th:if="${sm.maxPoints > 0}">(<span th:text="${#numbers.formatDecimal(100.0 * sm.points / sm.maxPoints, 1, 0)}">0</span>%)</th:block></li>
+            <li th:if="${sm.closed > 0}">Общее время: <span th:text="${@dates.duration(sm.totalSeconds)}">0:00:00</span></li>
+        </ul>
+
+        <th:block th:unless="${sm.byNumber.isEmpty()}">
+            <h3>По номерам заданий</h3>
+            <table class="table">
+                <thead><tr><th>№ ЕГЭ</th><th>Решено верно</th><th>Баллы</th><th>Среднее время на задание</th></tr></thead>
+                <tbody>
+                <tr th:each="n : ${sm.byNumber}">
+                    <td th:text="${n.egeNumber}">1</td>
+                    <td th:text="${n.correct} + ' из ' + ${n.tasks}">0 из 0</td>
+                    <td th:text="${n.points} + ' из ' + ${n.maxPoints}">0 из 0</td>
+                    <td th:text="${@dates.duration(n.averageSeconds())}">0:00:00</td>
+                </tr>
+                </tbody>
+            </table>
+        </th:block>
+    </section>
+
     <section class="panel">
-        <h2>Назначенные работы</h2>
-        <p th:if="${assignments.isEmpty()}">Нет назначенных работ.</p>
-        <table class="table" th:unless="${assignments.isEmpty()}">
-            <thead><tr><th>Работа</th><th>Назначено</th><th>Срок</th></tr></thead>
-            <tbody>
-            <tr th:each="a : ${assignments}">
-                <td><a th:href="@{/teacher/sets/{id}(id=${a.taskSet.id})}" th:text="${a.taskSet.title}">Работа</a></td>
-                <td th:text="${@dates.format(a.assignedAt)}">дата</td>
-                <td th:text="${a.deadlineAt == null} ? 'без срока' : ${@dates.format(a.deadlineAt)}">дата</td>
-            </tr>
-            </tbody>
-        </table>
+        <h2>Работы</h2>
+        <p th:if="${summary.results.isEmpty()}">Нет назначенных работ.</p>
+        <th:block th:unless="${summary.results.isEmpty()}">
+            <table th:replace="~{fragments/results :: table(${summary.results}, false, true, false)}"></table>
+            <p class="actions">
+                <a th:href="@{/teacher/results.csv(studentId=${student.id})}">CSV: сводка</a>
+                <a th:href="@{/teacher/results/tasks.csv(studentId=${student.id})}">CSV: по заданиям</a>
+            </p>
+        </th:block>
     </section>
 </main>
 </body>

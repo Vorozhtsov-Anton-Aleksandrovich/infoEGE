@@ -2,6 +2,7 @@ package com.github.anton.infoege.attempt;
 
 import com.github.anton.infoege.assignment.Assignment;
 import com.github.anton.infoege.assignment.AssignmentRepository;
+import com.github.anton.infoege.checking.AnswerChecker;
 import com.github.anton.infoege.task.TaskFile;
 import com.github.anton.infoege.task.TaskFileRepository;
 import com.github.anton.infoege.taskset.TaskSet;
@@ -152,6 +153,7 @@ public class AttemptService {
         Attempt attempt = lockOwn(attemptId, studentId);
         if (attempt.isInProgress()) {
             attempt.finish(Instant.now());
+            grade(attempt);
         }
         return attempt;
     }
@@ -169,10 +171,36 @@ public class AttemptService {
         return file;
     }
 
-    /** Закрывает все просроченные попытки. Вызывается планировщиком. */
+    /** Закрывает и проверяет все просроченные попытки. Вызывается планировщиком и перед построением отчётов. */
     @Transactional
     public int expireOverdue() {
-        return attemptRepository.expireOverdue(Instant.now().minus(Attempt.GRACE));
+        Instant now = Instant.now();
+        int expired = 0;
+        for (Long id : attemptRepository.findOverdueIds(now.minus(Attempt.GRACE))) {
+            Attempt attempt = attemptRepository.findForUpdate(id).orElseThrow();
+            if (attempt.isInProgress() && attempt.isOverdue(now)) {
+                attempt.expire();
+                grade(attempt);
+                expired++;
+            }
+        }
+        return expired;
+    }
+
+    /**
+     * Автопроверка: баллы по снимку правильного ответа и стратегии, итог в attempt.score.
+     * Ручной балл преподавателя не трогается.
+     */
+    private void grade(Attempt attempt) {
+        int total = 0;
+        for (AttemptAnswer answer : answerRepository.findByAttemptIdOrderByPosition(attempt.getId())) {
+            AnswerChecker.Result result = AnswerChecker.check(answer.getAnswer(), answer.getAnswerSnapshot(),
+                    answer.getScoringSnapshot(), answer.getPointsSnapshot());
+            answer.setIsCorrect(result.correct());
+            answer.setPoints(result.points());
+            total += result.points();
+        }
+        attempt.setScore(total);
     }
 
     @Transactional(readOnly = true)
@@ -191,6 +219,7 @@ public class AttemptService {
         Attempt attempt = attemptRepository.findOwnForUpdate(attemptId, studentId).orElseThrow(NotFoundException::new);
         if (attempt.isInProgress() && attempt.isOverdue(Instant.now())) {
             attempt.expire();
+            grade(attempt);
         }
         return attempt;
     }

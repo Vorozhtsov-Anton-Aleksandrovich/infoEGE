@@ -19,7 +19,9 @@
                 </th:block>
             </p>
             <p>Срок: <span th:text="${a.deadlineAt == null} ? 'без срока' : ${@dates.format(a.deadlineAt)}">дата</span></p>
-            <p><span class="status" th:classappend="'status-' + ${w.status.name().toLowerCase()}" th:text="${w.status.label}">не начато</span></p>
+            <p><span class="status" th:classappend="'status-' + ${w.status.name().toLowerCase()}" th:text="${w.status.label}">не начато</span>
+                <a th:if="${w.resultsVisible}" th:href="@{/student/assignments/{id}/result(id=${a.id})}">
+                    результаты: <span th:text="${w.attempt.finalScore}">0</span></a></p>
         </article>
     </div>
 </main>

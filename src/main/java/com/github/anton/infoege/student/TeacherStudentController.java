@@ -1,7 +1,7 @@
 package com.github.anton.infoege.student;
 
-import com.github.anton.infoege.assignment.AssignmentService;
 import com.github.anton.infoege.invite.InviteService;
+import com.github.anton.infoege.result.ResultService;
 import com.github.anton.infoege.user.AppUserDetails;
 import com.github.anton.infoege.user.User;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -21,13 +21,13 @@ public class TeacherStudentController {
 
     private final StudentService studentService;
     private final InviteService inviteService;
-    private final AssignmentService assignmentService;
+    private final ResultService resultService;
 
     public TeacherStudentController(StudentService studentService, InviteService inviteService,
-                                    AssignmentService assignmentService) {
+                                    ResultService resultService) {
         this.studentService = studentService;
         this.inviteService = inviteService;
-        this.assignmentService = assignmentService;
+        this.resultService = resultService;
     }
 
     @GetMapping
@@ -67,7 +67,7 @@ public class TeacherStudentController {
     @GetMapping("/{id}")
     public String show(@PathVariable Long id, Model model) {
         model.addAttribute("student", studentService.get(id));
-        model.addAttribute("assignments", assignmentService.forStudent(id));
+        model.addAttribute("summary", resultService.studentSummary(id));
         return "teacher/students/show";
     }
 

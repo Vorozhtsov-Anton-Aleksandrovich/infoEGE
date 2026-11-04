@@ -2,6 +2,7 @@ package com.github.anton.infoege.checking;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 /**
@@ -11,6 +12,7 @@ import java.util.regex.Pattern;
 public final class AnswerNormalizer {
 
     private static final Pattern CELL_SEPARATOR = Pattern.compile("[\\s;]+");
+    private static final Pattern SPACES = Pattern.compile("\\s+");
 
     private AnswerNormalizer() {
     }
@@ -41,6 +43,17 @@ public final class AnswerNormalizer {
             sb.append(String.join(" ", row));
         }
         return sb.toString();
+    }
+
+    /**
+     * Ячейка для сравнения: без пробелов по краям, внутренние пробелы схлопнуты,
+     * десятичный разделитель единый (запятая = точка), регистр не важен.
+     */
+    public static String normalizeCell(String cell) {
+        if (cell == null) {
+            return "";
+        }
+        return SPACES.matcher(cell.trim()).replaceAll(" ").replace(',', '.').toUpperCase(Locale.ROOT);
     }
 
     /** Проверяет, что таблица ровно rows × cols. */

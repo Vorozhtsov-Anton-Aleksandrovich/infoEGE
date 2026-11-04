@@ -34,7 +34,7 @@ public class StudentWorkController {
     }
 
     /** Строка списка работ ученика. */
-    public record WorkRow(Assignment assignment, Attempt attempt, WorkStatus status) {
+    public record WorkRow(Assignment assignment, Attempt attempt, WorkStatus status, boolean resultsVisible) {
     }
 
     @GetMapping("/student")
@@ -74,7 +74,8 @@ public class StudentWorkController {
                 .stream().collect(Collectors.toMap(a -> a.getAssignment().getId(), Function.identity()));
         Instant now = Instant.now();
         return assignments.stream()
-                .map(a -> new WorkRow(a, attempts.get(a.getId()), WorkStatus.of(a, attempts.get(a.getId()), now)))
+                .map(a -> new WorkRow(a, attempts.get(a.getId()), WorkStatus.of(a, attempts.get(a.getId()), now),
+                        ResultVisibility.visibleToStudent(a, attempts.get(a.getId()), now)))
                 .toList();
     }
 }

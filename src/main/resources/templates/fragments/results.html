@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<body>
+<!--
+    Таблица результатов назначений.
+    showStudent/showSet: показывать колонки ученика и работы; unassign: кнопка «Снять» для неначатых.
+-->
+<table th:fragment="table(results, showStudent, showSet, unassign)" class="table results">
+    <thead>
+    <tr>
+        <th th:if="${showStudent}">Ученик</th>
+        <th th:if="${showSet}">Работа</th>
+        <th>Статус</th>
+        <th>Балл</th>
+        <th>Общее время</th>
+        <th>Назначено</th>
+        <th>Срок</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="r : ${results}" th:with="a=${r.assignment}">
+        <td th:if="${showStudent}"><a th:href="@{/teacher/students/{id}(id=${a.student.id})}" th:text="${a.student.displayName}">Имя</a></td>
+        <td th:if="${showSet}"><a th:href="@{/teacher/sets/{id}(id=${a.taskSet.id})}" th:text="${a.taskSet.title}">Работа</a></td>
+        <td><span class="status" th:classappend="'status-' + ${r.status.name().toLowerCase()}" th:text="${r.status.label}">статус</span></td>
+        <td>
+            <th:block th:if="${r.closed}">
+                <strong th:text="${r.finalScore} ?: '—'">0</strong> / <span th:text="${r.maxScore}">0</span>
+                <span class="badge" th:if="${r.attempt.manualScore != null}" title="Балл изменён вручную">вручную</span>
+            </th:block>
+        </td>
+        <td th:text="${@dates.duration(r.totalSeconds)}">0:00:00</td>
+        <td th:text="${@dates.format(a.assignedAt)}">дата</td>
+        <td th:text="${a.deadlineAt == null} ? 'без срока' : ${@dates.format(a.deadlineAt)}">дата</td>
+        <td class="actions">
+            <a th:if="${r.attempt != null}" th:href="@{/teacher/assignments/{id}(id=${a.id})}">Подробно</a>
+            <form th:if="${unassign and r.attempt == null}" method="post"
+                  th:action="@{/teacher/sets/{s}/assignments/{id}/delete(s=${a.taskSet.id}, id=${a.id})}"
+                  data-confirm="Снять назначение?">
+                <button type="submit" class="link-button danger">Снять</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

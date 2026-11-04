@@ -139,3 +139,12 @@ textarea { resize: vertical; }
 .status-in_progress { background: #fff3cd; color: #7a5b00; }
 .status-finished { background: #dcefe0; color: #1e6b31; }
 .status-expired, .status-overdue { background: #fde8e8; color: #8a1c1c; }
+
+.facts { margin: 0; padding-left: 20px; }
+.facts li { margin: 2px 0; }
+.table tr.row-correct > td:first-child { box-shadow: inset 4px 0 #4f9a5d; }
+.table tr.row-wrong > td:first-child { box-shadow: inset 4px 0 #c62828; }
+.result-task.row-correct { border-left: 4px solid #4f9a5d; }
+.result-task.row-wrong { border-left: 4px solid #c62828; }
+.result-task details { margin: 8px 0; }
+.score-line { font-size: 18px; }

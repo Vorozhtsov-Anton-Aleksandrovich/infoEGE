@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Результат')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main th:with="a=${r.assignment}, at=${r.attempt}">
+    <div class="page-title">
+        <h1><span th:text="${a.student.displayName}">Ученик</span>: <span th:text="${a.taskSet.title}">Работа</span></h1>
+        <a th:href="@{/teacher/sets/{id}(id=${a.taskSet.id})}">К работе</a>
+    </div>
+    <div th:replace="~{fragments/messages :: flash}"></div>
+
+    <section class="panel">
+        <ul class="facts">
+            <li>Статус: <span class="status" th:classappend="'status-' + ${r.status.name().toLowerCase()}" th:text="${r.status.label}">статус</span></li>
+            <li>Начато: <span th:text="${@dates.format(at.startedAt)}">дата</span></li>
+            <li>Завершено: <span th:text="${at.finishedAt == null} ? '—' : ${@dates.format(at.finishedAt)}">дата</span></li>
+            <li>Общее время: <strong th:text="${@dates.duration(r.totalSeconds)}">0:00:00</strong></li>
+            <li th:if="${r.closed}">Автоматический балл: <span th:text="${at.score}">0</span> / <span th:text="${r.maxScore}">0</span></li>
+            <li th:if="${r.closed}">Итог: <strong th:text="${r.finalScore}">0</strong> / <span th:text="${r.maxScore}">0</span></li>
+        </ul>
+    </section>
+
+    <section class="panel" th:if="${r.closed}">
+        <h2>Ручная корректировка балла</h2>
+        <p th:if="${at.manualScore != null}" class="hint">
+            Изменено <span th:text="${@dates.format(at.manualUpdatedAt)}">дата</span>.
+        </p>
+        <form class="form" method="post" th:action="@{/teacher/assignments/{id}/score(id=${a.id})}">
+            <div class="form-row">
+                <label>Итоговый балл (пусто — автоматический)
+                    <input type="number" name="manualScore" min="0" th:max="${r.maxScore}" th:value="${at.manualScore}">
+                </label>
+            </div>
+            <label>Комментарий
+                <textarea name="comment" rows="2" th:text="${at.manualComment}"></textarea>
+            </label>
+            <div class="actions"><button type="submit">Сохранить</button></div>
+        </form>
+    </section>
+
+    <section class="panel">
+        <h2>Ответы по заданиям</h2>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>#</th><th>№ ЕГЭ</th><th>Задание</th><th>Ответ ученика</th><th>Правильный ответ</th>
+                <th>Баллы</th><th>Время</th><th>Смен ответа</th><th>Открыто</th><th>Сохранено</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="t : ${tasks}" th:with="ans=${t.answer}"
+                th:classappend="${ans.isCorrect == null} ? '' : (${ans.isCorrect} ? 'row-correct' : 'row-wrong')">
+                <td th:text="${t.number}">1</td>
+                <td th:text="${t.task.egeNumber}">1</td>
+                <td><a th:href="@{/teacher/tasks/{id}/preview(id=${t.task.id})}" th:text="${t.task.title}">Задание</a></td>
+                <td>
+                    <span th:if="${ans.answer == null}" class="hint">нет ответа</span>
+                    <table class="answer-grid readonly" th:if="${ans.answer != null}">
+                        <tr th:each="row : ${ans.answer}"><td th:each="cell : ${row}" th:text="${cell}">1</td></tr>
+                    </table>
+                </td>
+                <td>
+                    <table class="answer-grid readonly">
+                        <tr th:each="row : ${ans.answerSnapshot}"><td th:each="cell : ${row}" th:text="${cell}">1</td></tr>
+                    </table>
+                </td>
+                <td><span th:text="${ans.points == null} ? '—' : ${ans.points}">0</span> / <span th:text="${ans.pointsSnapshot}">1</span></td>
+                <td th:text="${@dates.duration(ans.timeSpentSeconds.longValue())}">0:00:00</td>
+                <td th:text="${ans.answerChanges}">0</td>
+                <td th:text="${@dates.format(ans.firstOpenedAt)}">дата</td>
+                <td th:text="${@dates.format(ans.lastSavedAt)}">дата</td>
+            </tr>
+            </tbody>
+        </table>
+        <p class="hint">Время на задание считается, только пока вкладка с тренажёром открыта и видна.</p>
+    </section>
+</main>
+</body>
+</html>

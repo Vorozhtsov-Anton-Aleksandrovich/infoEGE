@@ -28,8 +28,14 @@
         </form>
         <a class="button" th:if="${status == 'IN_PROGRESS'}"
            th:href="@{/trainer/attempts/{id}(id=${work.attempt.id})}">Продолжить</a>
-        <p th:if="${status == 'FINISHED' or status == 'EXPIRED'}">Работа сдана
-            <span th:text="${@dates.format(work.attempt.finishedAt)}">дата</span>.</p>
+        <th:block th:if="${status == 'FINISHED' or status == 'EXPIRED'}">
+            <p>Работа сдана <span th:text="${@dates.format(work.attempt.finishedAt)}">дата</span>.</p>
+            <a class="button" th:if="${work.resultsVisible}" th:href="@{/student/assignments/{id}/result(id=${a.id})}">Результаты</a>
+            <p th:unless="${work.resultsVisible}" class="hint" th:switch="${a.showResultsMode.name()}">
+                <span th:case="'AFTER_DEADLINE'">Результаты появятся после срока сдачи.</span>
+                <span th:case="*">Результаты увидит преподаватель.</span>
+            </p>
+        </th:block>
         <p th:if="${status == 'OVERDUE'}">Срок выполнения истёк.</p>
     </section>
 </main>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Результаты')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main th:with="a=${r.assignment}, at=${r.attempt}">
+    <div class="page-title">
+        <h1>Результаты: <span th:text="${a.taskSet.title}">Работа</span></h1>
+        <a th:href="@{/student}">Все работы</a>
+    </div>
+
+    <section class="panel">
+        <p class="score-line">Баллы: <strong th:text="${r.finalScore}">0</strong> из <span th:text="${r.maxScore}">0</span>.
+            Время: <span th:text="${@dates.duration(r.totalSeconds)}">0:00:00</span>.</p>
+        <p th:if="${at.manualComment}">Комментарий преподавателя: <span th:text="${at.manualComment}">текст</span></p>
+    </section>
+
+    <section class="panel result-task" th:each="t : ${tasks}" th:with="ans=${t.result.answer}"
+             th:classappend="${ans.isCorrect} ? 'row-correct' : 'row-wrong'">
+        <h2>Задание <span th:text="${t.result.number}">1</span>
+            <span class="hint" th:text="'— ' + ${ans.points} + ' из ' + ${ans.pointsSnapshot}">— 1 из 1</span></h2>
+        <details>
+            <summary>Условие</summary>
+            <div class="markdown" th:utext="${t.statementHtml}"></div>
+        </details>
+        <div class="form-row">
+            <div>
+                <div class="hint">Ваш ответ</div>
+                <span th:if="${ans.answer == null}" class="hint">нет ответа</span>
+                <table class="answer-grid readonly" th:if="${ans.answer != null}">
+                    <tr th:each="row : ${ans.answer}"><td th:each="cell : ${row}" th:text="${cell}">1</td></tr>
+                </table>
+            </div>
+            <div>
+                <div class="hint">Правильный ответ</div>
+                <table class="answer-grid readonly">
+                    <tr th:each="row : ${ans.answerSnapshot}"><td th:each="cell : ${row}" th:text="${cell}">1</td></tr>
+                </table>
+            </div>
+        </div>
+        <details th:if="${!#strings.isEmpty(t.solutionHtml)}">
+            <summary>Разбор</summary>
+            <div class="markdown" th:utext="${t.solutionHtml}"></div>
+        </details>
+    </section>
+</main>
+</body>
+</html>

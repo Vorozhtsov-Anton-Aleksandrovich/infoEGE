@@ -3,6 +3,7 @@ package com.github.anton.infoege.taskset;
 import com.github.anton.infoege.assignment.AssignForm;
 import com.github.anton.infoege.assignment.AssignmentService;
 import com.github.anton.infoege.assignment.ShowResultsMode;
+import com.github.anton.infoege.result.ResultService;
 import com.github.anton.infoege.student.StudentService;
 import com.github.anton.infoege.task.TaskFilter;
 import com.github.anton.infoege.task.TaskService;
@@ -30,14 +31,17 @@ public class TeacherTaskSetController {
     private final TaskService taskService;
     private final StudentService studentService;
     private final AssignmentService assignmentService;
+    private final ResultService resultService;
     private final Dates dates;
 
     public TeacherTaskSetController(TaskSetService taskSetService, TaskService taskService,
-                                    StudentService studentService, AssignmentService assignmentService, Dates dates) {
+                                    StudentService studentService, AssignmentService assignmentService,
+                                    ResultService resultService, Dates dates) {
         this.taskSetService = taskSetService;
         this.taskService = taskService;
         this.studentService = studentService;
         this.assignmentService = assignmentService;
+        this.resultService = resultService;
         this.dates = dates;
     }
 
@@ -179,7 +183,7 @@ public class TeacherTaskSetController {
         model.addAttribute("bankEgeNumber", egeNumber);
         model.addAttribute("bankTopic", topic);
         model.addAttribute("students", studentService.active());
-        model.addAttribute("assignments", assignmentService.forTaskSet(set.getId()));
+        model.addAttribute("results", resultService.results(set.getId(), null));
     }
 
     private static void validateTimeLimit(TaskSetForm form, BindingResult binding) {
