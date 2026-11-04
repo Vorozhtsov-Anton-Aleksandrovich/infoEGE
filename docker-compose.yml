@@ -30,8 +30,11 @@ services:
       TEACHER_LOGIN: ${TEACHER_LOGIN:-teacher}
       TEACHER_PASSWORD: ${TEACHER_PASSWORD:-teacher}
       TEACHER_NAME: ${TEACHER_NAME:-Преподаватель}
+    volumes:
+      - app-files:/app/data
     ports:
       - "8080:8080"
 
 volumes:
   db-data:
+  app-files:

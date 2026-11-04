@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="flash">
+    <p class="alert alert-info" th:if="${message}" th:text="${message}">Сообщение</p>
+    <div class="alert alert-error" th:if="${fileErrors}">
+        <p>Не все файлы загружены:</p>
+        <ul>
+            <li th:each="error : ${fileErrors}" th:text="${error}">Ошибка</li>
+        </ul>
+    </div>
+</div>
+</body>
+</html>

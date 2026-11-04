@@ -3,20 +3,12 @@ package com.github.anton.infoege;
 import com.github.anton.infoege.config.TeacherBootstrap;
 import com.github.anton.infoege.user.Role;
 import com.github.anton.infoege.user.User;
-import com.github.anton.infoege.user.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class InfoEgeApplicationTests extends IntegrationTest {
-
-    @Autowired
-    UserRepository userRepository;
-
-    @Autowired
-    PasswordEncoder passwordEncoder;
 
     @Autowired
     TeacherBootstrap teacherBootstrap;

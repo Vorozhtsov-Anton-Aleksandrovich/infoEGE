@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(${task == null} ? 'Новое задание' : 'Редактирование задания')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main>
+    <div class="page-title">
+        <h1 th:text="${task == null} ? 'Новое задание' : 'Задание #' + ${task.id}">Задание</h1>
+        <a th:if="${task != null}" class="button" th:href="@{/teacher/tasks/{id}/preview(id=${task.id})}">Предпросмотр как ученик</a>
+    </div>
+    <div th:replace="~{fragments/messages :: flash}"></div>
+    <p class="alert alert-info" th:if="${task != null and task.archived}">Задание в архиве и не показывается при сборке подборок.</p>
+
+    <form class="form" method="post" th:object="${form}"
+          th:action="${task == null} ? @{/teacher/tasks} : @{/teacher/tasks/{id}(id=${task.id})}">
+        <input type="hidden" name="taskId" th:if="${task != null}" th:value="${task.id}">
+
+        <div class="form-row">
+            <label>Номер ЕГЭ
+                <input type="number" min="1" th:field="*{egeNumber}" required>
+                <span class="field-error" th:errors="*{egeNumber}"></span>
+            </label>
+            <label class="grow">Название
+                <input type="text" th:field="*{title}" maxlength="300" required>
+                <span class="field-error" th:errors="*{title}"></span>
+            </label>
+            <label class="grow">Тема
+                <input type="text" th:field="*{topic}" maxlength="200" list="topics">
+                <span class="field-error" th:errors="*{topic}"></span>
+                <datalist id="topics">
+                    <option th:each="t : ${topics}" th:value="${t}"></option>
+                </datalist>
+            </label>
+        </div>
+
+        <div class="md-editor">
+            <label>Условие (Markdown)
+                <textarea th:field="*{statementMd}" rows="14" required
+                          hx-post="/teacher/tasks/markdown-preview" hx-params="statementMd,taskId"
+                          hx-trigger="input changed delay:500ms, load" hx-target="#statement-preview"></textarea>
+                <span class="field-error" th:errors="*{statementMd}"></span>
+            </label>
+            <div>
+                <div class="hint">Предпросмотр</div>
+                <div id="statement-preview" class="markdown preview-box"></div>
+            </div>
+        </div>
+        <p class="hint">Картинка из файлов задания: <code>![подпись](file:имя.png)</code>.
+            Таблицы, списки, <code>код</code> и формулы через <code>&lt;sub&gt;</code>/<code>&lt;sup&gt;</code> поддерживаются.</p>
+
+        <div class="form-row">
+            <label>Сложность
+                <select th:field="*{difficulty}">
+                    <option th:each="d : ${#numbers.sequence(1, 5)}" th:value="${d}" th:text="${d}">1</option>
+                </select>
+                <span class="field-error" th:errors="*{difficulty}"></span>
+            </label>
+            <label>Баллы
+                <input type="number" min="0" max="100" th:field="*{maxPoints}" required>
+                <span class="field-error" th:errors="*{maxPoints}"></span>
+            </label>
+            <label>Проверка
+                <select th:field="*{scoring}">
+                    <option value="ALL_OR_NOTHING">Всё или ничего</option>
+                    <option value="PER_ROW">Частичный балл по строкам</option>
+                </select>
+            </label>
+            <label>Строк в ответе
+                <input type="number" min="1" max="50" th:field="*{answerRows}" required>
+                <span class="field-error" th:errors="*{answerRows}"></span>
+            </label>
+            <label>Столбцов в ответе
+                <input type="number" min="1" max="10" th:field="*{answerCols}" required>
+                <span class="field-error" th:errors="*{answerCols}"></span>
+            </label>
+        </div>
+
+        <label>Правильный ответ
+            <textarea th:field="*{correctAnswer}" rows="3" required class="mono"></textarea>
+            <span class="hint">Одна строка таблицы на строку, ячейки через пробел или «;». Например, для 2 × 2: <code>10 20</code> и <code>30 40</code> на двух строках.</span>
+            <span class="field-error" th:errors="*{correctAnswer}"></span>
+        </label>
+
+        <div class="md-editor">
+            <label>Разбор (Markdown, ученик видит только после разрешённого момента)
+                <textarea th:field="*{solutionMd}" rows="8"
+                          hx-post="/teacher/tasks/markdown-preview" hx-params="solutionMd,taskId"
+                          hx-trigger="input changed delay:500ms, load" hx-target="#solution-preview"></textarea>
+            </label>
+            <div>
+                <div class="hint">Предпросмотр</div>
+                <div id="solution-preview" class="markdown preview-box"></div>
+            </div>
+        </div>
+
+        <div class="actions">
+            <button type="submit">Сохранить</button>
+            <a th:href="@{/teacher/tasks}">К списку</a>
+        </div>
+    </form>
+
+    <section th:if="${task != null}" id="files" class="panel">
+        <h2>Файлы</h2>
+        <table class="table" th:unless="${files.isEmpty()}">
+            <thead>
+            <tr><th>Имя</th><th>Тип</th><th>Размер</th><th>Вставка в условие</th><th></th></tr>
+            </thead>
+            <tbody>
+            <tr th:each="f : ${files}">
+                <td><a th:href="@{/teacher/tasks/{id}/files/{fid}(id=${task.id}, fid=${f.id})}" th:text="${f.originalName}">file.txt</a></td>
+                <td th:text="${f.image} ? 'картинка' : 'для скачивания'">тип</td>
+                <td th:text="${#numbers.formatDecimal(f.sizeBytes / 1024.0, 1, 1)} + ' КБ'">1 КБ</td>
+                <td><code th:if="${f.image}" th:text="'![](file:' + ${f.originalName} + ')'"></code></td>
+                <td>
+                    <form method="post" th:action="@{/teacher/tasks/{id}/files/{fid}/delete(id=${task.id}, fid=${f.id})}"
+                          data-confirm="Удалить файл?">
+                        <button type="submit" class="link-button danger">Удалить</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="form-row">
+            <form class="upload" method="post" enctype="multipart/form-data"
+                  th:action="@{/teacher/tasks/{id}/files(id=${task.id})}">
+                <input type="hidden" name="kind" value="ATTACHMENT">
+                <label>Файлы для скачивания
+                    <input type="file" name="files" multiple required>
+                </label>
+                <button type="submit">Загрузить</button>
+            </form>
+            <form class="upload" method="post" enctype="multipart/form-data"
+                  th:action="@{/teacher/tasks/{id}/files(id=${task.id})}">
+                <input type="hidden" name="kind" value="IMAGE">
+                <label>Картинки для условия
+                    <input type="file" name="files" multiple required accept="image/png,image/jpeg,image/gif,image/webp">
+                </label>
+                <button type="submit">Загрузить</button>
+            </form>
+        </div>
+    </section>
+
+    <section th:if="${task != null}" class="panel">
+        <h2>Архив и удаление</h2>
+        <div class="actions">
+            <form method="post" th:action="@{/teacher/tasks/{id}/archive(id=${task.id})}">
+                <input type="hidden" name="archived" th:value="${!task.archived}">
+                <button type="submit" th:text="${task.archived} ? 'Вернуть из архива' : 'В архив'">В архив</button>
+            </form>
+            <form method="post" th:action="@{/teacher/tasks/{id}/delete(id=${task.id})}"
+                  data-confirm="Удалить задание вместе с файлами? Это нельзя отменить.">
+                <button type="submit" class="danger-button">Удалить</button>
+            </form>
+        </div>
+    </section>
+</main>
+</body>
+</html>

@@ -40,3 +40,12 @@ TEACHER_LOGIN=teacher TEACHER_PASSWORD=teacher ./mvnw spring-boot:run
 | `DB_USER`, `DB_PASSWORD` | доступ к БД | `infoege` / `infoege` |
 | `TEACHER_LOGIN`, `TEACHER_PASSWORD` | аккаунт преподавателя при первом запуске | обязательны при пустой БД |
 | `TEACHER_NAME` | отображаемое имя преподавателя | `Преподаватель` |
+| `STORAGE_DIR` | каталог загруженных файлов | `./data/files` (в Docker `/app/data/files`) |
+| `MAX_FILE_SIZE` | лимит размера одного файла | `20MB` |
+
+Разрешённые расширения файлов задаются в `application.yml` (`app.storage.*-extensions`).
+
+## Банк заданий
+- Условие и разбор пишутся в Markdown (таблицы GFM, `<sub>`, `<sup>`), HTML санитизируется.
+- Картинка из файлов задания вставляется в условие как `![подпись](file:имя.png)`.
+- Правильный ответ: одна строка таблицы на строку текста, ячейки через пробел или `;`.

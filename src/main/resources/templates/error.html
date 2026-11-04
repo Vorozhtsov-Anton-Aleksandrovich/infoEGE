@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Ошибка')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main>
+    <h1 th:switch="${status}">
+        <span th:case="403">Нет доступа</span>
+        <span th:case="404">Страница не найдена</span>
+        <span th:case="*">Что-то пошло не так</span>
+    </h1>
+    <p th:if="${status == 413}" th:text="${message}">Сообщение</p>
+    <p><a th:href="@{/}">На главную</a></p>
+</main>
+</body>
+</html>

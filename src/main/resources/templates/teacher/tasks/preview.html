@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Предпросмотр')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main>
+    <div class="page-title">
+        <h1>Предпросмотр: так задание увидит ученик</h1>
+        <a class="button" th:href="@{/teacher/tasks/{id}/edit(id=${task.id})}">Редактировать</a>
+    </div>
+
+    <div class="student-frame">
+        <div class="task-header" th:text="'Задание ' + ${task.egeNumber}">Задание 1</div>
+        <section th:replace="~{fragments/task :: view(${task}, ${statementHtml}, ${attachments}, ${fileUrlBase})}"></section>
+    </div>
+
+    <section class="panel teacher-only">
+        <h2>Только для преподавателя</h2>
+        <p>Правильный ответ:</p>
+        <table class="answer-grid readonly">
+            <tr th:each="row : ${task.correctAnswer}">
+                <td th:each="cell : ${row}" th:text="${cell}">1</td>
+            </tr>
+        </table>
+        <p th:text="'Баллы: ' + ${task.maxPoints} + ', проверка: ' + (${task.scoring.name() == 'PER_ROW'} ? 'частичный балл по строкам' : 'всё или ничего')">Баллы</p>
+        <div th:if="${!#strings.isEmpty(solutionHtml)}">
+            <p>Разбор:</p>
+            <div class="markdown" th:utext="${solutionHtml}"></div>
+        </div>
+    </section>
+</main>
+</body>
+</html>

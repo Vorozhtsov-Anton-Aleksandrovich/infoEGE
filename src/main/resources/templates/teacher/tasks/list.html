@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Банк заданий')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main>
+    <div class="page-title">
+        <h1>Банк заданий</h1>
+        <a class="button" th:href="@{/teacher/tasks/new}">Новое задание</a>
+    </div>
+    <div th:replace="~{fragments/messages :: flash}"></div>
+
+    <form class="filters" th:action="@{/teacher/tasks}" method="get">
+        <label>Номер
+            <input type="number" name="egeNumber" min="1" th:value="${filter.egeNumber}">
+        </label>
+        <label>Тема
+            <select name="topic">
+                <option value="">Все</option>
+                <option th:each="t : ${topics}" th:value="${t}" th:text="${t}"
+                        th:selected="${t == filter.topic}">Тема</option>
+            </select>
+        </label>
+        <label>Сложность
+            <select name="difficulty">
+                <option value="">Любая</option>
+                <option th:each="d : ${#numbers.sequence(1, 5)}" th:value="${d}" th:text="${d}"
+                        th:selected="${d == filter.difficulty}">1</option>
+            </select>
+        </label>
+        <label>Архив
+            <select name="archive">
+                <option value="ACTIVE" th:selected="${filter.archiveOrDefault().name() == 'ACTIVE'}">Активные</option>
+                <option value="ARCHIVED" th:selected="${filter.archiveOrDefault().name() == 'ARCHIVED'}">В архиве</option>
+                <option value="ALL" th:selected="${filter.archiveOrDefault().name() == 'ALL'}">Все</option>
+            </select>
+        </label>
+        <button type="submit">Показать</button>
+        <a th:href="@{/teacher/tasks}">Сбросить</a>
+    </form>
+
+    <p th:if="${tasks.isEmpty()}">Заданий не найдено.</p>
+    <table class="table" th:unless="${tasks.isEmpty()}">
+        <thead>
+        <tr>
+            <th>№</th>
+            <th>Название</th>
+            <th>Тема</th>
+            <th>Сложность</th>
+            <th>Баллы</th>
+            <th>Ответ</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="task : ${tasks}" th:classappend="${task.archived} ? 'muted'">
+            <td th:text="${task.egeNumber}">1</td>
+            <td>
+                <a th:href="@{/teacher/tasks/{id}/edit(id=${task.id})}" th:text="${task.title}">Название</a>
+                <span class="badge" th:if="${task.archived}">архив</span>
+            </td>
+            <td th:text="${task.topic}">Тема</td>
+            <td th:text="${task.difficulty}">3</td>
+            <td th:text="${task.maxPoints}">1</td>
+            <td th:text="${task.answerRows} + ' × ' + ${task.answerCols}">1 × 1</td>
+            <td><a th:href="@{/teacher/tasks/{id}/preview(id=${task.id})}">Предпросмотр</a></td>
+        </tr>
+        </tbody>
+    </table>
+</main>
+</body>
+</html>

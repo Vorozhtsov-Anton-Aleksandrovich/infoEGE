@@ -6,6 +6,9 @@
 <main>
     <h1>Кабинет преподавателя</h1>
     <p>Здравствуйте, <span sec:authentication="principal.displayName">Имя</span>.</p>
+    <ul>
+        <li><a th:href="@{/teacher/tasks}">Банк заданий</a></li>
+    </ul>
 </main>
 </body>
 </html>

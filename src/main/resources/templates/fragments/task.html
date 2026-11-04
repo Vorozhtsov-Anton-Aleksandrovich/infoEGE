@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<body>
+<!--
+    Задание глазами ученика: условие, файлы, поле или таблица для ответа.
+    Используется в предпросмотре преподавателя и в тренажёре.
+-->
+<section th:fragment="view(task, statementHtml, attachments, fileUrlBase)" class="task-view">
+    <div class="markdown" th:utext="${statementHtml}"></div>
+
+    <div class="task-files" th:unless="${attachments.isEmpty()}">
+        <div class="hint">Файлы к заданию:</div>
+        <ul>
+            <li th:each="f : ${attachments}">
+                <a th:href="${fileUrlBase + f.id}" th:text="${f.originalName}" download>file.txt</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="answer">
+        <div class="hint">Ответ:</div>
+        <input th:if="${task.answerRows == 1 and task.answerCols == 1}" type="text" class="answer-single"
+               name="cell-0-0" autocomplete="off">
+        <table th:unless="${task.answerRows == 1 and task.answerCols == 1}" class="answer-grid">
+            <tr th:each="r : ${#numbers.sequence(0, task.answerRows - 1)}">
+                <td th:each="c : ${#numbers.sequence(0, task.answerCols - 1)}">
+                    <input type="text" th:name="'cell-' + ${r} + '-' + ${c}" autocomplete="off">
+                </td>
+            </tr>
+        </table>
+    </div>
+</section>
+</body>
+</html>

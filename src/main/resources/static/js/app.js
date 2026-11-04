@@ -6,3 +6,11 @@ document.addEventListener('htmx:configRequest', function (event) {
         event.detail.headers[header.content] = token.content;
     }
 });
+
+// Подтверждение для форм с атрибутом data-confirm (без inline-обработчиков, под будущий CSP).
+document.addEventListener('submit', function (event) {
+    const message = event.target.dataset && event.target.dataset.confirm;
+    if (message && !window.confirm(message)) {
+        event.preventDefault();
+    }
+});

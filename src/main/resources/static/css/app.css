@@ -61,3 +61,67 @@ button:hover { background: #274b7a; }
 .alert { padding: 10px 12px; border-radius: 4px; }
 .alert-error { background: #fde8e8; color: #8a1c1c; }
 .alert-info { background: #e7f0fb; color: #1d3557; }
+
+h1 { margin: 0 0 16px; font-size: 26px; }
+h2 { font-size: 20px; margin: 0 0 12px; }
+code, .mono { font-family: ui-monospace, Consolas, monospace; font-size: 14px; }
+
+.page-title { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 8px; }
+
+.button {
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 4px;
+    background: #1d3557;
+    color: #fff;
+    text-decoration: none;
+}
+.button:hover { background: #274b7a; }
+.danger-button { background: #b42318; }
+.danger-button:hover { background: #8f1c13; }
+.danger { color: #b42318; }
+
+.form-row { display: flex; flex-wrap: wrap; gap: 14px; align-items: flex-start; }
+.form-row .grow { flex: 1 1 260px; }
+.actions { display: flex; gap: 12px; align-items: center; }
+.actions form { margin: 0; }
+.field-error { color: #b42318; font-weight: 400; font-size: 14px; }
+.field-error:empty { display: none; }
+.hint { color: #59636e; font-size: 14px; font-weight: 400; }
+textarea { resize: vertical; }
+
+.md-editor { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 800px) { .md-editor { grid-template-columns: 1fr; } }
+.preview-box { min-height: 120px; padding: 10px 14px; border: 1px dashed #c4c9d0; border-radius: 4px; background: #fff; }
+
+.panel { margin-top: 28px; padding: 16px 20px; background: #fff; border: 1px solid #dfe3e8; border-radius: 6px; }
+.upload { display: flex; gap: 10px; align-items: flex-end; padding: 10px; border: 1px solid #eceff2; border-radius: 4px; }
+.upload label { display: flex; flex-direction: column; gap: 4px; }
+
+.filters { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; margin: 12px 0 18px; }
+.filters label { display: flex; flex-direction: column; gap: 4px; font-size: 14px; }
+.filters input[type=number] { width: 90px; }
+
+.table { width: 100%; border-collapse: collapse; background: #fff; }
+.table th, .table td { padding: 8px 10px; border-bottom: 1px solid #e6e9ed; text-align: left; vertical-align: top; }
+.table th { font-size: 14px; color: #59636e; font-weight: 600; }
+.table tr.muted td { color: #8b949e; }
+.table td form { margin: 0; }
+.badge { display: inline-block; padding: 0 6px; margin-left: 6px; border-radius: 8px; background: #eceff2; color: #59636e; font-size: 12px; }
+
+.markdown img { max-width: 100%; }
+.markdown table { border-collapse: collapse; margin: 8px 0; }
+.markdown th, .markdown td { border: 1px solid #c4c9d0; padding: 4px 8px; }
+.markdown pre { background: #f3f4f6; padding: 10px; overflow-x: auto; }
+
+/* Задание глазами ученика */
+.student-frame { background: #fff; border: 1px solid #dfe3e8; border-radius: 6px; padding: 20px 24px; }
+.task-header { font-weight: 600; font-size: 18px; margin-bottom: 12px; }
+.task-files ul { margin: 4px 0 0; }
+.answer { margin-top: 20px; }
+.answer-single { width: 260px; }
+.answer-grid { border-collapse: collapse; }
+.answer-grid td { border: 1px solid #c4c9d0; padding: 0; }
+.answer-grid input { border: 0; width: 110px; border-radius: 0; }
+.answer-grid.readonly td { padding: 4px 10px; }
+.teacher-only { border-color: #f0c36d; background: #fffaf0; }

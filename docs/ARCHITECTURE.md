@@ -54,7 +54,7 @@ task
   ege_number      int          NOT NULL                     -- 1..27, но в коде не зашивается
   title           varchar(300) NOT NULL
   statement_md    text         NOT NULL
-  difficulty      smallint     NOT NULL CHECK 1..5
+  difficulty      int          NOT NULL CHECK 1..5
   max_points      int          NOT NULL CHECK >= 0
   scoring         varchar(16)  NOT NULL                     -- ALL_OR_NOTHING | PER_ROW
   answer_rows     int          NOT NULL CHECK >= 1
@@ -73,6 +73,7 @@ task_file
   size_bytes      bigint NOT NULL
   content_type    varchar(100) NOT NULL
   kind            varchar(16)  NOT NULL                     -- ATTACHMENT | IMAGE (картинка в условии)
+  UNIQUE (task_id, original_name)                           -- картинки ссылаются на файл по имени
 
 task_set
   id                  bigserial PK

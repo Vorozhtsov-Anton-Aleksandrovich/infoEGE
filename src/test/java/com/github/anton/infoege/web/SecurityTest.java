@@ -4,11 +4,9 @@ import com.github.anton.infoege.IntegrationTest;
 import com.github.anton.infoege.user.AppUserDetails;
 import com.github.anton.infoege.user.Role;
 import com.github.anton.infoege.user.User;
-import com.github.anton.infoege.user.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.containsString;
@@ -28,12 +26,6 @@ class SecurityTest extends IntegrationTest {
 
     @Autowired
     MockMvc mvc;
-
-    @Autowired
-    UserRepository userRepository;
-
-    @Autowired
-    PasswordEncoder passwordEncoder;
 
     @BeforeEach
     void createUsers() {

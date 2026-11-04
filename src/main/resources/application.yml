@@ -15,6 +15,11 @@ spring:
     enabled: true
   thymeleaf:
     cache: true
+  servlet:
+    multipart:
+      # Лимит одного файла проверяет FileValidator; здесь только общий потолок запроса.
+      max-file-size: ${app.storage.max-file-size}
+      max-request-size: 200MB
 
 server:
   servlet:
@@ -38,3 +43,8 @@ app:
     login: ${TEACHER_LOGIN:}
     password: ${TEACHER_PASSWORD:}
     display-name: ${TEACHER_NAME:Преподаватель}
+  storage:
+    dir: ${STORAGE_DIR:./data/files}
+    max-file-size: ${MAX_FILE_SIZE:20MB}
+    attachment-extensions: txt,csv,py,pdf,doc,docx,odt,xls,xlsx,ods,zip,png,jpg,jpeg
+    image-extensions: png,jpg,jpeg,gif,webp
