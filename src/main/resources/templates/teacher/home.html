@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/layout :: head('Преподаватель')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main>
+    <h1>Кабинет преподавателя</h1>
+    <p>Здравствуйте, <span sec:authentication="principal.displayName">Имя</span>.</p>
+</main>
+</body>
+</html>

@@ -1,0 +1,40 @@
+spring:
+  application:
+    name: InfoEGE
+  profiles:
+    default: dev
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/infoege}
+    username: ${DB_USER:infoege}
+    password: ${DB_PASSWORD:infoege}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+  flyway:
+    enabled: true
+  thymeleaf:
+    cache: true
+
+server:
+  servlet:
+    session:
+      timeout: 12h
+      cookie:
+        http-only: true
+        same-site: lax
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never
+
+app:
+  teacher:
+    login: ${TEACHER_LOGIN:}
+    password: ${TEACHER_PASSWORD:}
+    display-name: ${TEACHER_NAME:Преподаватель}

@@ -1,0 +1,37 @@
+# Локальный запуск: docker compose up --build
+# Значения по умолчанию только для разработки. Продакшен: docker-compose.prod.yml (этап 6).
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: infoege
+      POSTGRES_USER: infoege
+      POSTGRES_PASSWORD: infoege
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U infoege -d infoege"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  app:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      DB_URL: jdbc:postgresql://db:5432/infoege
+      DB_USER: infoege
+      DB_PASSWORD: infoege
+      TEACHER_LOGIN: ${TEACHER_LOGIN:-teacher}
+      TEACHER_PASSWORD: ${TEACHER_PASSWORD:-teacher}
+      TEACHER_NAME: ${TEACHER_NAME:-Преподаватель}
+    ports:
+      - "8080:8080"
+
+volumes:
+  db-data:

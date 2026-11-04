@@ -1,0 +1,42 @@
+# ЕГЭ-тренажёр
+
+Закрытая платформа репетитора по ЕГЭ по информатике. План: см. постановку задачи,
+архитектура и схема БД: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
+
+## Требования
+- JDK 21
+- Docker (для `docker compose` и для тестов на Testcontainers)
+
+## Запуск всего в Docker
+
+```bash
+docker compose up --build
+```
+
+Приложение: http://localhost:8080, вход `teacher` / `teacher`
+(переопределяется переменными `TEACHER_LOGIN`, `TEACHER_PASSWORD`, `TEACHER_NAME`).
+
+Преподаватель создаётся только при первом запуске, если в БД ещё нет преподавателя.
+
+## Запуск из IDE / Maven (профиль dev)
+
+```bash
+docker compose up -d db
+TEACHER_LOGIN=teacher TEACHER_PASSWORD=teacher ./mvnw spring-boot:run
+```
+
+## Тесты
+
+```bash
+./mvnw verify
+```
+
+## Переменные окружения
+
+| Переменная | Назначение | По умолчанию |
+|---|---|---|
+| `SPRING_PROFILES_ACTIVE` | `dev` или `prod` | `dev` |
+| `DB_URL` | JDBC URL PostgreSQL | `jdbc:postgresql://localhost:5432/infoege` |
+| `DB_USER`, `DB_PASSWORD` | доступ к БД | `infoege` / `infoege` |
+| `TEACHER_LOGIN`, `TEACHER_PASSWORD` | аккаунт преподавателя при первом запуске | обязательны при пустой БД |
+| `TEACHER_NAME` | отображаемое имя преподавателя | `Преподаватель` |

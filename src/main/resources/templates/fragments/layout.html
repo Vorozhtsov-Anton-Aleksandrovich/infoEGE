@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:fragment="head(title)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="_csrf" th:content="${_csrf.token}">
+    <meta name="_csrf_header" th:content="${_csrf.headerName}">
+    <title th:text="${title} + ' — ЕГЭ-тренажёр'">ЕГЭ-тренажёр</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+    <script th:src="@{/js/htmx.min.js}" defer></script>
+    <script th:src="@{/js/app.js}" defer></script>
+</head>
+<body>
+
+<header th:fragment="header" class="site-header">
+    <a class="brand" th:href="@{/}">ЕГЭ-тренажёр</a>
+    <nav sec:authorize="hasRole('TEACHER')">
+        <a th:href="@{/teacher}">Главная</a>
+    </nav>
+    <nav sec:authorize="hasRole('STUDENT')">
+        <a th:href="@{/student}">Мои работы</a>
+    </nav>
+    <div class="user-box" sec:authorize="isAuthenticated()">
+        <span sec:authentication="principal.displayName">Имя</span>
+        <form th:action="@{/logout}" method="post">
+            <button type="submit" class="link-button">Выйти</button>
+        </form>
+    </div>
+</header>
+
+</body>
+</html>
