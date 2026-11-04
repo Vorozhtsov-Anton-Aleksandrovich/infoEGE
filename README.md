@@ -21,9 +21,14 @@ docker compose up --build
 ## Запуск из IDE / Maven (профиль dev)
 
 ```bash
-docker compose up -d db
-TEACHER_LOGIN=teacher TEACHER_PASSWORD=teacher ./mvnw spring-boot:run
+docker compose up -d db      # только база, на localhost:15432
+./mvnw spring-boot:run       # или кнопка Run у InfoEgeApplication в IntelliJ
 ```
+
+http://localhost:8080, вход `teacher` / `teacher` (значения по умолчанию профиля dev).
+База проекта проброшена на порт 15432, чтобы не конфликтовать с локально установленными PostgreSQL (5432, 5433, ...).
+Если запущен весь `docker compose up`, порт 8080 занят контейнером приложения: остановите его
+(`docker compose stop app`) перед запуском из IDE.
 
 ## Тесты
 
@@ -36,9 +41,9 @@ TEACHER_LOGIN=teacher TEACHER_PASSWORD=teacher ./mvnw spring-boot:run
 | Переменная | Назначение | По умолчанию |
 |---|---|---|
 | `SPRING_PROFILES_ACTIVE` | `dev` или `prod` | `dev` |
-| `DB_URL` | JDBC URL PostgreSQL | `jdbc:postgresql://localhost:5432/infoege` |
+| `DB_URL` | JDBC URL PostgreSQL | `jdbc:postgresql://localhost:15432/infoege` |
 | `DB_USER`, `DB_PASSWORD` | доступ к БД | `infoege` / `infoege` |
-| `TEACHER_LOGIN`, `TEACHER_PASSWORD` | аккаунт преподавателя при первом запуске | обязательны при пустой БД |
+| `TEACHER_LOGIN`, `TEACHER_PASSWORD` | аккаунт преподавателя при первом запуске | в dev `teacher`/`teacher`, в prod обязательны |
 | `TEACHER_NAME` | отображаемое имя преподавателя | `Преподаватель` |
 | `STORAGE_DIR` | каталог загруженных файлов | `./data/files` (в Docker `/app/data/files`) |
 | `MAX_FILE_SIZE` | лимит размера одного файла | `20MB` |

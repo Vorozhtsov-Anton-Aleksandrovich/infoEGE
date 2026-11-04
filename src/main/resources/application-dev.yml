@@ -5,3 +5,10 @@ spring:
 logging:
   level:
     com.github.anton.infoege: DEBUG
+
+# Только для разработки: преподаватель teacher/teacher, чтобы приложение запускалось из IDE без переменных.
+# В prod эти значения обязательно задаются через окружение.
+app:
+  teacher:
+    login: ${TEACHER_LOGIN:teacher}
+    password: ${TEACHER_PASSWORD:teacher}

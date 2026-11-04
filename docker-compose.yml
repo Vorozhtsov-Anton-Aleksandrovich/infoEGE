@@ -7,8 +7,9 @@ services:
       POSTGRES_DB: infoege
       POSTGRES_USER: infoege
       POSTGRES_PASSWORD: infoege
+    # Хост-порт 15432: стандартные 5432, 5433... часто заняты локально установленными PostgreSQL.
     ports:
-      - "5432:5432"
+      - "15432:5432"
     volumes:
       - db-data:/var/lib/postgresql/data
     healthcheck:

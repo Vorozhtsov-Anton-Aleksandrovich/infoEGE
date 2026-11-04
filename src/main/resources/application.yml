@@ -4,7 +4,8 @@ spring:
   profiles:
     default: dev
   datasource:
-    url: ${DB_URL:jdbc:postgresql://localhost:5432/infoege}
+    # По умолчанию — БД из docker-compose.yml (хост-порт 15432).
+    url: ${DB_URL:jdbc:postgresql://localhost:15432/infoege}
     username: ${DB_USER:infoege}
     password: ${DB_PASSWORD:infoege}
   jpa:
