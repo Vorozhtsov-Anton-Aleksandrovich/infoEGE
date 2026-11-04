@@ -15,8 +15,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class TaskService {
@@ -71,8 +74,8 @@ public class TaskService {
     }
 
     /**
-     * Физически удаляет задание вместе с файлами. Задание, которое уже входит в подборки,
-     * только архивируется, чтобы не менять собранные работы.
+     * Физически удаляет задание вместе с файлами. Задание, которое уже входит в подборки или попытки,
+     * только архивируется, чтобы не менять собранные работы и результаты.
      *
      * @return true, если удалено; false, если вместо удаления перенесено в архив
      */
@@ -93,6 +96,17 @@ public class TaskService {
     @Transactional(readOnly = true)
     public List<TaskFile> files(Long taskId) {
         return fileRepository.findByTaskIdOrderById(taskId);
+    }
+
+    @Transactional(readOnly = true)
+    public Map<Long, Task> tasksById(Collection<Long> ids) {
+        return taskRepository.findAllById(ids).stream().collect(Collectors.toMap(Task::getId, t -> t));
+    }
+
+    @Transactional(readOnly = true)
+    public Map<Long, List<TaskFile>> filesByTask(Collection<Long> taskIds) {
+        return fileRepository.findByTaskIdInOrderById(taskIds).stream()
+                .collect(Collectors.groupingBy(TaskFile::getTaskId));
     }
 
     @Transactional(readOnly = true)

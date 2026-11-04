@@ -106,8 +106,9 @@ attempt
   finished_at         timestamptz NULL
   status              varchar(16) NOT NULL                  -- IN_PROGRESS | FINISHED | EXPIRED
   score               int NULL
+  last_heartbeat_at   timestamptz NULL                      -- ограничение прироста времени на задание
   manual_score        int NULL                              -- этап 5: ручная корректировка
-  manual_comment      text NULL
+  manual_comment      text NULL                             -- этап 5
 
 attempt_answer
   attempt_id          bigint NOT NULL FK attempt
@@ -135,3 +136,14 @@ attempt_answer
 - `attempt.manual_score`, `manual_comment`: ручная корректировка балла на этапе 5.
 - Для будущей автооценки сложности в `attempt_answer` уже лежат `is_correct`, `points`,
   `time_spent_seconds`, `answer_changes`, `first_opened_at`, `last_saved_at`.
+
+## Тренажёр (этап 4)
+
+- Время попытки считает только сервер: `expires_at = min(started_at + лимит, срок назначения)`.
+  Сохранения принимаются ещё 5 секунд после `expires_at` (`Attempt.GRACE`) из-за сетевой задержки.
+- Попытку закрывают и запрос (ленивая проверка под блокировкой строки), и планировщик раз в 30 секунд;
+  `finished_at` в обоих случаях равен `expires_at`.
+- Все изменения попытки берут `SELECT ... FOR UPDATE` по попытке ученика: так сохранение, heartbeat
+  и завершение не конфликтуют, а чужая попытка просто не находится (404).
+- Время на задание: клиент раз в 15 секунд при видимой вкладке присылает, сколько секунд вкладка была видна.
+  Сервер засчитывает не больше, чем прошло с прошлого heartbeat попытки, и не больше 20 секунд за запрос.

@@ -23,7 +23,7 @@ public class SecurityConfig {
                         .requestMatchers("/invite/**").permitAll()
                         .requestMatchers("/actuator/health").permitAll()
                         .requestMatchers("/teacher/**", "/teacher").hasRole("TEACHER")
-                        .requestMatchers("/student/**", "/student").hasRole("STUDENT")
+                        .requestMatchers("/student/**", "/student", "/trainer/**").hasRole("STUDENT")
                         .anyRequest().authenticated())
                 .formLogin(form -> form
                         .loginPage("/login")

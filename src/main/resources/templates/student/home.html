@@ -7,10 +7,10 @@
     <h1>Мои работы</h1>
     <p>Здравствуйте, <span sec:authentication="principal.displayName">Имя</span>.</p>
 
-    <p th:if="${assignments.isEmpty()}">Пока вам ничего не назначено.</p>
-    <div class="cards" th:unless="${assignments.isEmpty()}">
-        <article class="card" th:each="a : ${assignments}">
-            <h2 th:text="${a.taskSet.title}">Название</h2>
+    <p th:if="${works.isEmpty()}">Пока вам ничего не назначено.</p>
+    <div class="cards" th:unless="${works.isEmpty()}">
+        <article class="card" th:each="w : ${works}" th:with="a=${w.assignment}">
+            <h2><a th:href="@{/student/assignments/{id}(id=${a.id})}" th:text="${a.taskSet.title}">Название</a></h2>
             <p class="hint">
                 <span th:text="${a.taskSet.type.name() == 'VARIANT'} ? 'Вариант' : 'Подборка'">Подборка</span>
                 · заданий: <span th:text="${a.taskSet.items.size()}">0</span>
@@ -18,9 +18,8 @@
                     · время: <span th:text="${a.taskSet.timeLimitMinutes}">0</span> мин
                 </th:block>
             </p>
-            <p th:if="${a.taskSet.description}" th:text="${a.taskSet.description}">Описание</p>
             <p>Срок: <span th:text="${a.deadlineAt == null} ? 'без срока' : ${@dates.format(a.deadlineAt)}">дата</span></p>
-            <p class="badge">не начато</p>
+            <p><span class="status" th:classappend="'status-' + ${w.status.name().toLowerCase()}" th:text="${w.status.label}">не начато</span></p>
         </article>
     </div>
 </main>

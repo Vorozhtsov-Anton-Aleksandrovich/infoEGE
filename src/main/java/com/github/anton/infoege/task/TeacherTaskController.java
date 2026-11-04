@@ -3,9 +3,6 @@ package com.github.anton.infoege.task;
 import com.github.anton.infoege.checking.AnswerNormalizer;
 import jakarta.validation.Valid;
 import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.ContentDisposition;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,7 +17,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Controller
@@ -146,14 +142,7 @@ public class TeacherTaskController {
     @GetMapping("/{id}/files/{fileId}")
     public ResponseEntity<InputStreamResource> download(@PathVariable Long id, @PathVariable Long fileId) throws IOException {
         TaskFile file = taskService.file(id, fileId);
-        ContentDisposition disposition = (file.isImage() ? ContentDisposition.inline() : ContentDisposition.attachment())
-                .filename(file.getOriginalName(), StandardCharsets.UTF_8)
-                .build();
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, disposition.toString())
-                .contentType(MediaType.parseMediaType(file.getContentType()))
-                .contentLength(file.getSizeBytes())
-                .body(new InputStreamResource(taskService.openFile(file)));
+        return FileDownload.of(file, taskService.openFile(file));
     }
 
     private void addEditAttributes(Task task, Model model) {

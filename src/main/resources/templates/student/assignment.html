@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(${work.assignment.taskSet.title})}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main th:with="a=${work.assignment}, set=${work.assignment.taskSet}, status=${work.status.name()}">
+    <div class="page-title">
+        <h1 th:text="${set.title}">Название</h1>
+        <a th:href="@{/student}">Все работы</a>
+    </div>
+    <div th:replace="~{fragments/messages :: flash}"></div>
+
+    <section class="panel">
+        <p th:if="${set.description}" th:text="${set.description}">Описание</p>
+        <ul>
+            <li><span th:text="${set.type.name() == 'VARIANT'} ? 'Вариант' : 'Подборка'">Подборка</span>,
+                заданий: <span th:text="${set.items.size()}">0</span></li>
+            <li th:if="${set.timeLimitMinutes != null}">Время на выполнение: <span th:text="${set.timeLimitMinutes}">0</span> мин.
+                Таймер запускается при нажатии «Начать» и не останавливается, даже если закрыть страницу.</li>
+            <li th:unless="${set.timeLimitMinutes != null}">Без ограничения времени.</li>
+            <li>Срок: <span th:text="${a.deadlineAt == null} ? 'без срока' : ${@dates.format(a.deadlineAt)}">дата</span></li>
+            <li>Статус: <span class="status" th:classappend="'status-' + ${status.toLowerCase()}" th:text="${work.status.label}">не начато</span></li>
+        </ul>
+
+        <form method="post" th:action="@{/student/assignments/{id}/start(id=${a.id})}" th:if="${status == 'NOT_STARTED'}"
+              th:attr="data-confirm=${set.timeLimitMinutes != null} ? 'Начать работу? Таймер запустится сразу.' : null">
+            <button type="submit">Начать</button>
+        </form>
+        <a class="button" th:if="${status == 'IN_PROGRESS'}"
+           th:href="@{/trainer/attempts/{id}(id=${work.attempt.id})}">Продолжить</a>
+        <p th:if="${status == 'FINISHED' or status == 'EXPIRED'}">Работа сдана
+            <span th:text="${@dates.format(work.attempt.finishedAt)}">дата</span>.</p>
+        <p th:if="${status == 'OVERDUE'}">Срок выполнения истёк.</p>
+    </section>
+</main>
+</body>
+</html>

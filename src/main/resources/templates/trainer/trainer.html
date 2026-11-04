@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="data:,">
+    <meta name="_csrf" th:content="${_csrf.token}">
+    <meta name="_csrf_header" th:content="${_csrf.headerName}">
+    <title th:text="${title}">Тренажёр</title>
+    <link rel="stylesheet" th:href="@{/css/trainer.css}">
+    <script th:src="@{/js/trainer.js}" defer></script>
+</head>
+<body class="trainer"
+      th:attr="data-api=@{/trainer/attempts/{id}(id=${attempt.id})},data-remaining=${remainingSeconds}">
+
+<header class="trainer-top">
+    <div class="trainer-title" th:text="${title}">Название работы</div>
+    <nav class="task-nav" aria-label="Задания">
+        <button type="button" class="task-btn" th:each="t, st : ${tasks}"
+                th:classappend="'status-' + ${t.status}"
+                th:attr="data-index=${st.index}"
+                th:title="'Задание ' + ${t.number}" th:text="${t.number}">1</button>
+    </nav>
+    <div class="trainer-right">
+        <div class="timer" id="timer" th:text="${remainingSeconds == null} ? 'Без ограничения' : ''">00:00:00</div>
+        <button type="button" class="finish-btn" id="finish-btn">Завершить работу</button>
+    </div>
+</header>
+
+<div class="save-bar">
+    <span class="save-status" id="save-status" data-state="saved">Ответы сохраняются автоматически</span>
+    <span class="legend">
+        <span class="legend-item status-not-opened">не открыто</span>
+        <span class="legend-item status-opened">открыто</span>
+        <span class="legend-item status-saved">ответ сохранён</span>
+    </span>
+</div>
+
+<main class="trainer-main">
+    <section class="trainer-task" th:each="t, st : ${tasks}" hidden
+             th:attr="data-index=${st.index},data-task-id=${t.taskId}">
+        <h1 class="task-title">Задание <span th:text="${t.number}">1</span></h1>
+        <section th:replace="~{fragments/task :: view(${t.statementHtml}, ${t.attachments},
+                 '/trainer/attempts/' + ${attempt.id} + '/files/', ${t.rows}, ${t.cols}, ${t.answer})}"></section>
+    </section>
+</main>
+
+<footer class="trainer-bottom">
+    <button type="button" id="prev-btn">← Назад</button>
+    <span class="position" id="position"></span>
+    <button type="button" id="next-btn">Далее →</button>
+</footer>
+
+<dialog id="finish-dialog">
+    <h2>Завершить работу?</h2>
+    <p id="finish-unanswered"></p>
+    <p id="finish-unsaved" class="warning" hidden>Часть ответов ещё не сохранена: проверьте подключение к интернету.</p>
+    <p>После завершения изменить ответы будет нельзя.</p>
+    <div class="dialog-actions">
+        <button type="button" id="finish-cancel">Вернуться к заданиям</button>
+        <button type="button" id="finish-confirm" class="finish-btn">Завершить</button>
+    </div>
+</dialog>
+
+<dialog id="closed-dialog">
+    <h2 id="closed-title">Время вышло</h2>
+    <p id="closed-text">Работа завершена. Сохранённые ответы приняты.</p>
+    <div class="dialog-actions">
+        <a th:href="@{/student/assignments/{id}(id=${attempt.assignment.id})}" class="button">К работе</a>
+    </div>
+</dialog>
+</body>
+</html>

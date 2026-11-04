@@ -68,13 +68,19 @@ public class AssignmentService {
     }
 
     /**
-     * Снимает назначение этой работы. После появления попыток (этап 4) начатые назначения снимать будет нельзя.
+     * Снимает назначение этой работы, если ученик ещё не начинал её.
+     *
+     * @return false, если попытка уже начата и снять назначение нельзя
      */
     @Transactional
-    public void delete(Long taskSetId, Long assignmentId) {
+    public boolean delete(Long taskSetId, Long assignmentId) {
         Assignment assignment = assignmentRepository.findById(assignmentId)
                 .filter(a -> a.getTaskSet().getId().equals(taskSetId))
                 .orElseThrow(NotFoundException::new);
+        if (assignmentRepository.hasAttempt(assignmentId)) {
+            return false;
+        }
         assignmentRepository.delete(assignment);
+        return true;
     }
 }

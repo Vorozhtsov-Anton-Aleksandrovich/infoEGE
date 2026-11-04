@@ -11,7 +11,7 @@
 
     <div class="student-frame">
         <div class="task-header" th:text="'Задание ' + ${task.egeNumber}">Задание 1</div>
-        <section th:replace="~{fragments/task :: view(${task}, ${statementHtml}, ${attachments}, ${fileUrlBase})}"></section>
+        <section th:replace="~{fragments/task :: view(${statementHtml}, ${attachments}, ${fileUrlBase}, ${task.answerRows}, ${task.answerCols}, null)}"></section>
     </div>
 
     <section class="panel teacher-only">

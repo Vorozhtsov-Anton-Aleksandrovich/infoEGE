@@ -163,8 +163,11 @@ public class TeacherTaskSetController {
 
     @PostMapping("/{id}/assignments/{assignmentId}/delete")
     public String deleteAssignment(@PathVariable Long id, @PathVariable Long assignmentId, RedirectAttributes redirect) {
-        assignmentService.delete(id, assignmentId);
-        redirect.addFlashAttribute("message", "Назначение снято.");
+        if (assignmentService.delete(id, assignmentId)) {
+            redirect.addFlashAttribute("message", "Назначение снято.");
+        } else {
+            redirect.addFlashAttribute("error", "Ученик уже начал эту работу, снять назначение нельзя.");
+        }
         return "redirect:/teacher/sets/" + id + "#assignments";
     }
 

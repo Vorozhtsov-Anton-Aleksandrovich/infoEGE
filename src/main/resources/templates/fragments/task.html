@@ -4,8 +4,9 @@
 <!--
     Задание глазами ученика: условие, файлы, поле или таблица для ответа.
     Используется в предпросмотре преподавателя и в тренажёре.
+    rows/cols — размер таблицы ответа, answer — сохранённый ответ или null.
 -->
-<section th:fragment="view(task, statementHtml, attachments, fileUrlBase)" class="task-view">
+<section th:fragment="view(statementHtml, attachments, fileUrlBase, rows, cols, answer)" class="task-view">
     <div class="markdown" th:utext="${statementHtml}"></div>
 
     <div class="task-files" th:unless="${attachments.isEmpty()}">
@@ -19,12 +20,15 @@
 
     <div class="answer">
         <div class="hint">Ответ:</div>
-        <input th:if="${task.answerRows == 1 and task.answerCols == 1}" type="text" class="answer-single"
-               name="cell-0-0" autocomplete="off">
-        <table th:unless="${task.answerRows == 1 and task.answerCols == 1}" class="answer-grid">
-            <tr th:each="r : ${#numbers.sequence(0, task.answerRows - 1)}">
-                <td th:each="c : ${#numbers.sequence(0, task.answerCols - 1)}">
-                    <input type="text" th:name="'cell-' + ${r} + '-' + ${c}" autocomplete="off">
+        <input th:if="${rows == 1 and cols == 1}" type="text" class="answer-single answer-cell"
+               name="cell-0-0" data-row="0" data-col="0" autocomplete="off" maxlength="100"
+               th:value="${answer != null} ? ${answer[0][0]} : ''">
+        <table th:unless="${rows == 1 and cols == 1}" class="answer-grid">
+            <tr th:each="r : ${#numbers.sequence(0, rows - 1)}">
+                <td th:each="c : ${#numbers.sequence(0, cols - 1)}">
+                    <input type="text" class="answer-cell" th:name="'cell-' + ${r} + '-' + ${c}"
+                           th:attr="data-row=${r},data-col=${c}" autocomplete="off" maxlength="100"
+                           th:value="${answer != null} ? ${answer[r][c]} : ''">
                 </td>
             </tr>
         </table>
