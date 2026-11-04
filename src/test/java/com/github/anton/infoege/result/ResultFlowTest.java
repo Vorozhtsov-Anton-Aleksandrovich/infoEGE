@@ -278,6 +278,7 @@ class ResultFlowTest extends IntegrationTest {
         form.setEgeNumber(egeNumber);
         form.setTitle("Задание " + egeNumber);
         form.setStatementMd("Условие " + egeNumber);
+        form.setSolutionEnabled(true);
         form.setSolutionMd("Разбор задания " + egeNumber);
         form.setCorrectAnswer(correct);
         form.setAnswerRows((int) correct.lines().count());

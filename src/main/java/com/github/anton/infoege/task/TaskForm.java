@@ -49,6 +49,9 @@ public class TaskForm {
     @NotBlank(message = "Укажите правильный ответ")
     private String correctAnswer;
 
+    /** Галочка «Добавить разбор»: без неё разбор не сохраняется. */
+    private boolean solutionEnabled;
+
     private String solutionMd;
 
     @Size(max = 200, message = "Не длиннее 200 символов")
@@ -66,6 +69,7 @@ public class TaskForm {
         form.answerCols = task.getAnswerCols();
         form.correctAnswer = AnswerNormalizer.format(task.getCorrectAnswer());
         form.solutionMd = task.getSolutionMd();
+        form.solutionEnabled = task.getSolutionMd() != null;
         form.topic = task.getTopic();
         return form;
     }
@@ -80,7 +84,7 @@ public class TaskForm {
         task.setAnswerRows(answerRows);
         task.setAnswerCols(answerCols);
         task.setCorrectAnswer(AnswerNormalizer.parse(correctAnswer));
-        task.setSolutionMd(blankToNull(solutionMd));
+        task.setSolutionMd(solutionEnabled ? blankToNull(solutionMd) : null);
         task.setTopic(blankToNull(topic));
     }
 
@@ -158,6 +162,14 @@ public class TaskForm {
 
     public void setCorrectAnswer(String correctAnswer) {
         this.correctAnswer = correctAnswer;
+    }
+
+    public boolean isSolutionEnabled() {
+        return solutionEnabled;
+    }
+
+    public void setSolutionEnabled(boolean solutionEnabled) {
+        this.solutionEnabled = solutionEnabled;
     }
 
     public String getSolutionMd() {

@@ -1,5 +1,8 @@
 * { box-sizing: border-box; }
 
+/* Атрибут hidden должен скрывать элемент, даже если у класса задан display. */
+[hidden] { display: none !important; }
+
 body {
     margin: 0;
     font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
@@ -148,3 +151,8 @@ textarea { resize: vertical; }
 .result-task.row-wrong { border-left: 4px solid #c62828; }
 .result-task details { margin: 8px 0; }
 .score-line { font-size: 18px; }
+
+label.checkbox { flex-direction: row; align-items: center; gap: 8px; }
+.form label.checkbox { flex-direction: row; }
+.paste-status.error { color: #b42318; }
+textarea.drop-target { outline: 2px dashed #0b5cad; }

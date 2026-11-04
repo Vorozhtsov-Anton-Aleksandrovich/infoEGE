@@ -11,8 +11,9 @@
     <div th:replace="~{fragments/messages :: flash}"></div>
     <p class="alert alert-info" th:if="${task != null and task.archived}">Задание в архиве и не показывается при сборке подборок.</p>
 
-    <form class="form" method="post" th:object="${form}"
-          th:action="${task == null} ? @{/teacher/tasks} : @{/teacher/tasks/{id}(id=${task.id})}">
+    <form class="form" method="post" th:object="${form}" id="task-form"
+          th:action="${task == null} ? @{/teacher/tasks} : @{/teacher/tasks/{id}(id=${task.id})}"
+          th:attr="data-image-url=${task != null} ? @{/teacher/tasks/{id}/images(id=${task.id})} : null">
         <input type="hidden" name="taskId" th:if="${task != null}" th:value="${task.id}">
 
         <div class="form-row">
@@ -35,17 +36,20 @@
 
         <div class="md-editor">
             <label>Условие (Markdown)
-                <textarea th:field="*{statementMd}" rows="14" required
+                <textarea th:field="*{statementMd}" rows="14" required data-image-paste
                           hx-post="/teacher/tasks/markdown-preview" hx-params="statementMd,taskId"
                           hx-trigger="input changed delay:500ms, load" hx-target="#statement-preview"></textarea>
                 <span class="field-error" th:errors="*{statementMd}"></span>
+                <span class="paste-status hint" aria-live="polite"></span>
             </label>
             <div>
                 <div class="hint">Предпросмотр</div>
                 <div id="statement-preview" class="markdown preview-box"></div>
             </div>
         </div>
-        <p class="hint">Картинка из файлов задания: <code>![подпись](file:имя.png)</code>.
+        <p class="hint">Картинку можно вставить в условие через Ctrl+V или перетащить файл в поле
+            <span th:if="${task == null}">(после первого сохранения задания)</span>.
+            Вручную картинка из файлов задания пишется так: <code>![подпись](file:имя.png)</code>.
             Таблицы, списки, <code>код</code> и формулы через <code>&lt;sub&gt;</code>/<code>&lt;sup&gt;</code> поддерживаются.</p>
 
         <div class="form-row">
@@ -81,11 +85,16 @@
             <span class="field-error" th:errors="*{correctAnswer}"></span>
         </label>
 
-        <div class="md-editor">
+        <label class="checkbox">
+            <input type="checkbox" th:field="*{solutionEnabled}" data-toggle-target="solution-editor">
+            Добавить разбор (решение)
+        </label>
+        <div class="md-editor" id="solution-editor" th:hidden="${!form.solutionEnabled}">
             <label>Разбор (Markdown, ученик видит только после разрешённого момента)
-                <textarea th:field="*{solutionMd}" rows="8"
+                <textarea th:field="*{solutionMd}" rows="8" data-image-paste
                           hx-post="/teacher/tasks/markdown-preview" hx-params="solutionMd,taskId"
                           hx-trigger="input changed delay:500ms, load" hx-target="#solution-preview"></textarea>
+                <span class="paste-status hint" aria-live="polite"></span>
             </label>
             <div>
                 <div class="hint">Предпросмотр</div>
@@ -155,5 +164,6 @@
         </div>
     </section>
 </main>
+<script th:src="@{/js/task-editor.js}" defer></script>
 </body>
 </html>

@@ -1,10 +1,10 @@
 // Тренажёр. Время и истечение попытки считает сервер; здесь таймер только показывает время
 // и подстраивается под remainingSeconds из каждого ответа сервера.
+// Ответ уходит на сервер только по кнопке «Сохранить ответ» (или Enter); несохранённые изменения не учитываются.
 (function () {
     'use strict';
 
     const HEARTBEAT_MS = 15000;
-    const SAVE_DEBOUNCE_MS = 700;
     const MAX_RETRY_MS = 30000;
 
     const body = document.body;
@@ -19,9 +19,11 @@
     const positionEl = document.getElementById('position');
     const prevBtn = document.getElementById('prev-btn');
     const nextBtn = document.getElementById('next-btn');
+    const finishBottomBtn = document.getElementById('finish-bottom-btn');
 
     let current = -1;
     let closed = false;
+    let authLost = false;
 
     // ---------- Запросы ----------
 
@@ -50,6 +52,11 @@
             throw new HttpError(res.status);
         }
         return res.json();
+    }
+
+    function setStatus(state, text) {
+        statusEl.dataset.state = state;
+        statusEl.textContent = text;
     }
 
     // ---------- Таймер ----------
@@ -88,9 +95,8 @@
             return;
         }
         timeUpHandled = true;
-        // Последняя попытка отправить несохранённое: сервер принимает ещё несколько секунд (Attempt.GRACE).
-        // Затем запрос к серверу: он закрывает попытку, и экран закрывается по его ответу (409).
-        flushSaves();
+        // Несохранённые изменения не отправляются. Через запас сервера (Attempt.GRACE) спрашиваем сервер:
+        // он закрывает попытку, и экран закрывается по его ответу (409).
         setTimeout(async function () {
             await heartbeat(current);
             onClosed('EXPIRED');
@@ -110,7 +116,6 @@
         }
         if (current >= 0) {
             heartbeat(current);
-            saveNow(current);
         }
         current = index;
         sections.forEach(function (s, i) { s.hidden = i !== index; });
@@ -119,12 +124,18 @@
         if (btn.classList.contains('status-not-opened')) {
             btn.classList.replace('status-not-opened', 'status-opened');
         }
+        const last = index === sections.length - 1;
         prevBtn.disabled = index === 0;
-        nextBtn.disabled = index === sections.length - 1;
+        nextBtn.hidden = last;
+        finishBottomBtn.hidden = !last;
         positionEl.textContent = (index + 1) + ' из ' + sections.length;
         history.replaceState(null, '', '#' + (index + 1));
         window.scrollTo(0, 0);
         heartbeat(index);
+        const firstInput = sections[index].querySelector('.answer-cell');
+        if (firstInput && !closed) {
+            firstInput.focus({ preventScroll: true });
+        }
     }
 
     buttons.forEach(function (b) {
@@ -133,14 +144,11 @@
     prevBtn.addEventListener('click', function () { show(current - 1); });
     nextBtn.addEventListener('click', function () { show(current + 1); });
 
-    // ---------- Автосохранение ----------
+    // ---------- Сохранение ответа ----------
 
-    const pending = new Map();   // taskId -> {index, cells}
-    let saving = false;
-    let retryMs = 0;
-    let retryTimer = null;
-    let debounceTimer = null;
-    let authLost = false;
+    // Последний сохранённый на сервере ответ каждого задания (для сравнения с тем, что сейчас в полях).
+    const savedValue = sections.map(function (s, i) { return valueKey(collect(i)); });
+    const saving = sections.map(function () { return false; });
 
     function taskId(index) {
         return Number(sections[index].dataset.taskId);
@@ -157,94 +165,96 @@
         return cells;
     }
 
+    // Сервер обрезает пробелы по краям, поэтому и сравниваем без них.
+    function valueKey(cells) {
+        return JSON.stringify(cells.map(function (row) { return row.map(function (v) { return v.trim(); }); }));
+    }
+
     function isEmpty(cells) {
         return cells.every(function (row) { return row.every(function (v) { return v.trim() === ''; }); });
     }
 
-    function setStatus(state, text) {
-        statusEl.dataset.state = state;
-        statusEl.textContent = text;
+    function isDirty(index) {
+        return valueKey(collect(index)) !== savedValue[index];
     }
 
-    function queue(index) {
-        pending.set(taskId(index), { index: index, cells: collect(index) });
-        setStatus('pending', 'Есть несохранённые изменения…');
+    function setAnswerState(index, state, text) {
+        const el = sections[index].querySelector('.answer-state');
+        el.dataset.state = state;
+        el.textContent = text;
     }
 
-    function saveNow(index) {
-        if (pending.has(taskId(index))) {
-            clearTimeout(debounceTimer);
-            flushSaves();
+    function refreshDirty(index) {
+        const dirty = isDirty(index);
+        buttons[index].classList.toggle('dirty', dirty);
+        if (dirty) {
+            setAnswerState(index, 'dirty', 'Ответ изменён, но не сохранён');
+        } else {
+            const saved = buttons[index].classList.contains('status-saved');
+            setAnswerState(index, saved ? 'saved' : 'empty', saved ? 'Ответ сохранён' : 'Ответ не сохранён');
         }
     }
 
-    async function flushSaves() {
-        if (saving || closed || authLost) {
+    async function save(index, retryMs) {
+        if (closed || authLost || saving[index]) {
             return;
         }
-        clearTimeout(retryTimer);
-        const next = pending.entries().next();
-        if (next.done) {
-            setStatus('saved', 'Все ответы сохранены');
-            return;
-        }
-        const id = next.value[0];
-        const entry = next.value[1];
-        pending.delete(id);
-        saving = true;
-        setStatus('saving', 'Сохранение…');
+        const cells = collect(index);
+        saving[index] = true;
+        setAnswerState(index, 'saving', 'Сохранение…');
         try {
-            const result = await post('/answers', { taskId: id, cells: entry.cells });
+            const result = await post('/answers', { taskId: taskId(index), cells: cells });
             syncRemaining(result.remainingSeconds);
-            markSaved(entry.index, !isEmpty(entry.cells));
-            retryMs = 0;
-            saving = false;
-            flushSaves();
+            savedValue[index] = valueKey(cells);
+            const btn = buttons[index];
+            btn.classList.remove('status-not-opened', 'status-opened', 'status-saved');
+            btn.classList.add(isEmpty(cells) ? 'status-opened' : 'status-saved');
+            saving[index] = false;
+            refreshDirty(index);
+            setStatus('saved', isEmpty(cells) ? 'Ответ на задание ' + (index + 1) + ' стёрт'
+                : 'Ответ на задание ' + (index + 1) + ' сохранён');
         } catch (e) {
-            saving = false;
+            saving[index] = false;
             if (e instanceof ClosedError) {
                 return;
             }
-            if (!pending.has(id)) {
-                pending.set(id, entry); // более новое изменение того же задания не затираем
-            }
             if (e instanceof HttpError && e.status === 401) {
                 authLost = true;
-                setStatus('error', 'Сеанс завершён. Войдите снова, чтобы сохранить ответы.');
+                setAnswerState(index, 'error', 'Не сохранено');
+                setStatus('error', 'Сеанс завершён. Войдите снова, чтобы сохранять ответы.');
                 return;
             }
             if (e instanceof HttpError && e.status === 400) {
-                pending.delete(id);
-                setStatus('error', 'Ответ не принят сервером (задание ' + (entry.index + 1) + ').');
+                setAnswerState(index, 'error', 'Ответ не принят сервером');
                 return;
             }
-            retryMs = retryMs ? Math.min(retryMs * 2, MAX_RETRY_MS) : 1000;
-            setStatus('offline', 'Нет связи с сервером. Повтор через ' + Math.round(retryMs / 1000) + ' с');
-            retryTimer = setTimeout(flushSaves, retryMs);
+            // Нет связи: повторяем, пока сервер не примет ответ, который ученик сохранил.
+            const delay = retryMs ? Math.min(retryMs * 2, MAX_RETRY_MS) : 1000;
+            setAnswerState(index, 'error', 'Нет связи. Повтор через ' + Math.round(delay / 1000) + ' с');
+            setStatus('offline', 'Нет связи с сервером, ответ на задание ' + (index + 1) + ' ещё не сохранён');
+            setTimeout(function () { save(index, delay); }, delay);
         }
     }
 
-    function markSaved(index, hasAnswer) {
-        const btn = buttons[index];
-        btn.classList.remove('status-not-opened', 'status-opened', 'status-saved');
-        btn.classList.add(hasAnswer ? 'status-saved' : 'status-opened');
-    }
-
     sections.forEach(function (section, index) {
+        section.querySelector('.save-answer-btn').addEventListener('click', function () { save(index); });
         section.querySelectorAll('.answer-cell').forEach(function (input) {
-            input.addEventListener('input', function () {
-                queue(index);
-                clearTimeout(debounceTimer);
-                debounceTimer = setTimeout(flushSaves, SAVE_DEBOUNCE_MS);
+            input.addEventListener('input', function () { refreshDirty(index); });
+            input.addEventListener('keydown', function (event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    save(index);
+                }
             });
-            input.addEventListener('blur', function () { saveNow(index); });
         });
     });
 
-    window.addEventListener('online', function () { retryMs = 0; flushSaves(); });
+    function dirtyNumbers() {
+        return sections.map(function (s, i) { return i; }).filter(isDirty).map(function (i) { return i + 1; });
+    }
 
     window.addEventListener('beforeunload', function (event) {
-        if (!closed && (pending.size > 0 || saving)) {
+        if (!closed && (dirtyNumbers().length > 0 || saving.some(Boolean))) {
             event.preventDefault();
             event.returnValue = '';
         }
@@ -290,7 +300,6 @@
         if (document.visibilityState === 'hidden') {
             heartbeat(current);
             visibleSince = null;
-            flushSaves();
         } else {
             visibleSince = Date.now();
         }
@@ -300,20 +309,24 @@
 
     const finishDialog = document.getElementById('finish-dialog');
 
-    document.getElementById('finish-btn').addEventListener('click', async function () {
-        clearTimeout(debounceTimer);
-        await flushSaves();
-        await waitForSaves(5000);
+    async function openFinishDialog() {
+        await waitForSaves(5000); // дождаться уже нажатых «Сохранить ответ»
         const unanswered = buttons
             .filter(function (b) { return !b.classList.contains('status-saved'); })
             .map(function (b) { return b.textContent.trim(); });
         document.getElementById('finish-unanswered').textContent = unanswered.length
-            ? 'Без ответа: ' + unanswered.join(', ') + '.'
-            : 'Ответы даны на все задания.';
-        document.getElementById('finish-unsaved').hidden = pending.size === 0 && !saving;
+            ? 'Без сохранённого ответа: ' + unanswered.join(', ') + '.'
+            : 'Ответы сохранены на все задания.';
+        const dirty = dirtyNumbers();
+        const unsavedEl = document.getElementById('finish-unsaved');
+        unsavedEl.hidden = dirty.length === 0;
+        unsavedEl.textContent = (dirty.length === 1 ? 'Изменения в задании ' : 'Изменения в заданиях ') + dirty.join(', ')
+            + ' не сохранены и не будут учтены. Чтобы их учесть, вернитесь и нажмите «Сохранить ответ».';
         finishDialog.showModal();
-    });
+    }
 
+    document.getElementById('finish-btn').addEventListener('click', openFinishDialog);
+    finishBottomBtn.addEventListener('click', openFinishDialog);
     document.getElementById('finish-cancel').addEventListener('click', function () { finishDialog.close(); });
 
     document.getElementById('finish-confirm').addEventListener('click', async function () {
@@ -336,7 +349,7 @@
         const started = Date.now();
         return new Promise(function (resolve) {
             (function check() {
-                if ((pending.size === 0 && !saving) || Date.now() - started > timeoutMs) {
+                if (!saving.some(Boolean) || Date.now() - started > timeoutMs) {
                     resolve();
                 } else {
                     setTimeout(check, 100);
@@ -350,7 +363,7 @@
             return;
         }
         closed = true;
-        document.querySelectorAll('.answer-cell').forEach(function (input) { input.disabled = true; });
+        document.querySelectorAll('.answer-cell, .save-answer-btn').forEach(function (el) { el.disabled = true; });
         if (finishDialog.open) {
             finishDialog.close();
         }

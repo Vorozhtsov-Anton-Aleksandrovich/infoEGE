@@ -60,6 +60,7 @@ abstract class AttemptTestSupport extends IntegrationTest {
         form.setAnswerCols(cols);
         form.setCorrectAnswer(correct);
         form.setMaxPoints(2);
+        form.setSolutionEnabled(true);
         form.setSolutionMd("Разбор-секрет " + egeNumber);
         return taskService.create(form);
     }

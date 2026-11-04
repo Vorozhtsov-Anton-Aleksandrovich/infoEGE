@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -23,6 +25,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrlPattern;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -53,6 +56,7 @@ class TeacherTaskControllerTest extends IntegrationTest {
                         .param("answerRows", "2")
                         .param("answerCols", "2")
                         .param("correctAnswer", "31415 92653\n58979 32384")
+                        .param("solutionEnabled", "true")
                         .param("solutionMd", "Секретный разбор")
                         .param("topic", "Программирование"))
                 .andExpect(status().is3xxRedirection())
@@ -261,6 +265,73 @@ class TeacherTaskControllerTest extends IntegrationTest {
                 .andExpect(status().isForbidden());
         mvc.perform(get("/teacher/tasks/{id}/files/{fid}", task.getId(), file.getId()).with(asStudent("bank-student")))
                 .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void pastedImagesGetUniqueNames() throws Exception {
+        Task task = createTask(13, null, 1);
+
+        for (String expected : List.of("image.png", "image-2.png")) {
+            mvc.perform(multipart("/teacher/tasks/{id}/images", task.getId())
+                            .file(new MockMultipartFile("file", "image.png", "image/png", new byte[]{1, 2}))
+                            .with(asTeacher()).with(csrf()))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.name").value(expected));
+        }
+        mvc.perform(multipart("/teacher/tasks/{id}/images", task.getId())
+                        .file(new MockMultipartFile("file", "", "image/jpeg", new byte[]{1}))
+                        .with(asTeacher()).with(csrf()))
+                .andExpect(jsonPath("$.name").value("image.jpg"));
+
+        assertThat(fileRepository.findByTaskIdOrderById(task.getId()))
+                .allMatch(TaskFile::isImage)
+                .extracting(TaskFile::getOriginalName).containsExactly("image.png", "image-2.png", "image.jpg");
+    }
+
+    @Test
+    void pastedNonImageIsRejected() throws Exception {
+        Task task = createTask(14, null, 1);
+
+        mvc.perform(multipart("/teacher/tasks/{id}/images", task.getId())
+                        .file(new MockMultipartFile("file", "data.txt", "text/plain", "x".getBytes()))
+                        .with(asTeacher()).with(csrf()))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value(containsString("Недопустимый тип")));
+        mvc.perform(multipart("/teacher/tasks/{id}/images", task.getId())
+                        .file(new MockMultipartFile("file", "a.png", "image/png", new byte[]{1}))
+                        .with(asStudent("paste-student")).with(csrf()))
+                .andExpect(status().isForbidden());
+
+        assertThat(fileRepository.findByTaskIdOrderById(task.getId())).isEmpty();
+    }
+
+    @Test
+    void solutionIsSavedOnlyWhenEnabled() throws Exception {
+        Task task = createTask(15, null, 1);
+        String url = "/teacher/tasks/" + task.getId();
+
+        mvc.perform(post(url).with(asTeacher()).with(csrf()).params(baseParams())
+                .param("solutionEnabled", "true").param("solutionMd", "Разбор есть"));
+        assertThat(taskService.get(task.getId()).getSolutionMd()).isEqualTo("Разбор есть");
+
+        // Галочка снята: текст в поле остаётся у браузера, но разбор не сохраняется.
+        mvc.perform(post(url).with(asTeacher()).with(csrf()).params(baseParams())
+                .param("solutionMd", "Разбор есть"));
+        assertThat(taskService.get(task.getId()).getSolutionMd()).isNull();
+    }
+
+    private static MultiValueMap<String, String> baseParams() {
+        var params = new LinkedMultiValueMap<String, String>();
+        params.add("egeNumber", "15");
+        params.add("title", "С разбором и без");
+        params.add("statementMd", "Условие");
+        params.add("difficulty", "3");
+        params.add("maxPoints", "1");
+        params.add("scoring", "ALL_OR_NOTHING");
+        params.add("answerRows", "1");
+        params.add("answerCols", "1");
+        params.add("correctAnswer", "1");
+        return params;
     }
 
     @Test

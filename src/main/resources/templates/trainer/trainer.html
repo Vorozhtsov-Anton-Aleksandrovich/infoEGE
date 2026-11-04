@@ -23,16 +23,17 @@
     </nav>
     <div class="trainer-right">
         <div class="timer" id="timer" th:text="${remainingSeconds == null} ? 'Без ограничения' : ''">00:00:00</div>
-        <button type="button" class="finish-btn" id="finish-btn">Завершить работу</button>
+        <button type="button" class="finish-btn" id="finish-btn">Завершить выполнение</button>
     </div>
 </header>
 
 <div class="save-bar">
-    <span class="save-status" id="save-status" data-state="saved">Ответы сохраняются автоматически</span>
+    <span class="save-status" id="save-status" data-state="saved">Нажмите «Сохранить ответ», чтобы ответ был учтён</span>
     <span class="legend">
         <span class="legend-item status-not-opened">не открыто</span>
         <span class="legend-item status-opened">открыто</span>
         <span class="legend-item status-saved">ответ сохранён</span>
+        <span class="legend-item dirty">изменён, не сохранён</span>
     </span>
 </div>
 
@@ -42,6 +43,11 @@
         <h1 class="task-title">Задание <span th:text="${t.number}">1</span></h1>
         <section th:replace="~{fragments/task :: view(${t.statementHtml}, ${t.attachments},
                  '/trainer/attempts/' + ${attempt.id} + '/files/', ${t.rows}, ${t.cols}, ${t.answer})}"></section>
+        <div class="save-answer">
+            <button type="button" class="save-answer-btn">Сохранить ответ</button>
+            <span class="answer-state" th:text="${t.answer != null} ? 'Ответ сохранён' : 'Ответ не сохранён'"
+                  th:attr="data-state=${t.answer != null} ? 'saved' : 'empty'">Ответ не сохранён</span>
+        </div>
     </section>
 </main>
 
@@ -49,12 +55,13 @@
     <button type="button" id="prev-btn">← Назад</button>
     <span class="position" id="position"></span>
     <button type="button" id="next-btn">Далее →</button>
+    <button type="button" id="finish-bottom-btn" class="finish-btn" hidden>Завершить выполнение</button>
 </footer>
 
 <dialog id="finish-dialog">
-    <h2>Завершить работу?</h2>
+    <h2>Завершить выполнение?</h2>
     <p id="finish-unanswered"></p>
-    <p id="finish-unsaved" class="warning" hidden>Часть ответов ещё не сохранена: проверьте подключение к интернету.</p>
+    <p id="finish-unsaved" class="warning" hidden></p>
     <p>После завершения изменить ответы будет нельзя.</p>
     <div class="dialog-actions">
         <button type="button" id="finish-cancel">Вернуться к заданиям</button>

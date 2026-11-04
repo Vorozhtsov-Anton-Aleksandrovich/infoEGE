@@ -1,6 +1,9 @@
 /* Тренажёр в стиле экзаменационной станции: строгий, без меню сайта. */
 * { box-sizing: border-box; }
 
+/* Атрибут hidden должен скрывать элемент, даже если у класса задан display. */
+[hidden] { display: none !important; }
+
 html, body { height: 100%; }
 
 body.trainer {
@@ -156,3 +159,14 @@ dialog h2 { margin-top: 0; }
     .trainer-title { max-width: none; width: 100%; }
     .legend { display: none; }
 }
+
+/* Сохранение ответа кнопкой */
+.save-answer { display: flex; align-items: center; gap: 14px; margin-top: 16px; }
+.save-answer-btn { background: #2f4a68; border-color: #2f4a68; color: #fff; font-weight: 600; }
+.save-answer-btn:hover:not(:disabled) { background: #3d5f85; }
+.answer-state { font-size: 14px; color: #555; }
+.answer-state[data-state="saved"] { color: #2e7d32; }
+.answer-state[data-state="dirty"], .answer-state[data-state="error"] { color: #b00020; font-weight: 600; }
+.answer-state[data-state="saving"] { color: #8a6d00; }
+.task-btn.dirty { box-shadow: inset 0 -4px 0 #c62828; }
+.legend-item.dirty::before { background: #fff; box-shadow: inset 0 -4px 0 #c62828; }

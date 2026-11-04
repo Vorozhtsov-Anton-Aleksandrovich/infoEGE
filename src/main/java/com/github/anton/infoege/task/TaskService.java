@@ -151,6 +151,63 @@ public class TaskService {
         return errors;
     }
 
+    /** Результат загрузки вставленной картинки: имя для ![](file:имя) или сообщение об ошибке. */
+    public record PastedImage(String name, String error) {
+    }
+
+    /**
+     * Картинка, вставленная в условие из буфера обмена или перетаскиванием.
+     * Из буфера она всегда приходит как image.png, поэтому имя при совпадении получает номер: image-2.png.
+     */
+    @Transactional
+    public PastedImage addPastedImage(Long taskId, MultipartFile upload) {
+        get(taskId);
+        String original = FileValidator.cleanName(upload.getOriginalFilename());
+        if (original == null || original.isBlank() || !original.contains(".")) {
+            original = "image." + extensionFor(upload.getContentType());
+        }
+        String error = fileValidator.validate(original, upload.getSize(), true);
+        if (error != null) {
+            return new PastedImage(null, error);
+        }
+        String name = uniqueName(taskId, original);
+        String key;
+        try (InputStream in = upload.getInputStream()) {
+            key = fileStorage.store(in);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+        fileRepository.save(new TaskFile(taskId, name, key, upload.getSize(), fileValidator.contentType(name), FileKind.IMAGE));
+        return new PastedImage(name, null);
+    }
+
+    private String uniqueName(Long taskId, String name) {
+        if (!fileRepository.existsByTaskIdAndOriginalName(taskId, name)) {
+            return name;
+        }
+        int dot = name.lastIndexOf('.');
+        String base = name.substring(0, dot);
+        String extension = name.substring(dot);
+        for (int i = 2; ; i++) {
+            String candidate = base + "-" + i + extension;
+            if (!fileRepository.existsByTaskIdAndOriginalName(taskId, candidate)) {
+                return candidate;
+            }
+        }
+    }
+
+    private static String extensionFor(String contentType) {
+        if (contentType == null) {
+            return "png";
+        }
+        return switch (contentType) {
+            case "image/jpeg" -> "jpg";
+            case "image/gif" -> "gif";
+            case "image/webp" -> "webp";
+            default -> "png";
+        };
+    }
+
     @Transactional
     public void deleteFile(Long taskId, Long fileId) {
         TaskFile file = file(taskId, fileId);

@@ -132,6 +132,13 @@ public class TeacherTaskController {
         return "redirect:/teacher/tasks/" + id + "/edit#files";
     }
 
+    /** Вставка картинки в условие (Ctrl+V или перетаскивание): отвечает JSON с именем файла. */
+    @PostMapping("/{id}/images")
+    public ResponseEntity<TaskService.PastedImage> pasteImage(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
+        TaskService.PastedImage result = taskService.addPastedImage(id, file);
+        return result.error() == null ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
+    }
+
     @PostMapping("/{id}/files/{fileId}/delete")
     public String deleteFile(@PathVariable Long id, @PathVariable Long fileId, RedirectAttributes redirect) {
         taskService.deleteFile(id, fileId);
