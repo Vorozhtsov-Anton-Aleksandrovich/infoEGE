@@ -42,8 +42,8 @@ http://localhost:8080, вход `teacher` / `teacher` (значения по у�
 |---|---|---|
 | `SPRING_PROFILES_ACTIVE` | `dev` или `prod` | `dev` |
 | `DB_URL` | JDBC URL PostgreSQL | `jdbc:postgresql://localhost:15432/infoege` |
-| `DB_USER`, `DB_PASSWORD` | доступ к БД | `infoege` / `infoege` |
-| `TEACHER_LOGIN`, `TEACHER_PASSWORD` | аккаунт преподавателя при первом запуске | в dev `teacher`/`teacher`, в prod обязательны |
+| `DB_USER`, `DB_PASSWORD` | доступ к БД | `infoege` / `infoege`, в prod обязательны |
+| `TEACHER_LOGIN`, `TEACHER_PASSWORD` | аккаунт преподавателя при первом запуске | в dev `teacher`/`teacher`; в prod обязательны, пароль от 12 символов и не равен логину |
 | `TEACHER_NAME` | отображаемое имя преподавателя | `Преподаватель` |
 | `STORAGE_DIR` | каталог загруженных файлов | `./data/files` (в Docker `/app/data/files`) |
 | `MAX_FILE_SIZE` | лимит размера одного файла | `20MB` |
@@ -99,6 +99,9 @@ http://localhost:8080, вход `teacher` / `teacher` (значения по у�
 ---
 
 # Продакшен
+
+**Первый деплой с нуля, по шагам: [docs/DEPLOY.md](docs/DEPLOY.md)** (сборка образа на сервере, без GitHub Actions).
+Ниже — справочник и автоматический деплой через GitHub Actions.
 
 Схема: VPS с Docker → Caddy (HTTPS, Let's Encrypt) → приложение → PostgreSQL.
 Наружу открыты только порты 80 и 443. Образ собирает GitHub Actions и кладёт в GitHub Container Registry.
@@ -171,6 +174,7 @@ echo "<TOKEN>" | docker login ghcr.io -u <github-login> --password-stdin
 
 ```bash
 cd /opt/infoege
+docker compose -f docker-compose.prod.yml --env-file .env pull app
 docker compose -f docker-compose.prod.yml --env-file .env up -d
 docker compose -f docker-compose.prod.yml --env-file .env logs -f app   # «Teacher account ... created»
 curl https://<домен>/actuator/health

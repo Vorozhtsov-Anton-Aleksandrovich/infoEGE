@@ -15,8 +15,18 @@ server:
     include-exception: false
 
 spring:
+  # Без значений по умолчанию: если переменная не задана, приложение не запустится.
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
   thymeleaf:
     cache: true
+
+app:
+  teacher:
+    # Пароль преподавателя не короче 12 символов и не совпадает с логином.
+    require-strong-password: true
 
 logging:
   level:

@@ -20,6 +20,7 @@ import org.springframework.util.StringUtils;
 public class TeacherBootstrap implements ApplicationRunner {
 
     private static final Logger log = LoggerFactory.getLogger(TeacherBootstrap.class);
+    static final int MIN_STRONG_PASSWORD_LENGTH = 12;
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -42,10 +43,20 @@ public class TeacherBootstrap implements ApplicationRunner {
             throw new IllegalStateException(
                     "No teacher account exists: set TEACHER_LOGIN and TEACHER_PASSWORD environment variables");
         }
+        if (properties.requireStrongPassword()) {
+            checkStrong(properties.login().trim(), properties.password());
+        }
         String displayName = StringUtils.hasText(properties.displayName()) ? properties.displayName() : "Преподаватель";
         User teacher = new User(Role.TEACHER, displayName, properties.login().trim(),
                 passwordEncoder.encode(properties.password()));
         userRepository.save(teacher);
         log.info("Teacher account '{}' created", teacher.getLogin());
+    }
+
+    private static void checkStrong(String login, String password) {
+        if (password.length() < MIN_STRONG_PASSWORD_LENGTH || password.equalsIgnoreCase(login)) {
+            throw new IllegalStateException("TEACHER_PASSWORD is too weak: use at least "
+                    + MIN_STRONG_PASSWORD_LENGTH + " characters, different from TEACHER_LOGIN");
+        }
     }
 }
