@@ -140,6 +140,7 @@ textarea { resize: vertical; }
 
 .status { display: inline-block; padding: 1px 8px; border-radius: 10px; font-size: 13px; background: #eceff2; color: #59636e; }
 .status-in_progress { background: #fff3cd; color: #7a5b00; }
+.status-paused { background: #e3ecf7; color: #2f4a68; }
 .status-finished { background: #dcefe0; color: #1e6b31; }
 .status-expired, .status-overdue { background: #fde8e8; color: #8a1c1c; }
 
@@ -156,3 +157,33 @@ label.checkbox { flex-direction: row; align-items: center; gap: 8px; }
 .form label.checkbox { flex-direction: row; }
 .paste-status.error { color: #b42318; }
 textarea.drop-target { outline: 2px dashed #0b5cad; }
+
+/* ===== Дашборд ученика ===== */
+.dashboard h2 { margin-top: 24px; font-size: 18px; }
+.stat-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+.stat-tile { display: flex; flex-direction: column; gap: 2px; padding: 12px 16px; border: 1px solid #eceff2;
+    border-radius: 6px; background: #fafbfc; }
+.stat-label { font-size: 13px; color: #5c6670; }
+.stat-value { font-size: 28px; line-height: 1.2; font-variant-numeric: tabular-nums; }
+.stat-hint { font-size: 13px; color: #5c6670; }
+
+/* Карта активности: недели — столбцы, дни — строки (пн сверху). Прокручивается внутри, а не вся страница. */
+.heatmap-scroll { overflow-x: auto; padding-bottom: 4px; }
+.heatmap { display: flex; gap: 3px; width: max-content; }
+.hm-weekdays, .hm-week { display: grid; grid-template-rows: 16px repeat(7, 11px); gap: 3px; }
+.hm-weekdays span { font-size: 10px; line-height: 11px; color: #5c6670; padding-right: 4px; }
+.hm-month { font-size: 10px; line-height: 16px; color: #5c6670; white-space: nowrap; width: 11px; overflow: visible; }
+.hm-day { display: inline-block; width: 11px; height: 11px; border-radius: 2px; }
+.hm-out { visibility: hidden; }
+.hm-l0 { background: #ebedf0; }
+.hm-l1 { background: #9be9a8; }
+.hm-l2 { background: #40c463; }
+.hm-l3 { background: #30a14e; }
+.hm-l4 { background: #216e39; }
+.hm-legend { display: flex; align-items: center; gap: 3px; margin-top: 6px; font-size: 12px; color: #5c6670; }
+.hm-legend .hm-day { margin: 0 1px; }
+
+.by-number .accuracy { display: flex; align-items: center; gap: 8px; }
+.by-number meter { width: 140px; height: 12px; }
+.by-number td:nth-child(2), .by-number td:nth-child(3) { font-variant-numeric: tabular-nums; }
+.card h3 { margin: 0 0 4px; font-size: 18px; }

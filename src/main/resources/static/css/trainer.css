@@ -74,6 +74,8 @@ button:disabled { opacity: .45; cursor: default; }
 .timer.warning { background: #ffd6d6; color: #a40000; }
 .finish-btn { background: #c62828; border-color: #a31f1f; color: #fff; font-weight: 600; }
 .finish-btn:hover:not(:disabled) { background: #a31f1f; }
+.pause-btn { background: #fff; border-color: #2f4a68; color: #2f4a68; font-weight: 600; }
+.pause-btn:hover:not(:disabled) { background: #e3ecf7; }
 
 /* Статус сохранения */
 .save-bar {
@@ -170,3 +172,15 @@ dialog h2 { margin-top: 0; }
 .answer-state[data-state="saving"] { color: #8a6d00; }
 .task-btn.dirty { box-shadow: inset 0 -4px 0 #c62828; }
 .legend-item.dirty::before { background: #fff; box-shadow: inset 0 -4px 0 #c62828; }
+
+/* Режим «Проверить ответ» */
+.task-btn.status-correct { background: #4f9a5d; border-color: #3d7c49; color: #fff; }
+.task-btn.status-partial { background: #f2a33a; border-color: #c97f1c; color: #fff; }
+.task-btn.status-wrong { background: #d9534f; border-color: #b52b27; color: #fff; }
+.legend-item.status-correct::before { background: #4f9a5d; }
+.legend-item.status-partial::before { background: #f2a33a; }
+.legend-item.status-wrong::before { background: #d9534f; }
+.answer-state[data-state="correct"] { color: #2e7d32; font-weight: 600; }
+.answer-state[data-state="partial"] { color: #a35f00; font-weight: 600; }
+.answer-state[data-state="wrong"] { color: #b00020; font-weight: 600; }
+.check-count { font-size: 14px; color: #555; }

@@ -15,7 +15,11 @@
             <li>Статус: <span class="status" th:classappend="'status-' + ${r.status.name().toLowerCase()}" th:text="${r.status.label}">статус</span></li>
             <li>Начато: <span th:text="${@dates.format(at.startedAt)}">дата</span></li>
             <li>Завершено: <span th:text="${at.finishedAt == null} ? '—' : ${@dates.format(at.finishedAt)}">дата</span></li>
-            <li>Общее время: <strong th:text="${@dates.duration(r.totalSeconds)}">0:00:00</strong></li>
+            <li>Общее время: <strong th:text="${@dates.duration(r.totalSeconds)}">0:00:00</strong>
+                <th:block th:if="${at.pausedSeconds > 0 or at.paused}">(без пауз;
+                    на паузе <span th:text="${@dates.duration(at.pausedSeconds)}">0:00:00</span><th:block th:if="${at.paused}">, сейчас на паузе</th:block>)</th:block></li>
+            <li th:with="st=${r.stats()}">Выполнено заданий: <span th:text="${st.answered} + ' из ' + ${st.tasks}">0 из 0</span><th:block
+                    th:if="${r.closed}">, верно: <span th:text="${st.correct} + ' (' + ${st.correctPercent()} + '%)'">0</span></th:block></li>
             <li th:if="${r.closed}">Автоматический балл: <span th:text="${at.score}">0</span> / <span th:text="${r.maxScore}">0</span></li>
             <li th:if="${r.closed}">Итог: <strong th:text="${r.finalScore}">0</strong> / <span th:text="${r.maxScore}">0</span></li>
         </ul>
@@ -45,7 +49,7 @@
             <thead>
             <tr>
                 <th>#</th><th>№ ЕГЭ</th><th>Задание</th><th>Ответ ученика</th><th>Правильный ответ</th>
-                <th>Баллы</th><th>Время</th><th>Смен ответа</th><th>Открыто</th><th>Сохранено</th>
+                <th>Баллы</th><th>Время</th><th>Смен ответа</th><th th:if="${a.showResultsMode.instant}">Проверок</th><th>Открыто</th><th>Сохранено</th>
             </tr>
             </thead>
             <tbody>
@@ -68,6 +72,7 @@
                 <td><span th:text="${ans.points == null} ? '—' : ${ans.points}">0</span> / <span th:text="${ans.pointsSnapshot}">1</span></td>
                 <td th:text="${@dates.duration(ans.timeSpentSeconds.longValue())}">0:00:00</td>
                 <td th:text="${ans.answerChanges}">0</td>
+                <td th:if="${a.showResultsMode.instant}" th:text="${ans.checkCount}">0</td>
                 <td th:text="${@dates.format(ans.firstOpenedAt)}">дата</td>
                 <td th:text="${@dates.format(ans.lastSavedAt)}">дата</td>
             </tr>

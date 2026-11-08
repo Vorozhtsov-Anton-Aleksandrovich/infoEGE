@@ -15,7 +15,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class AttemptService {
@@ -42,16 +44,19 @@ public class AttemptService {
         this.taskFileRepository = taskFileRepository;
     }
 
-    /** Попытка закрыта (завершена или время вышло): изменения больше не принимаются. */
-    public static class AttemptClosedException extends RuntimeException {
-        private final AttemptStatus status;
+    /** Статус для клиента, когда попытка на паузе (изменения не принимаются, пока ученик не продолжит). */
+    public static final String PAUSED = "PAUSED";
 
-        public AttemptClosedException(AttemptStatus status) {
+    /** Попытка закрыта (завершена, время вышло) или на паузе: изменения не принимаются. */
+    public static class AttemptClosedException extends RuntimeException {
+        private final String status;
+
+        public AttemptClosedException(String status) {
             super("Attempt is " + status);
             this.status = status;
         }
 
-        public AttemptStatus getStatus() {
+        public String getStatus() {
             return status;
         }
     }
@@ -101,10 +106,35 @@ public class AttemptService {
         return deadline == null || byLimit.isBefore(deadline) ? byLimit : deadline;
     }
 
-    /** Попытка ученика с проверкой истечения времени. Используется при открытии тренажёра. */
+    /**
+     * Попытка ученика с проверкой истечения времени. Используется при открытии тренажёра:
+     * попытка на паузе продолжается, время снова идёт.
+     */
     @Transactional
     public Attempt open(Long attemptId, Long studentId) {
-        return lockOwn(attemptId, studentId);
+        Attempt attempt = lockOwn(attemptId, studentId);
+        if (attempt.isInProgress() && attempt.isPaused()) {
+            attempt.resume(Instant.now(), attempt.getAssignment().getDeadlineAt());
+            attempt.setLastHeartbeatAt(Instant.now()); // время паузы не засчитывается в время на задание
+        }
+        return attempt;
+    }
+
+    /**
+     * «Закончить потом»: ставит попытку на паузу, время останавливается до следующего открытия тренажёра.
+     * Только если преподаватель разрешил паузу в назначении.
+     */
+    @Transactional(noRollbackFor = AttemptClosedException.class)
+    public Attempt pause(Long attemptId, Long studentId) {
+        Attempt attempt = lockOwn(attemptId, studentId);
+        if (!attempt.isInProgress()) {
+            throw new AttemptClosedException(attempt.getStatus().name());
+        }
+        if (!attempt.getAssignment().isAllowPause()) {
+            throw new IllegalArgumentException("Pause is not allowed for this assignment");
+        }
+        attempt.pause(Instant.now());
+        return attempt;
     }
 
     @Transactional(readOnly = true)
@@ -130,6 +160,47 @@ public class AttemptService {
     }
 
     /**
+     * Вердикт проверки для ученика. Правильный ответ не раскрывается, только верно/неверно и баллы.
+     *
+     * @param verdict correct, partial, wrong или null, если ответ пуст
+     */
+    public record CheckState(AttemptStatus status, Long remainingSeconds, String verdict, Integer points,
+                             int maxPoints, int checks) {
+    }
+
+    /** Вердикт по ответу: correct, partial (часть баллов при построчной проверке), wrong; null — ответа нет. */
+    public static String verdict(AttemptAnswer answer) {
+        if (answer.getAnswer() == null) {
+            return null;
+        }
+        AnswerChecker.Result result = check(answer);
+        return result.correct() ? "correct" : result.points() > 0 ? "partial" : "wrong";
+    }
+
+    /**
+     * «Проверить ответ»: сохраняет ответ, считает попытку и сразу возвращает вердикт.
+     * Доступно только в назначениях с режимом INSTANT; в зачёт при завершении идёт последний ответ.
+     */
+    @Transactional(noRollbackFor = AttemptClosedException.class)
+    public CheckState checkAnswer(Long attemptId, Long studentId, Long taskId, List<List<String>> cells) {
+        Attempt attempt = lockOwnInProgress(attemptId, studentId);
+        if (!attempt.getAssignment().getShowResultsMode().isInstant()) {
+            throw new IllegalArgumentException("Instant check is not enabled for this assignment");
+        }
+        AttemptAnswer answer = answerRepository.findByAttemptIdAndTaskId(attemptId, taskId)
+                .orElseThrow(NotFoundException::new);
+        answer.checkAnswer(normalize(cells, answer.rows(), answer.cols()), Instant.now());
+        Integer points = answer.getAnswer() == null ? null : check(answer).points();
+        return new CheckState(attempt.getStatus(), attempt.remainingSeconds(Instant.now()), verdict(answer), points,
+                answer.getPointsSnapshot(), answer.getCheckCount());
+    }
+
+    private static AnswerChecker.Result check(AttemptAnswer answer) {
+        return AnswerChecker.check(answer.getAnswer(), answer.getAnswerSnapshot(),
+                answer.getScoringSnapshot(), answer.getPointsSnapshot());
+    }
+
+    /**
      * Учёт времени на задание. Клиент присылает, сколько секунд вкладка была видимой с прошлого heartbeat;
      * сервер не засчитывает больше, чем прошло с прошлого heartbeat этой попытки, и больше лимита на запрос.
      */
@@ -152,6 +223,7 @@ public class AttemptService {
     public Attempt finish(Long attemptId, Long studentId) {
         Attempt attempt = lockOwn(attemptId, studentId);
         if (attempt.isInProgress()) {
+            attempt.resume(Instant.now(), attempt.getAssignment().getDeadlineAt());
             attempt.finish(Instant.now());
             grade(attempt);
         }
@@ -176,11 +248,11 @@ public class AttemptService {
     public int expireOverdue() {
         Instant now = Instant.now();
         int expired = 0;
-        for (Long id : attemptRepository.findOverdueIds(now.minus(Attempt.GRACE))) {
+        Set<Long> ids = new LinkedHashSet<>(attemptRepository.findOverdueIds(now.minus(Attempt.GRACE)));
+        ids.addAll(attemptRepository.findPausedPastDeadlineIds(now.minus(Attempt.GRACE)));
+        for (Long id : ids) {
             Attempt attempt = attemptRepository.findForUpdate(id).orElseThrow();
-            if (attempt.isInProgress() && attempt.isOverdue(now)) {
-                attempt.expire();
-                grade(attempt);
+            if (closeIfOverdue(attempt, now)) {
                 expired++;
             }
         }
@@ -194,8 +266,7 @@ public class AttemptService {
     private void grade(Attempt attempt) {
         int total = 0;
         for (AttemptAnswer answer : answerRepository.findByAttemptIdOrderByPosition(attempt.getId())) {
-            AnswerChecker.Result result = AnswerChecker.check(answer.getAnswer(), answer.getAnswerSnapshot(),
-                    answer.getScoringSnapshot(), answer.getPointsSnapshot());
+            AnswerChecker.Result result = check(answer);
             answer.setIsCorrect(result.correct());
             answer.setPoints(result.points());
             total += result.points();
@@ -217,17 +288,35 @@ public class AttemptService {
 
     private Attempt lockOwn(Long attemptId, Long studentId) {
         Attempt attempt = attemptRepository.findOwnForUpdate(attemptId, studentId).orElseThrow(NotFoundException::new);
-        if (attempt.isInProgress() && attempt.isOverdue(Instant.now())) {
-            attempt.expire();
-            grade(attempt);
-        }
+        closeIfOverdue(attempt, Instant.now());
         return attempt;
+    }
+
+    /**
+     * Закрывает и проверяет попытку, если время вышло: по лимиту (не на паузе) или по сроку назначения
+     * (в том числе на паузе — срок пауза не продлевает).
+     */
+    private boolean closeIfOverdue(Attempt attempt, Instant now) {
+        if (!attempt.isInProgress()) {
+            return false;
+        }
+        Instant deadline = attempt.getAssignment().getDeadlineAt();
+        boolean pastDeadline = attempt.isPaused() && deadline != null && !now.isBefore(deadline.plus(Attempt.GRACE));
+        if (!attempt.isOverdue(now) && !pastDeadline) {
+            return false;
+        }
+        attempt.expire();
+        grade(attempt);
+        return true;
     }
 
     private Attempt lockOwnInProgress(Long attemptId, Long studentId) {
         Attempt attempt = lockOwn(attemptId, studentId);
         if (!attempt.isInProgress()) {
-            throw new AttemptClosedException(attempt.getStatus());
+            throw new AttemptClosedException(attempt.getStatus().name());
+        }
+        if (attempt.isPaused()) {
+            throw new AttemptClosedException(PAUSED);
         }
         return attempt;
     }

@@ -18,7 +18,8 @@
     <section class="panel result-task" th:each="t : ${tasks}" th:with="ans=${t.result.answer}"
              th:classappend="${ans.isCorrect} ? 'row-correct' : 'row-wrong'">
         <h2>Задание <span th:text="${t.result.number}">1</span>
-            <span class="hint" th:text="'— ' + ${ans.points} + ' из ' + ${ans.pointsSnapshot}">— 1 из 1</span></h2>
+            <span class="hint" th:text="'— ' + ${ans.points} + ' из ' + ${ans.pointsSnapshot}">— 1 из 1</span>
+            <span class="hint" th:if="${a.showResultsMode.instant}" th:text="'· проверок: ' + ${ans.checkCount}">· проверок: 1</span></h2>
         <details>
             <summary>Условие</summary>
             <div class="markdown" th:utext="${t.statementHtml}"></div>

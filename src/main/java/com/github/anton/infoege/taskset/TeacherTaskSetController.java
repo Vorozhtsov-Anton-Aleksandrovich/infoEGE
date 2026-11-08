@@ -156,7 +156,8 @@ public class TeacherTaskSetController {
             addShowAttributes(set, null, null, model);
             return "teacher/sets/show";
         }
-        var result = assignmentService.assign(id, form.getStudentIds(), deadline, form.getShowResultsMode());
+        var result = assignmentService.assign(id, form.getStudentIds(), deadline, form.getShowResultsMode(),
+                form.isAllowPause());
         String message = "Назначено: " + result.created() + ".";
         if (!result.alreadyAssigned().isEmpty()) {
             message += " Уже было назначено раньше: " + String.join(", ", result.alreadyAssigned()) + ".";

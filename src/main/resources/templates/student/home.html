@@ -1,29 +1,83 @@
 <!DOCTYPE html>
 <html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head th:replace="~{fragments/layout :: head('Мои работы')}"></head>
+<head th:replace="~{fragments/layout :: head('Главная')}"></head>
 <body>
 <header th:replace="~{fragments/layout :: header}"></header>
-<main>
-    <h1>Мои работы</h1>
+<main th:with="d=${dashboard}">
+    <h1>Главная</h1>
     <p>Здравствуйте, <span sec:authentication="principal.displayName">Имя</span>.</p>
 
-    <p th:if="${works.isEmpty()}">Пока вам ничего не назначено.</p>
-    <div class="cards" th:unless="${works.isEmpty()}">
-        <article class="card" th:each="w : ${works}" th:with="a=${w.assignment}">
-            <h2><a th:href="@{/student/assignments/{id}(id=${a.id})}" th:text="${a.taskSet.title}">Название</a></h2>
-            <p class="hint">
-                <span th:text="${a.taskSet.type.name() == 'VARIANT'} ? 'Вариант' : 'Подборка'">Подборка</span>
-                · заданий: <span th:text="${a.taskSet.items.size()}">0</span>
-                <th:block th:if="${a.taskSet.timeLimitMinutes != null}">
-                    · время: <span th:text="${a.taskSet.timeLimitMinutes}">0</span> мин
-                </th:block>
-            </p>
-            <p>Срок: <span th:text="${a.deadlineAt == null} ? 'без срока' : ${@dates.format(a.deadlineAt)}">дата</span></p>
-            <p><span class="status" th:classappend="'status-' + ${w.status.name().toLowerCase()}" th:text="${w.status.label}">не начато</span>
-                <a th:if="${w.resultsVisible}" th:href="@{/student/assignments/{id}/result(id=${a.id})}">
-                    результаты: <span th:text="${w.attempt.finalScore}">0</span></a></p>
-        </article>
-    </div>
+    <!-- ===== Дашборд ===== -->
+    <section class="panel dashboard">
+        <div class="stat-tiles">
+            <div class="stat-tile">
+                <span class="stat-label">Решено заданий</span>
+                <strong class="stat-value" th:text="${d.answered}">0</strong>
+            </div>
+            <div class="stat-tile">
+                <span class="stat-label">Правильность</span>
+                <strong class="stat-value" th:text="${d.checked > 0} ? ${d.correctPercent()} + '%' : '—'">—</strong>
+                <span class="stat-hint" th:if="${d.checked > 0}"
+                      th:text="'верно ' + ${d.correct} + ' из ' + ${d.checked} + ' проверенных'">верно 0 из 0</span>
+                <span class="stat-hint" th:if="${d.checked == 0}">появится, когда будут результаты</span>
+            </div>
+            <div class="stat-tile">
+                <span class="stat-label">За год</span>
+                <strong class="stat-value" th:text="${d.yearTotal}">0</strong>
+                <span class="stat-hint" th:text="'активных дней: ' + ${d.activeDays}">активных дней: 0</span>
+            </div>
+        </div>
+
+        <h2>Активность</h2>
+        <div class="heatmap-scroll">
+            <div class="heatmap" role="img"
+                 th:attr="aria-label='Решено заданий за год: ' + ${d.yearTotal} + ', активных дней: ' + ${d.activeDays}">
+                <div class="hm-weekdays" aria-hidden="true">
+                    <span></span><span>пн</span><span></span><span>ср</span><span></span><span>пт</span><span></span><span></span>
+                </div>
+                <div class="hm-week" th:each="w : ${d.weeks}" aria-hidden="true">
+                    <span class="hm-month" th:text="${w.monthLabel}"></span>
+                    <span th:each="day : ${w.days}" class="hm-day"
+                          th:classappend="${day.level < 0} ? 'hm-out' : 'hm-l' + ${day.level}"
+                          th:title="${day.title}"></span>
+                </div>
+            </div>
+        </div>
+        <div class="hm-legend" aria-hidden="true">меньше
+            <span class="hm-day hm-l0"></span><span class="hm-day hm-l1"></span><span class="hm-day hm-l2"></span>
+            <span class="hm-day hm-l3"></span><span class="hm-day hm-l4"></span> больше
+        </div>
+
+        <h2>По номерам ЕГЭ</h2>
+        <p th:if="${d.byNumber.isEmpty()}" class="hint">Пока нет решённых заданий.</p>
+        <table class="table by-number" th:unless="${d.byNumber.isEmpty()}">
+            <thead><tr><th>№</th><th>Решено</th><th>Верно</th><th>Правильность</th></tr></thead>
+            <tbody>
+            <tr th:each="n : ${d.byNumber}">
+                <td><strong th:text="${n.egeNumber}">1</strong></td>
+                <td th:text="${n.answered}">0</td>
+                <td th:text="${n.checked > 0} ? ${n.correct} + ' из ' + ${n.checked} : '—'">—</td>
+                <td class="accuracy">
+                    <th:block th:if="${n.checked > 0}">
+                        <meter min="0" max="100" low="50" high="80" optimum="100" th:value="${n.correctPercent()}"
+                               th:text="${n.correctPercent()} + '%'">0%</meter>
+                        <span th:text="${n.correctPercent()} + '%'">0%</span>
+                    </th:block>
+                    <span th:if="${n.checked == 0}" class="hint">нет результатов</span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <p class="hint" th:unless="${d.byNumber.isEmpty()}">Правильность считается по работам, результаты которых уже открыты.</p>
+    </section>
+
+    <!-- ===== Назначенные работы ===== -->
+    <h2 class="spaced">Варианты</h2>
+    <div th:replace="~{fragments/works :: cards(${variants}, 'Вариантов пока нет.')}"></div>
+
+    <h2 class="spaced">Задания</h2>
+    <div th:replace="~{fragments/works :: cards(${collections}, 'Подборок заданий пока нет.')}"></div>
 </main>
+
 </body>
 </html>

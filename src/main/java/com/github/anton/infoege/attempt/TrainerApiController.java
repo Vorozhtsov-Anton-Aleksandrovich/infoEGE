@@ -41,6 +41,13 @@ public class TrainerApiController {
         return attemptService.saveAnswer(attemptId, student.getId(), request.taskId(), request.cells());
     }
 
+    /** Режим «Проверить ответ»: сохраняет ответ и отвечает верно/неверно, без правильного ответа. */
+    @PostMapping("/check")
+    public AttemptService.CheckState check(@PathVariable Long attemptId, @Valid @RequestBody SaveRequest request,
+                                           @AuthenticationPrincipal AppUserDetails student) {
+        return attemptService.checkAnswer(attemptId, student.getId(), request.taskId(), request.cells());
+    }
+
     @PostMapping("/heartbeat")
     public AttemptService.AttemptState heartbeat(@PathVariable Long attemptId, @Valid @RequestBody HeartbeatRequest request,
                                                  @AuthenticationPrincipal AppUserDetails student) {
@@ -54,9 +61,17 @@ public class TrainerApiController {
                 "redirect", "/student/assignments/" + attempt.getAssignment().getId());
     }
 
+    /** «Закончить потом»: попытка на паузе, время остановлено. */
+    @PostMapping("/pause")
+    public Map<String, String> pause(@PathVariable Long attemptId, @AuthenticationPrincipal AppUserDetails student) {
+        Attempt attempt = attemptService.pause(attemptId, student.getId());
+        return Map.of("status", AttemptService.PAUSED,
+                "redirect", "/student/assignments/" + attempt.getAssignment().getId());
+    }
+
     @ExceptionHandler(AttemptService.AttemptClosedException.class)
     public ResponseEntity<Map<String, String>> closed(AttemptService.AttemptClosedException e) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("status", e.getStatus().name()));
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("status", e.getStatus()));
     }
 
     @ExceptionHandler(IllegalArgumentException.class)

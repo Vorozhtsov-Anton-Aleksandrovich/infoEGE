@@ -1,6 +1,8 @@
 // Тренажёр. Время и истечение попытки считает сервер; здесь таймер только показывает время
 // и подстраивается под remainingSeconds из каждого ответа сервера.
 // Ответ уходит на сервер только по кнопке «Сохранить ответ» (или Enter); несохранённые изменения не учитываются.
+// В режиме «Проверить ответ» (data-mode="instant") та же кнопка проверяет ответ: сервер сохраняет его
+// и отвечает «верно/неверно»; исправлять можно сколько угодно, в зачёт идёт последний проверенный.
 (function () {
     'use strict';
 
@@ -9,6 +11,11 @@
 
     const body = document.body;
     const api = body.dataset.api;
+    const instant = body.dataset.mode === 'instant';
+    const BUTTON_LABEL = instant ? '«Проверить ответ»' : '«Сохранить ответ»';
+    const STATUS_CLASSES = ['status-not-opened', 'status-opened', 'status-saved',
+        'status-correct', 'status-partial', 'status-wrong'];
+    const VERDICT_TEXT = { correct: 'Верно', partial: 'Частично верно', wrong: 'Неверно' };
     const csrfToken = document.querySelector('meta[name="_csrf"]').content;
     const csrfHeader = document.querySelector('meta[name="_csrf_header"]').content;
 
@@ -149,6 +156,16 @@
     // Последний сохранённый на сервере ответ каждого задания (для сравнения с тем, что сейчас в полях).
     const savedValue = sections.map(function (s, i) { return valueKey(collect(i)); });
     const saving = sections.map(function () { return false; });
+    // Вердикт последней проверки (режим «Проверить ответ»): correct, partial, wrong или null.
+    const verdicts = sections.map(function (s) {
+        const state = s.querySelector('.answer-state').dataset.state;
+        return VERDICT_TEXT[state] ? state : null;
+    });
+
+    function isAnswered(btn) {
+        return ['status-saved', 'status-correct', 'status-partial', 'status-wrong']
+            .some(function (c) { return btn.classList.contains(c); });
+    }
 
     function taskId(index) {
         return Number(sections[index].dataset.taskId);
@@ -188,7 +205,10 @@
         const dirty = isDirty(index);
         buttons[index].classList.toggle('dirty', dirty);
         if (dirty) {
-            setAnswerState(index, 'dirty', 'Ответ изменён, но не сохранён');
+            setAnswerState(index, 'dirty', instant ? 'Ответ изменён, но не проверен' : 'Ответ изменён, но не сохранён');
+        } else if (instant) {
+            const v = verdicts[index];
+            setAnswerState(index, v || 'empty', v ? VERDICT_TEXT[v] : 'Ответ не проверен');
         } else {
             const saved = buttons[index].classList.contains('status-saved');
             setAnswerState(index, saved ? 'saved' : 'empty', saved ? 'Ответ сохранён' : 'Ответ не сохранён');
@@ -201,15 +221,28 @@
         }
         const cells = collect(index);
         saving[index] = true;
-        setAnswerState(index, 'saving', 'Сохранение…');
+        setAnswerState(index, 'saving', instant ? 'Проверка…' : 'Сохранение…');
         try {
-            const result = await post('/answers', { taskId: taskId(index), cells: cells });
+            const result = await post(instant ? '/check' : '/answers', { taskId: taskId(index), cells: cells });
             syncRemaining(result.remainingSeconds);
             savedValue[index] = valueKey(cells);
             const btn = buttons[index];
-            btn.classList.remove('status-not-opened', 'status-opened', 'status-saved');
-            btn.classList.add(isEmpty(cells) ? 'status-opened' : 'status-saved');
+            btn.classList.remove.apply(btn.classList, STATUS_CLASSES);
             saving[index] = false;
+            if (instant) {
+                verdicts[index] = result.verdict || null;
+                btn.classList.add(result.verdict ? 'status-' + result.verdict : 'status-opened');
+                sections[index].querySelector('.check-count').textContent = 'Проверок: ' + result.checks;
+                refreshDirty(index);
+                if (result.verdict === 'partial') {
+                    setAnswerState(index, 'partial', 'Частично верно: ' + result.points + ' из ' + result.maxPoints);
+                }
+                setStatus('saved', result.verdict
+                    ? 'Задание ' + (index + 1) + ': ' + VERDICT_TEXT[result.verdict].toLowerCase()
+                    : 'Ответ на задание ' + (index + 1) + ' стёрт');
+                return;
+            }
+            btn.classList.add(isEmpty(cells) ? 'status-opened' : 'status-saved');
             refreshDirty(index);
             setStatus('saved', isEmpty(cells) ? 'Ответ на задание ' + (index + 1) + ' стёрт'
                 : 'Ответ на задание ' + (index + 1) + ' сохранён');
@@ -310,18 +343,19 @@
     const finishDialog = document.getElementById('finish-dialog');
 
     async function openFinishDialog() {
-        await waitForSaves(5000); // дождаться уже нажатых «Сохранить ответ»
+        await waitForSaves(5000); // дождаться уже нажатых «Сохранить ответ» / «Проверить ответ»
         const unanswered = buttons
-            .filter(function (b) { return !b.classList.contains('status-saved'); })
+            .filter(function (b) { return !isAnswered(b); })
             .map(function (b) { return b.textContent.trim(); });
         document.getElementById('finish-unanswered').textContent = unanswered.length
-            ? 'Без сохранённого ответа: ' + unanswered.join(', ') + '.'
+            ? (instant ? 'Без проверенного ответа: ' : 'Без сохранённого ответа: ') + unanswered.join(', ') + '.'
             : 'Ответы сохранены на все задания.';
         const dirty = dirtyNumbers();
         const unsavedEl = document.getElementById('finish-unsaved');
         unsavedEl.hidden = dirty.length === 0;
         unsavedEl.textContent = (dirty.length === 1 ? 'Изменения в задании ' : 'Изменения в заданиях ') + dirty.join(', ')
-            + ' не сохранены и не будут учтены. Чтобы их учесть, вернитесь и нажмите «Сохранить ответ».';
+            + (instant ? ' не проверены' : ' не сохранены') + ' и не будут учтены. Чтобы их учесть, вернитесь и нажмите '
+            + BUTTON_LABEL + '.';
         finishDialog.showModal();
     }
 
@@ -345,6 +379,37 @@
         }
     });
 
+    // ---------- Пауза («Закончить потом») ----------
+
+    const pauseDialog = document.getElementById('pause-dialog');
+    if (pauseDialog) {
+        document.getElementById('pause-btn').addEventListener('click', async function () {
+            await waitForSaves(5000);
+            const dirty = dirtyNumbers();
+            const unsavedEl = document.getElementById('pause-unsaved');
+            unsavedEl.hidden = dirty.length === 0;
+            unsavedEl.textContent = (dirty.length === 1 ? 'Изменения в задании ' : 'Изменения в заданиях ') + dirty.join(', ')
+                + (instant ? ' не проверены' : ' не сохранены') + ' и пропадут. Чтобы их учесть, нажмите ' + BUTTON_LABEL + '.';
+            pauseDialog.showModal();
+        });
+        document.getElementById('pause-cancel').addEventListener('click', function () { pauseDialog.close(); });
+        document.getElementById('pause-confirm').addEventListener('click', async function () {
+            this.disabled = true;
+            await heartbeat(current);
+            try {
+                const result = await post('/pause');
+                closed = true; // страница уходит: не предупреждать о несохранённом
+                location.href = result.redirect;
+            } catch (e) {
+                this.disabled = false;
+                if (!(e instanceof ClosedError)) {
+                    pauseDialog.close();
+                    setStatus('offline', 'Не удалось поставить на паузу: нет связи с сервером. Попробуйте ещё раз.');
+                }
+            }
+        });
+    }
+
     function waitForSaves(timeoutMs) {
         const started = Date.now();
         return new Promise(function (resolve) {
@@ -367,7 +432,14 @@
         if (finishDialog.open) {
             finishDialog.close();
         }
-        if (status === 'FINISHED') {
+        if (pauseDialog && pauseDialog.open) {
+            pauseDialog.close();
+        }
+        if (status === 'PAUSED') {
+            document.getElementById('closed-title').textContent = 'Работа на паузе';
+            document.getElementById('closed-text').textContent =
+                'Работа поставлена на паузу в другой вкладке. Чтобы продолжить, откройте её снова со страницы работы.';
+        } else if (status === 'FINISHED') {
             document.getElementById('closed-title').textContent = 'Работа завершена';
         } else if (endsAt !== null) {
             timerEl.textContent = '00:00:00';

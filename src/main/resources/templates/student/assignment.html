@@ -16,7 +16,11 @@
             <li><span th:text="${set.type.name() == 'VARIANT'} ? 'Вариант' : 'Подборка'">Подборка</span>,
                 заданий: <span th:text="${set.items.size()}">0</span></li>
             <li th:if="${set.timeLimitMinutes != null}">Время на выполнение: <span th:text="${set.timeLimitMinutes}">0</span> мин.
-                Таймер запускается при нажатии «Начать» и не останавливается, даже если закрыть страницу.</li>
+                <th:block th:unless="${a.allowPause}">Таймер запускается при нажатии «Начать» и не останавливается,
+                    даже если закрыть страницу.</th:block>
+                <th:block th:if="${a.allowPause}">Таймер запускается при нажатии «Начать». Работу можно поставить
+                    на паузу кнопкой «Закончить потом»: время остановится до возвращения.</th:block></li>
+            <li th:if="${set.timeLimitMinutes == null and a.allowPause}">Работу можно прервать кнопкой «Закончить потом» и вернуться позже.</li>
             <li th:unless="${set.timeLimitMinutes != null}">Без ограничения времени.</li>
             <li>Срок: <span th:text="${a.deadlineAt == null} ? 'без срока' : ${@dates.format(a.deadlineAt)}">дата</span></li>
             <li>Статус: <span class="status" th:classappend="'status-' + ${status.toLowerCase()}" th:text="${work.status.label}">не начато</span></li>
@@ -28,6 +32,13 @@
         </form>
         <a class="button" th:if="${status == 'IN_PROGRESS'}"
            th:href="@{/trainer/attempts/{id}(id=${work.attempt.id})}">Продолжить</a>
+        <th:block th:if="${status == 'PAUSED'}">
+            <p>Работа на паузе, время остановлено.
+                <th:block th:if="${work.remainingSeconds != null}">Осталось:
+                    <strong th:text="${@dates.duration(work.remainingSeconds)}">0:00:00</strong>.</th:block>
+                Ответы сохранены.</p>
+            <a class="button" th:href="@{/trainer/attempts/{id}(id=${work.attempt.id})}">Продолжить</a>
+        </th:block>
         <th:block th:if="${status == 'FINISHED' or status == 'EXPIRED'}">
             <p>Работа сдана <span th:text="${@dates.format(work.attempt.finishedAt)}">дата</span>.</p>
             <a class="button" th:if="${work.resultsVisible}" th:href="@{/student/assignments/{id}/result(id=${a.id})}">Результаты</a>

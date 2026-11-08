@@ -37,6 +37,13 @@ public class AssignmentService {
      */
     @Transactional
     public AssignResult assign(Long taskSetId, List<Long> studentIds, Instant deadlineAt, ShowResultsMode mode) {
+        return assign(taskSetId, studentIds, deadlineAt, mode, false);
+    }
+
+    /** То же, с разрешением паузы («Закончить потом»). */
+    @Transactional
+    public AssignResult assign(Long taskSetId, List<Long> studentIds, Instant deadlineAt, ShowResultsMode mode,
+                               boolean allowPause) {
         TaskSet set = taskSetRepository.findById(taskSetId).orElseThrow(NotFoundException::new);
         if (mode == ShowResultsMode.AFTER_DEADLINE && deadlineAt == null) {
             throw new IllegalArgumentException("AFTER_DEADLINE requires a deadline");
@@ -51,7 +58,7 @@ public class AssignmentService {
                 already.add(student.getDisplayName());
                 continue;
             }
-            assignmentRepository.save(new Assignment(student, set, deadlineAt, mode));
+            assignmentRepository.save(new Assignment(student, set, deadlineAt, mode, allowPause));
             created++;
         }
         return new AssignResult(created, already);

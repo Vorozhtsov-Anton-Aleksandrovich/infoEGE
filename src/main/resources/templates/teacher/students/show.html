@@ -32,6 +32,11 @@
             <li>Назначено работ: <span th:text="${sm.results.size()}">0</span>, сдано: <span th:text="${sm.closed}">0</span></li>
             <li th:if="${sm.closed > 0}">Баллы по сданным работам: <strong th:text="${sm.points}">0</strong> из <span th:text="${sm.maxPoints}">0</span>
                 <th:block th:if="${sm.maxPoints > 0}">(<span th:text="${#numbers.formatDecimal(100.0 * sm.points / sm.maxPoints, 1, 0)}">0</span>%)</th:block></li>
+            <li th:if="${sm.closed > 0}">Задания в сданных работах: выполнено
+                <strong th:text="${sm.stats.answered}">0</strong> из <span th:text="${sm.stats.tasks}">0</span>
+                (<span th:text="${sm.stats.answeredPercent()}">0</span>%), верно
+                <strong th:text="${sm.stats.correct}">0</strong>
+                (<span th:text="${sm.stats.correctPercent()}">0</span>%)</li>
             <li th:if="${sm.closed > 0}">Общее время: <span th:text="${@dates.duration(sm.totalSeconds)}">0:00:00</span></li>
         </ul>
 

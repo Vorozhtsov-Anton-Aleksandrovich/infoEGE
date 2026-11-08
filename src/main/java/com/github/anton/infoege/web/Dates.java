@@ -23,6 +23,11 @@ public class Dates {
         this.zone = zone;
     }
 
+    /** Часовой пояс интерфейса (app.time-zone). */
+    public ZoneId zone() {
+        return zone;
+    }
+
     public String format(Instant instant) {
         return instant == null ? "" : DISPLAY.format(instant.atZone(zone));
     }

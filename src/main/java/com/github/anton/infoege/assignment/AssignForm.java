@@ -20,6 +20,17 @@ public class AssignForm {
     @NotNull
     private ShowResultsMode showResultsMode = ShowResultsMode.AFTER_FINISH;
 
+    /** Разрешить паузу («Закончить потом»). */
+    private boolean allowPause;
+
+    public boolean isAllowPause() {
+        return allowPause;
+    }
+
+    public void setAllowPause(boolean allowPause) {
+        this.allowPause = allowPause;
+    }
+
     public List<Long> getStudentIds() {
         return studentIds;
     }

@@ -11,29 +11,42 @@
     <script th:src="@{/js/trainer.js}" defer></script>
 </head>
 <body class="trainer"
-      th:attr="data-api=@{/trainer/attempts/{id}(id=${attempt.id})},data-remaining=${remainingSeconds}">
+      th:attr="data-api=@{/trainer/attempts/{id}(id=${attempt.id})},data-remaining=${remainingSeconds},
+               data-mode=${instant} ? 'instant' : 'save'">
 
 <header class="trainer-top">
     <div class="trainer-title" th:text="${title}">Название работы</div>
     <nav class="task-nav" aria-label="Задания">
         <button type="button" class="task-btn" th:each="t, st : ${tasks}"
-                th:classappend="'status-' + ${t.status}"
+                th:classappend="'status-' + (${instant and t.verdict != null} ? ${t.verdict} : ${t.status})"
                 th:attr="data-index=${st.index}"
                 th:title="'Задание ' + ${t.number}" th:text="${t.number}">1</button>
     </nav>
     <div class="trainer-right">
         <div class="timer" id="timer" th:text="${remainingSeconds == null} ? 'Без ограничения' : ''">00:00:00</div>
+        <button type="button" class="pause-btn" id="pause-btn" th:if="${allowPause}"
+                title="Время остановится, ответы сохранятся. Продолжить можно со страницы работы">Закончить потом</button>
         <button type="button" class="finish-btn" id="finish-btn">Завершить выполнение</button>
     </div>
 </header>
 
 <div class="save-bar">
-    <span class="save-status" id="save-status" data-state="saved">Нажмите «Сохранить ответ», чтобы ответ был учтён</span>
-    <span class="legend">
+    <span class="save-status" id="save-status" data-state="saved"
+          th:text="${instant} ? 'Нажмите «Проверить ответ»: сразу будет видно, верен ли он. В зачёт идёт последний проверенный ответ'
+                              : 'Нажмите «Сохранить ответ», чтобы ответ был учтён'">Нажмите «Сохранить ответ», чтобы ответ был учтён</span>
+    <span class="legend" th:unless="${instant}">
         <span class="legend-item status-not-opened">не открыто</span>
         <span class="legend-item status-opened">открыто</span>
         <span class="legend-item status-saved">ответ сохранён</span>
         <span class="legend-item dirty">изменён, не сохранён</span>
+    </span>
+    <span class="legend" th:if="${instant}">
+        <span class="legend-item status-not-opened">не открыто</span>
+        <span class="legend-item status-opened">открыто</span>
+        <span class="legend-item status-correct">верно</span>
+        <span class="legend-item status-partial">частично</span>
+        <span class="legend-item status-wrong">неверно</span>
+        <span class="legend-item dirty">изменён, не проверен</span>
     </span>
 </div>
 
@@ -43,10 +56,18 @@
         <h1 class="task-title">Задание <span th:text="${t.number}">1</span></h1>
         <section th:replace="~{fragments/task :: view(${t.statementHtml}, ${t.attachments},
                  '/trainer/attempts/' + ${attempt.id} + '/files/', ${t.rows}, ${t.cols}, ${t.answer})}"></section>
-        <div class="save-answer">
+        <div class="save-answer" th:unless="${instant}">
             <button type="button" class="save-answer-btn">Сохранить ответ</button>
             <span class="answer-state" th:text="${t.answer != null} ? 'Ответ сохранён' : 'Ответ не сохранён'"
                   th:attr="data-state=${t.answer != null} ? 'saved' : 'empty'">Ответ не сохранён</span>
+        </div>
+        <div class="save-answer" th:if="${instant}">
+            <button type="button" class="save-answer-btn">Проверить ответ</button>
+            <span class="answer-state"
+                  th:attr="data-state=${t.verdict} ?: 'empty'"
+                  th:text="${t.verdict == 'correct'} ? 'Верно' : (${t.verdict == 'partial'} ? 'Частично верно'
+                          : (${t.verdict == 'wrong'} ? 'Неверно' : 'Ответ не проверен'))">Ответ не проверен</span>
+            <span class="check-count" th:text="'Проверок: ' + ${t.checks}">Проверок: 0</span>
         </div>
     </section>
 </main>
@@ -66,6 +87,16 @@
     <div class="dialog-actions">
         <button type="button" id="finish-cancel">Вернуться к заданиям</button>
         <button type="button" id="finish-confirm" class="finish-btn">Завершить</button>
+    </div>
+</dialog>
+
+<dialog id="pause-dialog" th:if="${allowPause}">
+    <h2>Закончить потом?</h2>
+    <p>Время остановится. Сохранённые ответы останутся, продолжить можно со страницы работы.</p>
+    <p id="pause-unsaved" class="warning" hidden></p>
+    <div class="dialog-actions">
+        <button type="button" id="pause-cancel">Вернуться к заданиям</button>
+        <button type="button" id="pause-confirm" class="pause-btn">Поставить на паузу</button>
     </div>
 </dialog>
 

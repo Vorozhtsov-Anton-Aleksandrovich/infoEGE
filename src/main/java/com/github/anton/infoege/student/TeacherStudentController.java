@@ -33,6 +33,7 @@ public class TeacherStudentController {
     @GetMapping
     public String list(Model model) {
         model.addAttribute("students", studentService.all());
+        model.addAttribute("stats", resultService.statsByStudent());
         model.addAttribute("invites", inviteService.pendingNewStudents());
         return "teacher/students/list";
     }

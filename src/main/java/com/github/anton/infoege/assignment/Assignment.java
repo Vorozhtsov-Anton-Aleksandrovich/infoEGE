@@ -41,10 +41,16 @@ public class Assignment {
     @Column(nullable = false)
     private ShowResultsMode showResultsMode;
 
+    /** Разрешена ли пауза («Закончить потом»): время попытки останавливается до возвращения ученика. */
+    @Column(nullable = false)
+    private boolean allowPause;
+
     protected Assignment() {
     }
 
-    public Assignment(User student, TaskSet taskSet, Instant deadlineAt, ShowResultsMode showResultsMode) {
+    public Assignment(User student, TaskSet taskSet, Instant deadlineAt, ShowResultsMode showResultsMode,
+                      boolean allowPause) {
+        this.allowPause = allowPause;
         this.student = student;
         this.taskSet = taskSet;
         this.deadlineAt = deadlineAt;
@@ -73,5 +79,9 @@ public class Assignment {
 
     public ShowResultsMode getShowResultsMode() {
         return showResultsMode;
+    }
+
+    public boolean isAllowPause() {
+        return allowPause;
     }
 }

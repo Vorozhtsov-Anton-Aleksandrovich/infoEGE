@@ -12,6 +12,8 @@
         <th th:if="${showSet}">Работа</th>
         <th>Статус</th>
         <th>Балл</th>
+        <th title="Заданий с ответом">Выполнено</th>
+        <th title="Решено верно (после сдачи)">Верно</th>
         <th>Общее время</th>
         <th>Назначено</th>
         <th>Срок</th>
@@ -28,6 +30,12 @@
                 <strong th:text="${r.finalScore} ?: '—'">0</strong> / <span th:text="${r.maxScore}">0</span>
                 <span class="badge" th:if="${r.attempt.manualScore != null}" title="Балл изменён вручную">вручную</span>
             </th:block>
+        </td>
+        <td th:with="st=${r.stats()}">
+            <span th:if="${r.attempt != null}" th:text="${st.answered} + ' из ' + ${st.tasks}">0 из 0</span>
+        </td>
+        <td th:with="st=${r.stats()}">
+            <span th:if="${r.closed}" th:text="${st.correct} + ' из ' + ${st.tasks} + ' (' + ${st.correctPercent()} + '%)'">0 из 0 (0%)</span>
         </td>
         <td th:text="${@dates.duration(r.totalSeconds)}">0:00:00</td>
         <td th:text="${@dates.format(a.assignedAt)}">дата</td>

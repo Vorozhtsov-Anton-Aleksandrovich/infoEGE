@@ -10,6 +10,7 @@ import java.time.Instant;
 public enum WorkStatus {
     NOT_STARTED("не начато"),
     IN_PROGRESS("в процессе"),
+    PAUSED("на паузе"),
     FINISHED("завершено"),
     EXPIRED("время вышло"),
     OVERDUE("просрочено");
@@ -33,7 +34,9 @@ public enum WorkStatus {
             return deadlinePassed ? OVERDUE : NOT_STARTED;
         }
         return switch (attempt.getStatus()) {
-            case IN_PROGRESS -> attempt.isOverdue(now) ? EXPIRED : IN_PROGRESS;
+            case IN_PROGRESS -> attempt.isPaused()
+                    ? (assignment.getDeadlineAt() != null && !now.isBefore(assignment.getDeadlineAt()) ? EXPIRED : PAUSED)
+                    : attempt.isOverdue(now) ? EXPIRED : IN_PROGRESS;
             case FINISHED -> FINISHED;
             case EXPIRED -> EXPIRED;
         };

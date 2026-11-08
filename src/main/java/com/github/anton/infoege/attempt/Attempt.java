@@ -56,6 +56,13 @@ public class Attempt {
 
     private Instant manualUpdatedAt;
 
+    /** Начало текущей паузы («Закончить потом»); null — попытка не на паузе. */
+    private Instant pausedAt;
+
+    /** Сколько секунд попытка провела на паузе (завершённые паузы). */
+    @Column(nullable = false)
+    private long pausedSeconds;
+
     protected Attempt() {
     }
 
@@ -65,14 +72,47 @@ public class Attempt {
         this.expiresAt = expiresAt;
     }
 
+    /** Время вышло. На паузе время не идёт, поэтому попытка на паузе по лимиту не истекает (только по сроку). */
     public boolean isOverdue(Instant now) {
-        return expiresAt != null && !now.isBefore(expiresAt.plus(GRACE));
+        return pausedAt == null && expiresAt != null && !now.isBefore(expiresAt.plus(GRACE));
     }
 
-    /** Закрывает попытку по истечении времени. */
+    public boolean isPaused() {
+        return pausedAt != null;
+    }
+
+    /** Ставит на паузу: оставшееся время замораживается. */
+    public void pause(Instant now) {
+        if (pausedAt == null) {
+            pausedAt = now;
+        }
+    }
+
+    /**
+     * Снимает с паузы: конец попытки сдвигается на длительность паузы, но не позже срока назначения.
+     */
+    public void resume(Instant now, Instant deadline) {
+        if (pausedAt == null) {
+            return;
+        }
+        long paused = Math.max(0, Duration.between(pausedAt, now).toSeconds());
+        pausedSeconds += paused;
+        if (expiresAt != null) {
+            Instant shifted = expiresAt.plusSeconds(paused);
+            expiresAt = deadline != null && shifted.isAfter(deadline) ? deadline : shifted;
+        }
+        pausedAt = null;
+    }
+
+    /** Закрывает попытку по истечении времени. Если она была на паузе (прошёл срок), конец — начало паузы. */
     public void expire() {
         status = AttemptStatus.EXPIRED;
-        finishedAt = expiresAt;
+        if (pausedAt != null) {
+            finishedAt = expiresAt != null && expiresAt.isBefore(pausedAt) ? expiresAt : pausedAt;
+            pausedAt = null;
+        } else {
+            finishedAt = expiresAt;
+        }
     }
 
     public void finish(Instant now) {
@@ -85,7 +125,8 @@ public class Attempt {
         if (expiresAt == null) {
             return null;
         }
-        return Math.max(0, Duration.between(now, expiresAt).toSeconds());
+        Instant at = pausedAt != null ? pausedAt : now;
+        return Math.max(0, Duration.between(at, expiresAt).toSeconds());
     }
 
     /** Итоговый балл: ручной, если выставлен, иначе автоматический. */
@@ -99,10 +140,18 @@ public class Attempt {
         this.manualUpdatedAt = now;
     }
 
-    /** Общее время: от старта до завершения, для незавершённой попытки до текущего момента. */
+    /** Общее время без пауз: от старта до завершения, для незавершённой попытки до текущего момента или паузы. */
     public long totalSeconds(Instant now) {
-        Instant end = finishedAt != null ? finishedAt : now;
-        return Math.max(0, Duration.between(startedAt, end).toSeconds());
+        Instant end = finishedAt != null ? finishedAt : pausedAt != null ? pausedAt : now;
+        return Math.max(0, Duration.between(startedAt, end).toSeconds() - pausedSeconds);
+    }
+
+    public Instant getPausedAt() {
+        return pausedAt;
+    }
+
+    public long getPausedSeconds() {
+        return pausedSeconds;
     }
 
     public boolean isInProgress() {

@@ -17,7 +17,7 @@ public final class ResultVisibility {
             return false;
         }
         return switch (assignment.getShowResultsMode()) {
-            case AFTER_FINISH -> true;
+            case AFTER_FINISH, INSTANT -> true;
             case AFTER_DEADLINE -> assignment.getDeadlineAt() != null && !now.isBefore(assignment.getDeadlineAt());
             case TEACHER_ONLY -> false;
         };

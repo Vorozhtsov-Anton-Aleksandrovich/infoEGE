@@ -112,9 +112,15 @@
                         <option value="AFTER_FINISH">Сразу после завершения</option>
                         <option value="AFTER_DEADLINE">После срока</option>
                         <option value="TEACHER_ONLY">Только преподавателю</option>
+                        <option value="INSTANT">Сразу при ответе («Проверить ответ»)</option>
                     </select>
                 </label>
             </div>
+            <label class="checkbox">
+                <input type="checkbox" th:field="*{allowPause}">
+                Разрешить паузу («Закончить потом»): ученик выходит, время останавливается.
+                Без паузы выйти можно, только сдав работу, а если просто закрыть страницу, таймер идёт дальше
+            </label>
             <div class="actions"><button type="submit">Назначить</button></div>
         </form>
 

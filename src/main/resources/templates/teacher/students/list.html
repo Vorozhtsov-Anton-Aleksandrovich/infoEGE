@@ -44,11 +44,16 @@
         <h2>Зарегистрированные</h2>
         <p th:if="${students.isEmpty()}">Пока никого.</p>
         <table class="table" th:unless="${students.isEmpty()}">
-            <thead><tr><th>Имя</th><th>Логин</th><th>С нами с</th><th>Статус</th></tr></thead>
+            <thead><tr><th>Имя</th><th>Логин</th><th title="Заданий с ответом в сданных работах">Выполнено заданий</th>
+                <th title="Решено верно от всех заданий сданных работ">Верно</th><th>С нами с</th><th>Статус</th></tr></thead>
             <tbody>
             <tr th:each="s : ${students}" th:classappend="${!s.active} ? 'muted'">
                 <td><a th:href="@{/teacher/students/{id}(id=${s.id})}" th:text="${s.displayName}">Имя</a></td>
                 <td th:text="${s.login}">login</td>
+                <th:block th:with="st=${stats.get(s.id)}">
+                    <td th:text="${st == null} ? '—' : ${st.answered} + ' из ' + ${st.tasks}">0 из 0</td>
+                    <td th:text="${st == null} ? '—' : ${st.correct} + ' (' + ${st.correctPercent()} + '%)'">0 (0%)</td>
+                </th:block>
                 <td th:text="${@dates.format(s.createdAt)}">дата</td>
                 <td th:text="${s.active} ? 'активен' : 'деактивирован'">активен</td>
             </tr>

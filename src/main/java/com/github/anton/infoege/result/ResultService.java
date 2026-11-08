@@ -59,6 +59,38 @@ public class ResultService {
         public boolean isClosed() {
             return attempt != null && !attempt.isInProgress();
         }
+
+        /** Выполнено (дан ответ) и верно по заданиям этой работы. «Верно» известно только после завершения. */
+        public TaskStats stats() {
+            return TaskStats.of(answers);
+        }
+    }
+
+    /**
+     * Задания: всего, выполнено (есть ответ) и решено верно.
+     * Процент правильности считается от всех заданий, процент выполнения — тоже.
+     */
+    public record TaskStats(int tasks, int answered, int correct) {
+
+        public static final TaskStats EMPTY = new TaskStats(0, 0, 0);
+
+        public static TaskStats of(List<AttemptAnswer> answers) {
+            return new TaskStats(answers.size(),
+                    (int) answers.stream().filter(a -> a.getAnswer() != null).count(),
+                    (int) answers.stream().filter(a -> Boolean.TRUE.equals(a.getIsCorrect())).count());
+        }
+
+        public TaskStats plus(TaskStats other) {
+            return new TaskStats(tasks + other.tasks, answered + other.answered, correct + other.correct);
+        }
+
+        public int correctPercent() {
+            return tasks == 0 ? 0 : (int) Math.round(100.0 * correct / tasks);
+        }
+
+        public int answeredPercent() {
+            return tasks == 0 ? 0 : (int) Math.round(100.0 * answered / tasks);
+        }
     }
 
     /** Ответ на одно задание вместе с заданием из банка (название, номер, разбор). */
@@ -73,8 +105,21 @@ public class ResultService {
         }
     }
 
+    /** stats — по заданиям всех сданных работ. */
     public record StudentSummary(List<AssignmentResult> results, int closed, int points, int maxPoints,
-                                 long totalSeconds, List<NumberStat> byNumber) {
+                                 long totalSeconds, List<NumberStat> byNumber, TaskStats stats) {
+    }
+
+    /** Выполнено и верно по сданным работам каждого ученика: id ученика → статистика. */
+    @Transactional
+    public Map<Long, TaskStats> statsByStudent() {
+        Map<Long, TaskStats> stats = new java.util.HashMap<>();
+        for (AssignmentResult r : results(null, null)) {
+            if (r.isClosed()) {
+                stats.merge(r.assignment().getStudent().getId(), r.stats(), TaskStats::plus);
+            }
+        }
+        return stats;
     }
 
     /** Все назначения с результатами; фильтры необязательны. */
@@ -144,7 +189,7 @@ public class ResultService {
                 answers.addAll(r.answers());
             }
         }
-        return new StudentSummary(results, closed, points, maxPoints, seconds, byNumber(answers));
+        return new StudentSummary(results, closed, points, maxPoints, seconds, byNumber(answers), TaskStats.of(answers));
     }
 
     /**

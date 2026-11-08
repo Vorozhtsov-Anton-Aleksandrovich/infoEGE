@@ -2,6 +2,8 @@ package com.github.anton.infoege.attempt;
 
 import com.github.anton.infoege.assignment.Assignment;
 import com.github.anton.infoege.assignment.AssignmentService;
+import com.github.anton.infoege.student.StudentDashboardService;
+import com.github.anton.infoege.taskset.TaskSetType;
 import com.github.anton.infoege.user.AppUserDetails;
 import com.github.anton.infoege.web.NotFoundException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -27,19 +29,29 @@ public class StudentWorkController {
 
     private final AssignmentService assignmentService;
     private final AttemptService attemptService;
+    private final StudentDashboardService dashboardService;
 
-    public StudentWorkController(AssignmentService assignmentService, AttemptService attemptService) {
+    public StudentWorkController(AssignmentService assignmentService, AttemptService attemptService,
+                                 StudentDashboardService dashboardService) {
         this.assignmentService = assignmentService;
         this.attemptService = attemptService;
+        this.dashboardService = dashboardService;
     }
 
-    /** Строка списка работ ученика. */
-    public record WorkRow(Assignment assignment, Attempt attempt, WorkStatus status, boolean resultsVisible) {
+    /** Строка списка работ ученика. remainingSeconds — сколько времени осталось у начатой работы с лимитом. */
+    public record WorkRow(Assignment assignment, Attempt attempt, WorkStatus status, boolean resultsVisible,
+                          Long remainingSeconds) {
     }
 
     @GetMapping("/student")
     public String home(@AuthenticationPrincipal AppUserDetails student, Model model) {
-        model.addAttribute("works", rows(student.getId()));
+        List<WorkRow> works = rows(student.getId());
+        model.addAttribute("works", works);
+        model.addAttribute("variants", works.stream()
+                .filter(w -> w.assignment().getTaskSet().getType() == TaskSetType.VARIANT).toList());
+        model.addAttribute("collections", works.stream()
+                .filter(w -> w.assignment().getTaskSet().getType() != TaskSetType.VARIANT).toList());
+        model.addAttribute("dashboard", dashboardService.dashboard(student.getId()));
         return "student/home";
     }
 
@@ -75,7 +87,8 @@ public class StudentWorkController {
         Instant now = Instant.now();
         return assignments.stream()
                 .map(a -> new WorkRow(a, attempts.get(a.getId()), WorkStatus.of(a, attempts.get(a.getId()), now),
-                        ResultVisibility.visibleToStudent(a, attempts.get(a.getId()), now)))
+                        ResultVisibility.visibleToStudent(a, attempts.get(a.getId()), now),
+                        attempts.get(a.getId()) == null ? null : attempts.get(a.getId()).remainingSeconds(now)))
                 .toList();
     }
 }

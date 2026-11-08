@@ -60,6 +60,10 @@ public class AttemptAnswer {
     @Column(nullable = false)
     private int answerChanges;
 
+    /** Число проверок в режиме «Проверить ответ». */
+    @Column(nullable = false)
+    private int checkCount;
+
     private Instant firstOpenedAt;
 
     private Instant lastSavedAt;
@@ -99,6 +103,21 @@ public class AttemptAnswer {
         answer = newAnswer;
         lastSavedAt = now;
         markOpened(now);
+    }
+
+    /**
+     * Проверка в режиме «Проверить ответ»: сохраняет ответ и считает попытку.
+     * Повторная проверка того же ответа и проверка пустого ответа попыткой не считаются.
+     */
+    public void checkAnswer(List<List<String>> newAnswer, Instant now) {
+        if (newAnswer != null && (checkCount == 0 || !Objects.equals(answer, newAnswer))) {
+            checkCount++;
+        }
+        saveAnswer(newAnswer, now);
+    }
+
+    public int getCheckCount() {
+        return checkCount;
     }
 
     public void addTimeSpent(int seconds) {

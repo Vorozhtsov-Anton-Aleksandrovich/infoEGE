@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<body>
+<!-- Карточки назначенных работ ученика (главная). list — строки StudentWorkController.WorkRow. -->
+<th:block th:fragment="cards(list, emptyText)">
+    <p th:if="${list.isEmpty()}" class="hint" th:text="${emptyText}">Пусто.</p>
+    <div class="cards" th:unless="${list.isEmpty()}">
+        <article class="card" th:each="w : ${list}" th:with="a=${w.assignment}">
+            <h3><a th:href="@{/student/assignments/{id}(id=${a.id})}" th:text="${a.taskSet.title}">Название</a></h3>
+            <p class="hint">
+                заданий: <span th:text="${a.taskSet.items.size()}">0</span>
+                <th:block th:if="${a.taskSet.timeLimitMinutes != null}">
+                    · время: <span th:text="${a.taskSet.timeLimitMinutes}">0</span> мин
+                </th:block>
+            </p>
+            <p>Срок: <span th:text="${a.deadlineAt == null} ? 'без срока' : ${@dates.format(a.deadlineAt)}">дата</span></p>
+            <p><span class="status" th:classappend="'status-' + ${w.status.name().toLowerCase()}" th:text="${w.status.label}">не начато</span>
+                <a th:if="${w.resultsVisible}" th:href="@{/student/assignments/{id}/result(id=${a.id})}">
+                    результаты: <span th:text="${w.attempt.finalScore}">0</span></a></p>
+        </article>
+    </div>
+</th:block>
+</body>
+</html>

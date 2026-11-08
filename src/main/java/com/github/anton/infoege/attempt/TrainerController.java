@@ -41,9 +41,13 @@ public class TrainerController {
         this.taskSetService = taskSetService;
     }
 
-    /** Задание на странице тренажёра. status: not-opened, opened или saved. */
+    /**
+     * Задание на странице тренажёра. status: not-opened, opened или saved.
+     * verdict и checks заполняются только в режиме «Проверить ответ» (verdict: correct, partial, wrong или null).
+     */
     public record TrainerTask(int number, Long taskId, int egeNumber, String statementHtml, List<TaskFile> attachments,
-                              int rows, int cols, List<List<String>> answer, String status) {
+                              int rows, int cols, List<List<String>> answer, String status,
+                              String verdict, int checks) {
     }
 
     @GetMapping
@@ -60,7 +64,10 @@ public class TrainerController {
         model.addAttribute("attempt", attempt);
         model.addAttribute("title", set.getTitle());
         model.addAttribute("remainingSeconds", attempt.remainingSeconds(Instant.now()));
-        model.addAttribute("tasks", trainerTasks(attemptId));
+        boolean instant = attempt.getAssignment().getShowResultsMode().isInstant();
+        model.addAttribute("instant", instant);
+        model.addAttribute("allowPause", attempt.getAssignment().isAllowPause());
+        model.addAttribute("tasks", trainerTasks(attemptId, instant));
         return "trainer/trainer";
     }
 
@@ -71,7 +78,7 @@ public class TrainerController {
         return FileDownload.of(file, taskService.openFile(file));
     }
 
-    private List<TrainerTask> trainerTasks(Long attemptId) {
+    private List<TrainerTask> trainerTasks(Long attemptId, boolean instant) {
         List<AttemptAnswer> answers = attemptService.answers(attemptId);
         List<Long> taskIds = answers.stream().map(AttemptAnswer::getTaskId).toList();
         Map<Long, Task> tasks = taskService.tasksById(taskIds);
@@ -85,7 +92,8 @@ public class TrainerController {
             String status = answer.getAnswer() != null ? "saved" : answer.getFirstOpenedAt() != null ? "opened" : "not-opened";
             result.add(new TrainerTask(result.size() + 1, task.getId(), task.getEgeNumber(), html,
                     taskFiles.stream().filter(f -> !f.isImage()).toList(),
-                    answer.rows(), answer.cols(), answer.getAnswer(), status));
+                    answer.rows(), answer.cols(), answer.getAnswer(), status,
+                    instant ? AttemptService.verdict(answer) : null, answer.getCheckCount()));
         }
         return result;
     }

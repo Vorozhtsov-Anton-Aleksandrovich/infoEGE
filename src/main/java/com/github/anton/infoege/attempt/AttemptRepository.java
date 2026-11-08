@@ -30,6 +30,11 @@ public interface AttemptRepository extends JpaRepository<Attempt, Long> {
     @Query("select a.id from Attempt a where a.status = 'IN_PROGRESS' and a.expiresAt <= :threshold")
     List<Long> findOverdueIds(Instant threshold);
 
+    /** Попытки на паузе, у которых прошёл срок назначения: их тоже нужно закрыть. */
+    @Query("select a.id from Attempt a join a.assignment s where a.status = 'IN_PROGRESS' and a.pausedAt is not null "
+            + "and s.deadlineAt <= :threshold")
+    List<Long> findPausedPastDeadlineIds(Instant threshold);
+
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("select a from Attempt a where a.id = :id")
     Optional<Attempt> findForUpdate(Long id);

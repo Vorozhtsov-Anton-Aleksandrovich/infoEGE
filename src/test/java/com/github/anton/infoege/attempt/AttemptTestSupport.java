@@ -76,7 +76,11 @@ abstract class AttemptTestSupport extends IntegrationTest {
     }
 
     Assignment assign(TaskSet set, User student) {
-        assignmentService.assign(set.getId(), List.of(student.getId()), null, ShowResultsMode.AFTER_FINISH);
+        return assign(set, student, ShowResultsMode.AFTER_FINISH);
+    }
+
+    Assignment assign(TaskSet set, User student, ShowResultsMode mode) {
+        assignmentService.assign(set.getId(), List.of(student.getId()), null, mode);
         return assignmentService.forStudent(student.getId()).stream()
                 .filter(a -> a.getTaskSet().getId().equals(set.getId())).findFirst().orElseThrow();
     }
