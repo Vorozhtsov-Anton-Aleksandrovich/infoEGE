@@ -19,6 +19,7 @@ import java.util.function.Function;
  * Markdown → безопасный HTML.
  * Картинки из файлов задания пишутся как {@code ![подпись](file:имя.png)}; адрес подставляет
  * вызывающий код через {@code fileUrlResolver}, потому что он разный для преподавателя и ученика.
+ * Подчёркивание пишется HTML-тегом {@code <u>…</u>} (в Markdown своего синтаксиса нет).
  */
 @Component
 public class MarkdownRenderer {
@@ -35,7 +36,11 @@ public class MarkdownRenderer {
                     .toFactory());
 
     private final Parser parser = Parser.builder().extensions(List.of(TablesExtension.create())).build();
-    private final HtmlRenderer renderer = HtmlRenderer.builder().extensions(List.of(TablesExtension.create())).build();
+    // Одиночный Enter в тексте — перенос строки, как ожидает преподаватель (по стандарту Markdown строки склеились бы).
+    private final HtmlRenderer renderer = HtmlRenderer.builder()
+            .extensions(List.of(TablesExtension.create()))
+            .softbreak("<br />")
+            .build();
 
     public String render(String markdown, Function<String, String> fileUrlResolver) {
         if (markdown == null || markdown.isBlank()) {

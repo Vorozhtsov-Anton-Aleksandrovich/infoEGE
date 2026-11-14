@@ -35,19 +35,23 @@
         </div>
 
         <div class="md-editor">
-            <label>Условие (Markdown)
+            <div class="md-input">
+            <label>Условие
                 <textarea th:field="*{statementMd}" rows="14" required data-image-paste
                           hx-post="/teacher/tasks/markdown-preview" hx-params="statementMd,taskId"
                           hx-trigger="input changed delay:500ms, load" hx-target="#statement-preview"></textarea>
                 <span class="field-error" th:errors="*{statementMd}"></span>
                 <span class="paste-status hint" aria-live="polite"></span>
             </label>
+            </div>
             <div>
                 <div class="hint">Предпросмотр</div>
                 <div id="statement-preview" class="markdown preview-box"></div>
             </div>
         </div>
-        <p class="hint">Картинку можно вставить в условие через Ctrl+V или перетащить файл в поле
+        <p class="hint">Выделите текст и нажмите <b>Ж</b> (Ctrl+B), <i>К</i> (Ctrl+I) или <u>Ч</u> (Ctrl+U).
+            Enter — перенос строки, пустая строка — новый абзац.
+            Картинку можно вставить в условие через Ctrl+V или перетащить файл в поле
             <span th:if="${task == null}">(после первого сохранения задания)</span>.
             Вручную картинка из файлов задания пишется так: <code>![подпись](file:имя.png)</code>.
             Таблицы, списки, <code>код</code> и формулы через <code>&lt;sub&gt;</code>/<code>&lt;sup&gt;</code> поддерживаются.</p>
@@ -90,12 +94,14 @@
             Добавить разбор (решение)
         </label>
         <div class="md-editor" id="solution-editor" th:hidden="${!form.solutionEnabled}">
-            <label>Разбор (Markdown, ученик видит только после разрешённого момента)
+            <div class="md-input">
+            <label>Разбор (ученик видит только после разрешённого момента)
                 <textarea th:field="*{solutionMd}" rows="8" data-image-paste
                           hx-post="/teacher/tasks/markdown-preview" hx-params="solutionMd,taskId"
                           hx-trigger="input changed delay:500ms, load" hx-target="#solution-preview"></textarea>
                 <span class="paste-status hint" aria-live="polite"></span>
             </label>
+            </div>
             <div>
                 <div class="hint">Предпросмотр</div>
                 <div id="solution-preview" class="markdown preview-box"></div>

@@ -157,6 +157,11 @@ label.checkbox { flex-direction: row; align-items: center; gap: 8px; }
 .form label.checkbox { flex-direction: row; }
 .paste-status.error { color: #b42318; }
 textarea.drop-target { outline: 2px dashed #0b5cad; }
+.md-input { display: flex; flex-direction: column; gap: 4px; }
+.format-toolbar { display: flex; gap: 4px; }
+.format-toolbar button { min-width: 34px; padding: 3px 8px; font-size: 15px; background: #eceff2; color: #1d3557;
+    border: 1px solid #d0d5db; }
+.format-toolbar button:hover { background: #dde2e8; }
 
 /* ===== Дашборд ученика ===== */
 .dashboard h2 { margin-top: 24px; font-size: 18px; }
