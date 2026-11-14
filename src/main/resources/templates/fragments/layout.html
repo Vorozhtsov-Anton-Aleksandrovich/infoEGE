@@ -23,9 +23,11 @@
         <a th:href="@{/teacher/sets}">Подборки и варианты</a>
         <a th:href="@{/teacher/students}">Ученики</a>
         <a th:href="@{/teacher/results}">Результаты</a>
+        <a th:href="@{/courses}">Курсы</a>
     </nav>
     <nav sec:authorize="hasRole('STUDENT')">
         <a th:href="@{/student}">Мои работы</a>
+        <a th:href="@{/courses}">Курсы</a>
     </nav>
     <div class="user-box" sec:authorize="isAuthenticated()">
         <span sec:authentication="principal.displayName">Имя</span>

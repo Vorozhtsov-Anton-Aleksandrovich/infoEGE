@@ -1,0 +1,81 @@
+package com.github.anton.infoege.course;
+
+import com.github.anton.infoege.IntegrationTest;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.web.servlet.MockMvc;
+
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.not;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrlPattern;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+class CourseWebTest extends IntegrationTest {
+
+    @Autowired
+    MockMvc mvc;
+
+    @Test
+    void anonymousIsRedirectedToLogin() throws Exception {
+        mvc.perform(get("/courses")).andExpect(status().is3xxRedirection()).andExpect(redirectedUrlPattern("**/login"));
+        mvc.perform(get("/course-assets/python-ege/images/range.svg")).andExpect(status().is3xxRedirection());
+    }
+
+    @Test
+    void studentAndTeacherSeeCoursesTab() throws Exception {
+        mvc.perform(get("/courses").with(asStudent("course-student")))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Python для ЕГЭ по информатике")))
+                .andExpect(content().string(containsString("href=\"/courses\"")));
+        mvc.perform(get("/courses").with(asTeacher())).andExpect(status().isOk());
+    }
+
+    @Test
+    void studentHomeShowsCourse() throws Exception {
+        mvc.perform(get("/student").with(asStudent("course-student")))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("href=\"/courses/python-ege\"")));
+    }
+
+    @Test
+    void courseAndLessonPages() throws Exception {
+        mvc.perform(get("/courses/python-ege").with(asStudent("course-student")))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("/courses/python-ege/10-ege-tricks")));
+
+        mvc.perform(get("/courses/python-ege/02-pycharm").with(asStudent("course-student")))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("/course-assets/python-ege/images/")))
+                .andExpect(content().string(containsString("/courses/python-ege/01-install-idle")))
+                .andExpect(content().string(containsString("/courses/python-ege/03-io-variables")))
+                // Скрытый тест py02-3 (n = 12345) на странице не показывается.
+                .andExpect(content().string(not(containsString("76205685"))));
+    }
+
+    @Test
+    void unknownCourseOrLessonIs404() throws Exception {
+        mvc.perform(get("/courses/nope").with(asStudent("course-student"))).andExpect(status().isNotFound());
+        mvc.perform(get("/courses/python-ege/nope").with(asStudent("course-student"))).andExpect(status().isNotFound());
+    }
+
+    @Test
+    void servesCourseImages() throws Exception {
+        mvc.perform(get("/course-assets/python-ege/images/range.svg").with(asStudent("course-student")))
+                .andExpect(status().isOk())
+                .andExpect(header().string("Content-Type", containsString("image/svg+xml")))
+                .andExpect(header().string("Cache-Control", containsString("max-age=86400")));
+    }
+
+    @Test
+    void rejectsBadImageNames() throws Exception {
+        mvc.perform(get("/course-assets/python-ege/images/missing.svg").with(asStudent("course-student")))
+                .andExpect(status().isNotFound());
+        mvc.perform(get("/course-assets/python-ege/images/course.json").with(asStudent("course-student")))
+                .andExpect(status().isNotFound());
+        mvc.perform(get("/course-assets/python-ege/images/..%2F..%2Fcourse.json").with(asStudent("course-student")))
+                .andExpect(status().is4xxClientError());
+    }
+}

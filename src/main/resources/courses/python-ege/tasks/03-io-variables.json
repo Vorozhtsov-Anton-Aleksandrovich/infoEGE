@@ -1,0 +1,179 @@
+{
+  "lesson": "03-io-variables",
+  "tasks": [
+    {
+      "id": "py03-1",
+      "title": "Сумма двух чисел",
+      "statement": "В одной строке через пробел даны два целых числа `a` и `b`. Выведи их сумму.",
+      "starterCode": "",
+      "hint": "",
+      "tests": [
+        {
+          "input": "3 5\n",
+          "hidden": false,
+          "output": "8"
+        },
+        {
+          "input": "-7 7\n",
+          "hidden": true,
+          "output": "0"
+        },
+        {
+          "input": "1000000000 1000000000\n",
+          "hidden": true,
+          "output": "2000000000"
+        },
+        {
+          "input": "0 -15\n",
+          "hidden": true,
+          "output": "-15"
+        }
+      ]
+    },
+    {
+      "id": "py03-2",
+      "title": "Последняя цифра",
+      "statement": "Дано натуральное число `n`. Выведи его последнюю цифру.",
+      "starterCode": "",
+      "hint": "",
+      "tests": [
+        {
+          "input": "2025\n",
+          "hidden": false,
+          "output": "5"
+        },
+        {
+          "input": "7\n",
+          "hidden": true,
+          "output": "7"
+        },
+        {
+          "input": "1230\n",
+          "hidden": true,
+          "output": "0"
+        },
+        {
+          "input": "99999999999999999999\n",
+          "hidden": true,
+          "output": "9"
+        }
+      ]
+    },
+    {
+      "id": "py03-3",
+      "title": "Сумма цифр трёхзначного",
+      "statement": "Дано трёхзначное число. Выведи сумму его цифр. Реши через `//` и `%`, без строк.",
+      "starterCode": "",
+      "hint": "Сотни: n // 100. Десятки: n // 10 % 10. Единицы: n % 10.",
+      "tests": [
+        {
+          "input": "123\n",
+          "hidden": false,
+          "output": "6"
+        },
+        {
+          "input": "100\n",
+          "hidden": true,
+          "output": "1"
+        },
+        {
+          "input": "999\n",
+          "hidden": true,
+          "output": "27"
+        },
+        {
+          "input": "507\n",
+          "hidden": true,
+          "output": "12"
+        }
+      ]
+    },
+    {
+      "id": "py03-4",
+      "title": "Электронные часы",
+      "statement": "С начала суток прошло `n` минут (`n` может быть больше 1440 — тогда прошли сутки и больше). Выведи через пробел, сколько часов и минут показывают часы (часы от 0 до 23).",
+      "starterCode": "",
+      "hint": "",
+      "tests": [
+        {
+          "input": "150\n",
+          "hidden": false,
+          "output": "2 30"
+        },
+        {
+          "input": "1441\n",
+          "hidden": false,
+          "output": "0 1"
+        },
+        {
+          "input": "0\n",
+          "hidden": true,
+          "output": "0 0"
+        },
+        {
+          "input": "1439\n",
+          "hidden": true,
+          "output": "23 59"
+        },
+        {
+          "input": "100000\n",
+          "hidden": true,
+          "output": "10 40"
+        }
+      ]
+    },
+    {
+      "id": "py03-5",
+      "title": "Парты",
+      "statement": "В школе открывают три класса. В каждой строке дано число учеников класса. За одной партой сидят не больше двух учеников. Сколько всего парт нужно купить?",
+      "starterCode": "",
+      "hint": "Для нечётного числа учеников нужна ещё одна парта: (x + 1) // 2.",
+      "tests": [
+        {
+          "input": "20\n21\n22\n",
+          "hidden": false,
+          "output": "32"
+        },
+        {
+          "input": "1\n1\n1\n",
+          "hidden": true,
+          "output": "3"
+        },
+        {
+          "input": "0\n0\n0\n",
+          "hidden": true,
+          "output": "0"
+        },
+        {
+          "input": "17\n19\n18\n",
+          "hidden": true,
+          "output": "28"
+        }
+      ]
+    },
+    {
+      "id": "py03-6",
+      "title": "Обмен значений",
+      "statement": "В одной строке даны два числа `a` и `b`. Поменяй значения переменных местами и выведи `a b`.",
+      "starterCode": "",
+      "hint": "",
+      "tests": [
+        {
+          "input": "1 2\n",
+          "hidden": false,
+          "output": "2 1"
+        },
+        {
+          "input": "-5 10\n",
+          "hidden": true,
+          "output": "10 -5"
+        },
+        {
+          "input": "7 7\n",
+          "hidden": true,
+          "output": "7 7"
+        }
+      ]
+    }
+  ]
+}

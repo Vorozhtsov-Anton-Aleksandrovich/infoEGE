@@ -43,15 +43,25 @@ public class MarkdownRenderer {
             .build();
 
     public String render(String markdown, Function<String, String> fileUrlResolver) {
+        return renderWithImages(markdown, destination -> destination.startsWith(FILE_PREFIX)
+                ? fileUrlResolver.apply(destination.substring(FILE_PREFIX.length()))
+                : destination);
+    }
+
+    /**
+     * То же, но адрес каждой картинки целиком проходит через {@code imageResolver}:
+     * он возвращает итоговый адрес или null, если картинку нужно убрать (останется подпись).
+     */
+    public String renderWithImages(String markdown, Function<String, String> imageResolver) {
         if (markdown == null || markdown.isBlank()) {
             return "";
         }
         Node document = parser.parse(markdown);
-        resolveFileImages(document, fileUrlResolver);
+        resolveImages(document, imageResolver);
         return POLICY.sanitize(renderer.render(document));
     }
 
-    private void resolveFileImages(Node document, Function<String, String> fileUrlResolver) {
+    private void resolveImages(Node document, Function<String, String> imageResolver) {
         List<Image> images = new ArrayList<>();
         document.accept(new AbstractVisitor() {
             @Override
@@ -60,11 +70,7 @@ public class MarkdownRenderer {
             }
         });
         for (Image image : images) {
-            String destination = image.getDestination();
-            if (!destination.startsWith(FILE_PREFIX)) {
-                continue;
-            }
-            String url = fileUrlResolver.apply(destination.substring(FILE_PREFIX.length()));
+            String url = imageResolver.apply(image.getDestination());
             if (url != null) {
                 image.setDestination(url);
             } else {

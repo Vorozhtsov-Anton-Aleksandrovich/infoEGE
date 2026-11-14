@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(${course.title})}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main class="course-page">
+    <p class="breadcrumbs"><a th:href="@{/courses}">Курсы</a></p>
+    <h1 th:text="${course.title}">Курс</h1>
+    <p class="course-description" th:text="${course.description}">Описание</p>
+
+    <ol class="lesson-list">
+        <li th:each="l : ${course.lessons}">
+            <a th:href="@{/courses/{c}/{l}(c=${course.slug}, l=${l.slug})}">
+                <span class="lesson-number" th:text="${l.number}">1</span>
+                <span class="lesson-title" th:text="${l.title}">Урок</span>
+                <span class="hint" th:text="|задач: ${l.tasks.size()}|">задач: 0</span>
+            </a>
+        </li>
+    </ol>
+</main>
+</body>
+</html>

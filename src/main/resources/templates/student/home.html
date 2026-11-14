@@ -7,6 +7,12 @@
     <h1>Главная</h1>
     <p>Здравствуйте, <span sec:authentication="principal.displayName">Имя</span>.</p>
 
+    <!-- ===== Курсы ===== -->
+    <section class="home-courses" th:unless="${courses.isEmpty()}">
+        <h2>Курсы</h2>
+        <div th:replace="~{courses/cards :: cards(${courses})}"></div>
+    </section>
+
     <!-- ===== Дашборд ===== -->
     <section class="panel dashboard">
         <div class="stat-tiles">

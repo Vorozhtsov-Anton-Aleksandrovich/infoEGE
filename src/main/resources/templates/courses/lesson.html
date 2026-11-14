@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(${lesson.title})}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main class="course-page">
+    <p class="breadcrumbs">
+        <a th:href="@{/courses}">Курсы</a> /
+        <a th:href="@{/courses/{c}(c=${course.slug})}" th:text="${course.title}">Курс</a>
+    </p>
+
+    <article class="markdown course-text" th:utext="${lesson.html}"></article>
+
+    <section class="lesson-tasks" th:unless="${lesson.tasks.isEmpty()}">
+        <h2>Задачи урока</h2>
+        <article class="course-task" th:each="t, st : ${lesson.tasks}" th:id="${t.id}">
+            <h3 th:text="|Задача ${st.count}. ${t.title}|">Задача</h3>
+            <div class="markdown" th:utext="${t.statementHtml}"></div>
+
+            <details class="task-hint" th:unless="${#strings.isEmpty(t.hintHtml)}">
+                <summary>Подсказка</summary>
+                <div class="markdown" th:utext="${t.hintHtml}"></div>
+            </details>
+
+            <div class="task-examples">
+                <h4>Примеры</h4>
+                <div class="example" th:each="test : ${t.openTests()}">
+                    <div th:unless="${test.files.isEmpty()}" class="example-files">
+                        <div th:each="f : ${test.filePreviews(10)}">
+                            <div class="hint">Файл <code th:text="${f.key}">17.txt</code> (первые строки)</div>
+                            <pre th:text="${f.value}"></pre>
+                        </div>
+                    </div>
+                    <div class="example-io">
+                        <div>
+                            <div class="hint">Ввод</div>
+                            <pre th:text="${#strings.isEmpty(test.input)} ? '(пусто)' : ${test.input}"></pre>
+                        </div>
+                        <div>
+                            <div class="hint">Вывод</div>
+                            <pre th:text="${test.output}"></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <details class="starter-code" th:unless="${#strings.isEmpty(t.starterCode)}">
+                <summary>Начальный код</summary>
+                <pre th:text="${t.starterCode}"></pre>
+            </details>
+        </article>
+    </section>
+
+    <nav class="lesson-nav">
+        <a th:if="${prev != null}" class="button" th:href="@{/courses/{c}/{l}(c=${course.slug}, l=${prev.slug})}"
+           th:text="|← ${prev.title}|">← Предыдущий</a>
+        <span></span>
+        <a th:if="${next != null}" class="button" th:href="@{/courses/{c}/{l}(c=${course.slug}, l=${next.slug})}"
+           th:text="|${next.title} →|">Следующий →</a>
+    </nav>
+</main>
+</body>
+</html>

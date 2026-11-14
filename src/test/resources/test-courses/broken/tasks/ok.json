@@ -1,0 +1,8 @@
+{
+  "lesson": "ok",
+  "tasks": [
+    {"id": "dup-1", "title": "Первая", "statement": "Выведи 1", "tests": [{"input": "", "output": "1", "hidden": false}]},
+    {"id": "dup-1", "title": "Повтор id", "statement": "Выведи 2", "tests": [{"input": "", "output": "2", "hidden": false}]},
+    {"id": "only-hidden", "title": "Только скрытые", "statement": "Выведи 3", "tests": [{"input": "", "output": "3", "hidden": true}]}
+  ]
+}

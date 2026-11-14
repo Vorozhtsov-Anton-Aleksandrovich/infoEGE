@@ -1,0 +1,262 @@
+{
+  "lesson": "05-loops",
+  "tasks": [
+    {
+      "id": "py05-1",
+      "title": "Сумма от 1 до n",
+      "statement": "Дано натуральное `n`. Выведи сумму чисел от 1 до `n` включительно. Используй цикл.",
+      "starterCode": "",
+      "hint": "",
+      "tests": [
+        {
+          "input": "5\n",
+          "hidden": false,
+          "output": "15"
+        },
+        {
+          "input": "1\n",
+          "hidden": true,
+          "output": "1"
+        },
+        {
+          "input": "1000\n",
+          "hidden": true,
+          "output": "500500"
+        },
+        {
+          "input": "99999\n",
+          "hidden": true,
+          "output": "4999950000"
+        }
+      ]
+    },
+    {
+      "id": "py05-2",
+      "title": "Факториал",
+      "statement": "Дано `n` (0 ≤ n ≤ 100). Выведи `n! = 1 · 2 · … · n` (по определению `0! = 1`).",
+      "starterCode": "",
+      "hint": "",
+      "tests": [
+        {
+          "input": "5\n",
+          "hidden": false,
+          "output": "120"
+        },
+        {
+          "input": "0\n",
+          "hidden": true,
+          "output": "1"
+        },
+        {
+          "input": "1\n",
+          "hidden": true,
+          "output": "1"
+        },
+        {
+          "input": "20\n",
+          "hidden": true,
+          "output": "2432902008176640000"
+        },
+        {
+          "input": "100\n",
+          "hidden": true,
+          "output": "93326215443944152681699238856266700490715968264381621468592963895217599993229915608941463976156518286253697920827223758251185210916864000000000000000000000000"
+        }
+      ]
+    },
+    {
+      "id": "py05-3",
+      "title": "Количество цифр",
+      "statement": "Дано целое неотрицательное число. Выведи количество цифр в нём, используя `while` (без `str` и `len`).",
+      "starterCode": "",
+      "hint": "Аккуратно с нулём: в числе 0 одна цифра.",
+      "tests": [
+        {
+          "input": "2025\n",
+          "hidden": false,
+          "output": "4"
+        },
+        {
+          "input": "0\n",
+          "hidden": false,
+          "output": "1"
+        },
+        {
+          "input": "9\n",
+          "hidden": true,
+          "output": "1"
+        },
+        {
+          "input": "10\n",
+          "hidden": true,
+          "output": "2"
+        },
+        {
+          "input": "123456789012345\n",
+          "hidden": true,
+          "output": "15"
+        }
+      ]
+    },
+    {
+      "id": "py05-4",
+      "title": "Сумма цифр",
+      "statement": "Дано натуральное число (может быть очень большим). Выведи сумму его цифр, используя `while`, `%` и `//`.",
+      "starterCode": "",
+      "hint": "",
+      "tests": [
+        {
+          "input": "2025\n",
+          "hidden": false,
+          "output": "9"
+        },
+        {
+          "input": "7\n",
+          "hidden": true,
+          "output": "7"
+        },
+        {
+          "input": "1000000\n",
+          "hidden": true,
+          "output": "1"
+        },
+        {
+          "input": "99999999999999999999\n",
+          "hidden": true,
+          "output": "180"
+        }
+      ]
+    },
+    {
+      "id": "py05-5",
+      "title": "Кратные на отрезке",
+      "statement": "В одной строке даны `a b k` (a ≤ b). Сколько чисел на отрезке [a; b] делятся на `k`?",
+      "starterCode": "",
+      "hint": "",
+      "tests": [
+        {
+          "input": "1 10 3\n",
+          "hidden": false,
+          "output": "3"
+        },
+        {
+          "input": "5 5 5\n",
+          "hidden": true,
+          "output": "1"
+        },
+        {
+          "input": "1 100000 7\n",
+          "hidden": true,
+          "output": "14285"
+        },
+        {
+          "input": "-10 10 5\n",
+          "hidden": true,
+          "output": "5"
+        },
+        {
+          "input": "13 17 20\n",
+          "hidden": true,
+          "output": "0"
+        }
+      ]
+    },
+    {
+      "id": "py05-6",
+      "title": "Простое число",
+      "statement": "Дано натуральное `n` (n ≤ 10⁹). Выведи `YES`, если оно простое, иначе `NO`. Перебирай делители только до √n, иначе будет слишком долго.",
+      "starterCode": "",
+      "hint": "while d * d <= n — это и есть «до корня».",
+      "tests": [
+        {
+          "input": "7\n",
+          "hidden": false,
+          "output": "YES"
+        },
+        {
+          "input": "1\n",
+          "hidden": false,
+          "output": "NO"
+        },
+        {
+          "input": "2\n",
+          "hidden": true,
+          "output": "YES"
+        },
+        {
+          "input": "91\n",
+          "hidden": true,
+          "output": "NO"
+        },
+        {
+          "input": "999999937\n",
+          "hidden": true,
+          "output": "YES"
+        },
+        {
+          "input": "1000000000\n",
+          "hidden": true,
+          "output": "NO"
+        }
+      ]
+    },
+    {
+      "id": "py05-7",
+      "title": "Числа Фибоначчи",
+      "statement": "F₁ = F₂ = 1, каждое следующее — сумма двух предыдущих: 1, 1, 2, 3, 5, 8, … Дано `n` (1 ≤ n ≤ 200). Выведи Fₙ.",
+      "starterCode": "",
+      "hint": "",
+      "tests": [
+        {
+          "input": "6\n",
+          "hidden": false,
+          "output": "8"
+        },
+        {
+          "input": "1\n",
+          "hidden": true,
+          "output": "1"
+        },
+        {
+          "input": "2\n",
+          "hidden": true,
+          "output": "1"
+        },
+        {
+          "input": "50\n",
+          "hidden": true,
+          "output": "12586269025"
+        },
+        {
+          "input": "200\n",
+          "hidden": true,
+          "output": "280571172992510140037611932413038677189525"
+        }
+      ]
+    },
+    {
+      "id": "py05-8",
+      "title": "Кратные трём",
+      "statement": "В первой строке `n`, далее `n` целых чисел, по одному в строке. Выведи через пробел количество чисел, кратных 3, и их сумму.",
+      "starterCode": "",
+      "hint": "",
+      "tests": [
+        {
+          "input": "5\n3\n4\n9\n-6\n1\n",
+          "hidden": false,
+          "output": "3 6"
+        },
+        {
+          "input": "1\n5\n",
+          "hidden": true,
+          "output": "0 0"
+        },
+        {
+          "input": "30\n-757\n-346\n29\n948\n48\n325\n761\n951\n-790\n810\n-543\n832\n230\n272\n139\n-139\n604\n172\n121\n725\n496\n590\n573\n5\n538\n583\n201\n-97\n-509\n-995\n",
+          "hidden": true,
+          "output": "7 2988"
+        }
+      ]
+    }
+  ]
+}

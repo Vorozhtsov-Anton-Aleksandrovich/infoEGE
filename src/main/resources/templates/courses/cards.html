@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<body>
+<!-- Карточки курсов: раздел «Курсы» и главная ученика. -->
+<th:block th:fragment="cards(courses)">
+    <p th:if="${courses.isEmpty()}" class="hint">Курсов пока нет.</p>
+    <div class="cards" th:unless="${courses.isEmpty()}">
+        <article class="card course-card" th:each="c : ${courses}">
+            <h3><a th:href="@{/courses/{slug}(slug=${c.slug})}" th:text="${c.title}">Курс</a></h3>
+            <p th:text="${c.description}">Описание</p>
+            <p class="hint" th:text="|уроков: ${c.lessons.size()} · задач: ${c.taskCount()}|">уроков: 0</p>
+            <p><a class="button" th:href="@{/courses/{slug}(slug=${c.slug})}">Открыть курс</a></p>
+        </article>
+    </div>
+</th:block>
+</body>
+</html>

@@ -2,6 +2,7 @@ package com.github.anton.infoege.attempt;
 
 import com.github.anton.infoege.assignment.Assignment;
 import com.github.anton.infoege.assignment.AssignmentService;
+import com.github.anton.infoege.course.CourseRegistry;
 import com.github.anton.infoege.student.StudentDashboardService;
 import com.github.anton.infoege.taskset.TaskSetType;
 import com.github.anton.infoege.user.AppUserDetails;
@@ -30,12 +31,14 @@ public class StudentWorkController {
     private final AssignmentService assignmentService;
     private final AttemptService attemptService;
     private final StudentDashboardService dashboardService;
+    private final CourseRegistry courseRegistry;
 
     public StudentWorkController(AssignmentService assignmentService, AttemptService attemptService,
-                                 StudentDashboardService dashboardService) {
+                                 StudentDashboardService dashboardService, CourseRegistry courseRegistry) {
         this.assignmentService = assignmentService;
         this.attemptService = attemptService;
         this.dashboardService = dashboardService;
+        this.courseRegistry = courseRegistry;
     }
 
     /** Строка списка работ ученика. remainingSeconds — сколько времени осталось у начатой работы с лимитом. */
@@ -52,6 +55,7 @@ public class StudentWorkController {
         model.addAttribute("collections", works.stream()
                 .filter(w -> w.assignment().getTaskSet().getType() != TaskSetType.VARIANT).toList());
         model.addAttribute("dashboard", dashboardService.dashboard(student.getId()));
+        model.addAttribute("courses", courseRegistry.courses());
         return "student/home";
     }
 

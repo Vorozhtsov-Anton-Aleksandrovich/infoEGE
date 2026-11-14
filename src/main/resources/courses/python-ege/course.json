@@ -1,0 +1,17 @@
+{
+  "slug": "python-ege",
+  "title": "Python для ЕГЭ по информатике",
+  "description": "Короткий курс: установка Python, IDLE и PyCharm, основы языка и приёмы для заданий ЕГЭ. В каждом уроке — теория с картинками и задачи с автопроверкой прямо в браузере.",
+  "lessons": [
+    {"slug": "01-install-idle",  "title": "Установка Python и IDLE",  "file": "lessons/01-install-idle.md",  "tasks": "tasks/01-install-idle.json"},
+    {"slug": "02-pycharm",       "title": "PyCharm",                  "file": "lessons/02-pycharm.md",       "tasks": "tasks/02-pycharm.json"},
+    {"slug": "03-io-variables",  "title": "Переменные, ввод и вывод", "file": "lessons/03-io-variables.md",  "tasks": "tasks/03-io-variables.json"},
+    {"slug": "04-conditions",    "title": "Условия",                  "file": "lessons/04-conditions.md",    "tasks": "tasks/04-conditions.json"},
+    {"slug": "05-loops",         "title": "Циклы",                    "file": "lessons/05-loops.md",         "tasks": "tasks/05-loops.json"},
+    {"slug": "06-strings",       "title": "Строки",                   "file": "lessons/06-strings.md",       "tasks": "tasks/06-strings.json"},
+    {"slug": "07-lists",         "title": "Списки",                   "file": "lessons/07-lists.md",         "tasks": "tasks/07-lists.json"},
+    {"slug": "08-functions",     "title": "Функции",                  "file": "lessons/08-functions.md",     "tasks": "tasks/08-functions.json"},
+    {"slug": "09-files",         "title": "Работа с файлами",         "file": "lessons/09-files.md",         "tasks": "tasks/09-files.json"},
+    {"slug": "10-ege-tricks",    "title": "Приёмы Python для ЕГЭ",    "file": "lessons/10-ege-tricks.md",    "tasks": "tasks/10-ege-tricks.json"}
+  ]
+}
