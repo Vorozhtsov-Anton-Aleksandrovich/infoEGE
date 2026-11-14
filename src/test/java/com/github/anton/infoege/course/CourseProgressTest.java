@@ -103,7 +103,7 @@ class CourseProgressTest extends IntegrationTest {
         mvc.perform(get("/teacher/courses/python-ege/students/" + s.getId()).with(asTeacher()))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Решено 1 из 72 задач.")))
-                .andExpect(content().string(containsString("решена ✅")))
+                .andExpect(content().string(containsString(">решена</span>")))
                 .andExpect(content().string(containsString("print(&#39;черновик&#39;)")))
                 .andExpect(content().string(containsString("проверок: 1")));
 

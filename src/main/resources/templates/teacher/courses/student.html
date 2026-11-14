@@ -25,7 +25,7 @@
             <div class="task-title">
                 <strong th:text="|Задача ${st.count}. ${row.task.title}|">Задача</strong>
                 <span class="task-status" th:classappend="${row.state() == 'solved'} ? 'solved'"
-                      th:text="${row.state() == 'solved'} ? 'решена ✅' : (${row.state() == 'tried'} ? 'не решена' : 'не начата')">не начата</span>
+                      th:text="${row.state() == 'solved'} ? 'решена' : (${row.state() == 'tried'} ? 'не решена' : 'не начата')">не начата</span>
             </div>
             <th:block th:if="${row.status != null}">
                 <div class="hint" th:text="|проверок: ${row.attempts}|">проверок: 0</div>

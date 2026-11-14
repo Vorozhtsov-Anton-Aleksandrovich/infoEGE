@@ -3,6 +3,7 @@ package com.github.anton.infoege.course;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.anton.infoege.markdown.MarkdownRenderer;
 import org.junit.jupiter.api.Test;
+import org.springframework.core.io.ClassPathResource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -42,6 +43,23 @@ class CourseRegistryTest {
         assertThat(registry.image("python-ege", "..%2Fcourse.json")).isEmpty();
         assertThat(registry.image("python-ege", "Range.SVG")).isEmpty();
         assertThat(registry.image("nope", "range.svg")).isEmpty();
+    }
+
+    @Test
+    void expectedOutputsAreAlreadyNormalized() {
+        // Эталоны строит course-tools/build_tasks.py той же нормализацией, что и сервер.
+        for (Course.CourseTask task : load("classpath*:courses/*/course.json").course("python-ege").orElseThrow().tasks()) {
+            for (Course.CourseTest test : task.tests()) {
+                assertThat(OutputComparison.normalize(test.output())).as(task.id()).isEqualTo(test.output());
+            }
+        }
+    }
+
+    @Test
+    void referenceSolutionsAreNotOnClasspath() {
+        assertThat(new ClassPathResource("course-tools/solutions/py01-1.py").exists()).isFalse();
+        assertThat(new ClassPathResource("courses/python-ege/solutions/py01-1.py").exists()).isFalse();
+        assertThat(new ClassPathResource("static/solutions/py01-1.py").exists()).isFalse();
     }
 
     @Test

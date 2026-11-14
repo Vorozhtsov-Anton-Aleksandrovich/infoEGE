@@ -22,7 +22,7 @@
             <summary class="task-summary">
                 <span class="task-summary-title" th:text="|Задача ${st.count}. ${t.title}|">Задача</span>
                 <span class="task-status"
-                      th:text="${solved} ? 'решена ✅' : (${status != null} ? 'не решена' : 'не начата')">не начата</span>
+                      th:text="${solved} ? 'решена' : (${status != null} ? 'не решена' : 'не начата')">не начата</span>
             </summary>
             <div class="task-body">
             <div class="markdown" th:utext="${t.statementHtml}"></div>
@@ -64,9 +64,9 @@
                     <textarea class="run-input mono" rows="3" spellcheck="false"></textarea>
                 </label>
                 <div class="workspace-actions">
-                    <button type="button" class="run-button" title="Ctrl+Enter">▶ Запустить</button>
-                    <button type="button" class="check-button">✔ Проверить</button>
-                    <button type="button" class="reset-button link-button">↺ Сбросить к начальному коду</button>
+                    <button type="button" class="run-button" title="Ctrl+Enter">Запустить</button>
+                    <button type="button" class="check-button">Проверить</button>
+                    <button type="button" class="reset-button link-button">Сбросить к начальному коду</button>
                     <span class="run-state hint" aria-live="polite"></span>
                 </div>
                 <div class="run-output" hidden></div>

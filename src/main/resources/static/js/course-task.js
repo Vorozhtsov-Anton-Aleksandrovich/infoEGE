@@ -106,7 +106,7 @@
             }
             card.classList.remove('task-new', 'task-tried');
             card.classList.add('task-' + value);
-            statusBadge.textContent = value === 'solved' ? 'решена ✅' : 'не решена';
+            statusBadge.textContent = value === 'solved' ? 'решена' : 'не решена';
         }
         const key = draftKey(course, taskId);
         let tests = null;
@@ -212,7 +212,7 @@
         function renderResults(response, runs) {
             results.replaceChildren();
             const summary = el('div', response.solved ? 'check-summary solved' : 'check-summary',
-                response.solved ? 'Все тесты пройдены — задача решена! 🎉'
+                response.solved ? 'Все тесты пройдены — задача решена!'
                     : 'Пройдено тестов: ' + response.passed + ' из ' + response.total);
             results.appendChild(summary);
             response.results.forEach(function (r) {
@@ -221,7 +221,7 @@
                 const row = el('div', 'check-test ' + (r.passed ? 'passed' : 'failed'));
                 const verdict = { passed: 'верно', wrong: 'неверный ответ', error: 'ошибка', timeout: 'превышено время' }[r.status];
                 row.appendChild(el('div', 'check-test-title',
-                    (r.passed ? '✅ ' : '❌ ') + 'Тест ' + (r.index + 1) + (r.hidden ? ' (скрытый)' : '') + ': ' + verdict));
+                    'Тест ' + (r.index + 1) + (r.hidden ? ' (скрытый)' : '') + ': ' + verdict));
                 if (!r.hidden) {
                     // Открытый тест: ввод, ожидаемый и полученный вывод. У пройденного — свёрнуто.
                     const grid = el('div', 'check-io');
