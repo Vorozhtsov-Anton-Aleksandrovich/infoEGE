@@ -6,7 +6,10 @@ import org.springframework.stereotype.Repository;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * Попытки и статусы задач курсов. Через JdbcTemplate, потому что статус обновляется одним upsert
@@ -46,6 +49,36 @@ public class CourseProgressRepository {
                     updated_at = EXCLUDED.updated_at
                 RETURNING solved""",
                 Boolean.class, userId, courseSlug, taskId, solved, code, solved ? now : null, now));
+    }
+
+    /** Задача, которую ученик проверял последней в курсе, — для кнопки «Продолжить». */
+    public Optional<String> lastTaskId(long userId, String courseSlug) {
+        return jdbc.query("""
+                SELECT task_id FROM course_task_status WHERE user_id = ? AND course_slug = ?
+                ORDER BY updated_at DESC LIMIT 1""",
+                (rs, i) -> rs.getString(1), userId, courseSlug).stream().findFirst();
+    }
+
+    /** Решённые задачи курса у всех учеников: user_id → множество task_id. */
+    public Map<Long, Set<String>> solvedByUser(String courseSlug) {
+        Map<Long, Set<String>> result = new HashMap<>();
+        jdbc.query("SELECT user_id, task_id FROM course_task_status WHERE course_slug = ? AND solved",
+                rs -> {
+                    result.computeIfAbsent(rs.getLong(1), id -> new HashSet<>()).add(rs.getString(2));
+                }, courseSlug);
+        return result;
+    }
+
+    /** Сколько раз ученик проверял каждую задачу курса: task_id → число проверок. */
+    public Map<String, Integer> attemptCounts(long userId, String courseSlug) {
+        Map<String, Integer> result = new HashMap<>();
+        jdbc.query("""
+                SELECT task_id, COUNT(*) FROM course_task_attempt WHERE user_id = ? AND course_slug = ?
+                GROUP BY task_id""",
+                rs -> {
+                    result.put(rs.getString(1), rs.getInt(2));
+                }, userId, courseSlug);
+        return result;
     }
 
     /** Статусы задач курса у ученика: task_id → статус. */

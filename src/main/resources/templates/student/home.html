@@ -10,7 +10,7 @@
     <!-- ===== Курсы ===== -->
     <section class="home-courses" th:unless="${courses.isEmpty()}">
         <h2>Курсы</h2>
-        <div th:replace="~{courses/cards :: cards(${courses})}"></div>
+        <div th:replace="~{courses/cards :: cards(${courses}, ${courseProgress})}"></div>
     </section>
 
     <!-- ===== Дашборд ===== -->

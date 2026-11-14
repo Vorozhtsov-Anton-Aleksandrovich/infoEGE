@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(|${student.displayName}: ${course.title}|)}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main>
+    <p class="breadcrumbs">
+        <a th:href="@{/teacher/courses/{c}(c=${course.slug})}">Прогресс учеников</a> /
+        <a th:href="@{/teacher/students/{id}(id=${student.id})}" th:text="${student.displayName}">Ученик</a>
+    </p>
+    <h1 th:text="|${student.displayName}: ${course.title}|">Ученик: курс</h1>
+    <p>
+        <span th:text="|Решено ${progress.total.solved} из ${progress.total.total} задач.|">Решено 0 из 0 задач.</span>
+        <span th:if="${progress.started}" class="hint"
+              th:text="|Последний урок: ${progress.continueLesson.number}. ${progress.continueLesson.title}|"></span>
+        <span th:unless="${progress.started}" class="hint">Курс ещё не начат.</span>
+    </p>
+
+    <section class="panel" th:each="lessonTasks : ${lessons}">
+        <h2>
+            <span th:text="|${lessonTasks.lesson.number}. ${lessonTasks.lesson.title}|">Урок</span>
+            <span class="badge" th:classappend="|cell-${lessonTasks.progress.level()}|" th:text="${lessonTasks.progress.label()}">0/0</span>
+        </h2>
+        <div class="teacher-task" th:each="row, st : ${lessonTasks.tasks}">
+            <div class="task-title">
+                <strong th:text="|Задача ${st.count}. ${row.task.title}|">Задача</strong>
+                <span class="task-status" th:classappend="${row.state() == 'solved'} ? 'solved'"
+                      th:text="${row.state() == 'solved'} ? 'решена ✅' : (${row.state() == 'tried'} ? 'не решена' : 'не начата')">не начата</span>
+            </div>
+            <th:block th:if="${row.status != null}">
+                <div class="hint" th:text="|проверок: ${row.attempts}|">проверок: 0</div>
+                <details>
+                    <summary>Последний код</summary>
+                    <pre class="code-view" th:text="${row.status.lastCode}"></pre>
+                </details>
+            </th:block>
+        </div>
+    </section>
+</main>
+</body>
+</html>

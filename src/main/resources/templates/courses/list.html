@@ -5,7 +5,7 @@
 <header th:replace="~{fragments/layout :: header}"></header>
 <main>
     <h1>Курсы</h1>
-    <div th:replace="~{courses/cards :: cards(${courses})}"></div>
+    <div th:replace="~{courses/cards :: cards(${courses}, ${courseProgress})}"></div>
 </main>
 </body>
 </html>

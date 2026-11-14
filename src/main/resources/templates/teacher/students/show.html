@@ -26,6 +26,17 @@
         </form>
     </div>
 
+    <section class="panel" th:unless="${courseProgress.isEmpty()}">
+        <h2>Курсы</h2>
+        <ul class="facts">
+            <li th:each="p : ${courseProgress}">
+                <a th:href="@{/teacher/courses/{c}/students/{id}(c=${p.course.slug}, id=${student.id})}"
+                   th:text="${p.course.title}">Курс</a>:
+                <span th:text="|решено ${p.total.solved} из ${p.total.total}|">решено 0 из 0</span>
+            </li>
+        </ul>
+    </section>
+
     <section class="panel" th:with="sm=${summary}">
         <h2>Сводка</h2>
         <ul class="facts">

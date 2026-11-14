@@ -265,3 +265,33 @@ textarea.drop-target { outline: 2px dashed #0b5cad; }
 .check-test-title { font-weight: 500; }
 .check-io { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 6px; }
 @media (max-width: 700px) { .check-io { grid-template-columns: 1fr; } }
+
+/* ===== Прогресс по курсам ===== */
+.course-progress { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 8px 0; }
+.course-progress progress { width: 180px; height: 10px; appearance: none; border: 0; border-radius: 5px; background: #eceff2; }
+.course-progress progress::-webkit-progress-bar { background: #eceff2; border-radius: 5px; }
+.course-progress progress::-webkit-progress-value { border-radius: 5px; background: #8a96a3; }
+.course-progress progress::-moz-progress-bar { border-radius: 5px; background: #8a96a3; }
+.course-progress progress.progress-good::-webkit-progress-value { background: #2f9e44; }
+.course-progress progress.progress-good::-moz-progress-bar { background: #2f9e44; }
+.course-progress progress.progress-mid::-webkit-progress-value { background: #e0a800; }
+.course-progress progress.progress-mid::-moz-progress-bar { background: #e0a800; }
+.course-progress progress.progress-low::-webkit-progress-value { background: #d64545; }
+.course-progress progress.progress-low::-moz-progress-bar { background: #d64545; }
+.lesson-solved { font-size: 14px; color: #59636e; white-space: nowrap; }
+.lesson-solved.done { color: #1e6b31; font-weight: 600; }
+.lesson-list a.done { border-color: #b7dfc0; }
+.lesson-list a.done .lesson-number { background: #2f9e44; color: #fff; }
+
+.table-scroll { overflow-x: auto; }
+.course-progress-table th, .course-progress-table td { text-align: center; white-space: nowrap; }
+.course-progress-table th:first-child, .course-progress-table td:first-child { text-align: left; }
+.course-progress-table td.total { font-weight: 600; }
+.cell-good { background: #dcefe0; color: #1e6b31; }
+.cell-mid { background: #fff3cd; color: #7a5b00; }
+.cell-low { background: #fde8e8; color: #8a1c1c; }
+.cell-none { background: #f6f7f8; color: #8a96a3; }
+.teacher-task { padding: 10px 0; border-top: 1px solid #eceff2; }
+.teacher-task:first-of-type { border-top: 0; }
+.code-view { background: #f3f4f6; border-radius: 4px; padding: 10px 12px; overflow-x: auto;
+    font-family: ui-monospace, Consolas, monospace; font-size: 14px; line-height: 1.45; }

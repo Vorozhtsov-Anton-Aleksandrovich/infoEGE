@@ -32,24 +32,29 @@ public class CourseController {
 
     private final CourseRegistry registry;
     private final CourseProgressRepository progress;
+    private final CourseProgressService progressService;
     private final CourseWebConfig.Versions versions;
 
     public CourseController(CourseRegistry registry, CourseProgressRepository progress,
-                            CourseWebConfig.Versions versions) {
+                            CourseProgressService progressService, CourseWebConfig.Versions versions) {
         this.registry = registry;
         this.progress = progress;
+        this.progressService = progressService;
         this.versions = versions;
     }
 
     @GetMapping("/courses")
-    public String list(Model model) {
+    public String list(@AuthenticationPrincipal AppUserDetails user, Model model) {
         model.addAttribute("courses", registry.courses());
+        model.addAttribute("courseProgress", progressService.forUser(user.getId()));
         return "courses/list";
     }
 
     @GetMapping("/courses/{courseSlug}")
-    public String course(@PathVariable String courseSlug, Model model) {
-        model.addAttribute("course", course(courseSlug));
+    public String course(@PathVariable String courseSlug, @AuthenticationPrincipal AppUserDetails user, Model model) {
+        Course course = course(courseSlug);
+        model.addAttribute("course", course);
+        model.addAttribute("progress", progressService.forUser(user.getId(), course));
         return "courses/course";
     }
 

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(|Прогресс: ${course.title}|)}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main>
+    <p class="breadcrumbs">
+        <a th:href="@{/courses}">Курсы</a> /
+        <a th:href="@{/courses/{c}(c=${course.slug})}" th:text="${course.title}">Курс</a>
+    </p>
+    <h1>Прогресс учеников</h1>
+    <p class="hint">В ячейке — решено задач урока из всех. Зелёный — от 80 %, жёлтый — от 40 %, красный — меньше,
+        серый — ещё ничего не решено. Нажмите на ученика, чтобы увидеть задачи и последний код.</p>
+
+    <p th:if="${rows.isEmpty()}" class="hint">Активных учеников пока нет.</p>
+    <div class="table-scroll" th:unless="${rows.isEmpty()}">
+        <table class="table course-progress-table">
+            <thead>
+            <tr>
+                <th>Ученик</th>
+                <th th:each="l : ${course.lessons}" th:title="${l.title}" th:text="${l.number}">1</th>
+                <th>Всего</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="r : ${rows}">
+                <td><a th:href="@{/teacher/courses/{c}/students/{id}(c=${course.slug}, id=${r.student.id})}"
+                       th:text="${r.student.displayName}">Ученик</a></td>
+                <td th:each="l : ${course.lessons}" th:with="p=${r.lesson(l.slug)}"
+                    th:class="|cell-${p.level()}|" th:title="|${l.number}. ${l.title}: решено ${p.label()}|"
+                    th:text="${p.label()}">0/0</td>
+                <td th:class="|cell-${r.total.level()} total|" th:text="${r.total.label()}">0/0</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h2 class="spaced">Уроки</h2>
+    <ol class="facts">
+        <li th:each="l : ${course.lessons}" th:text="|${l.title} (задач: ${l.tasks.size()})|">Урок</li>
+    </ol>
+</main>
+</body>
+</html>
