@@ -1,5 +1,6 @@
-n = int(input())
-a, b = 1, 1
-for i in range(n - 1):
-    a, b = b, a + b
-print(a)
+a, b, k = map(int, input().split())
+cnt = 0
+for x in range(a, b + 1):
+    if x % k == 0:
+        cnt += 1
+print(cnt)

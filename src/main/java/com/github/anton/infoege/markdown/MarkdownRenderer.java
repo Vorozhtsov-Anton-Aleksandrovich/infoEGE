@@ -32,7 +32,8 @@ public class MarkdownRenderer {
             .and(Sanitizers.TABLES)
             .and(Sanitizers.IMAGES)
             .and(new HtmlPolicyBuilder()
-                    .allowElements("pre", "code", "hr", "sub", "sup")
+                    // details/summary — спойлеры «Показать ответ» в уроках курсов.
+                    .allowElements("pre", "code", "hr", "sub", "sup", "details", "summary")
                     .toFactory());
 
     private final Parser parser = Parser.builder().extensions(List.of(TablesExtension.create())).build();

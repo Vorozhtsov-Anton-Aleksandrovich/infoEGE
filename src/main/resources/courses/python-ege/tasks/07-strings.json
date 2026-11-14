@@ -1,12 +1,12 @@
 {
-  "lesson": "06-strings",
+  "lesson": "07-strings",
   "tasks": [
     {
-      "id": "py06-1",
+      "id": "py07-1",
       "title": "Задом наперёд",
       "statement": "Дана строка. Выведи её задом наперёд.",
       "starterCode": "",
-      "hint": "",
+      "hint": "Срез s[::-1] переворачивает строку.",
       "tests": [
         {
           "input": "PYTHON\n",
@@ -26,11 +26,11 @@
       ]
     },
     {
-      "id": "py06-2",
+      "id": "py07-2",
       "title": "Палиндром",
       "statement": "Дана строка без пробелов. Выведи `YES`, если она читается одинаково слева направо и справа налево, иначе `NO`.",
       "starterCode": "",
-      "hint": "",
+      "hint": "Сравни строку с ней же, перевёрнутой: s == s[::-1].",
       "tests": [
         {
           "input": "level\n",
@@ -60,11 +60,11 @@
       ]
     },
     {
-      "id": "py06-3",
+      "id": "py07-3",
       "title": "Гласные",
       "statement": "Дана строка из латинских букв и пробелов. Посчитай количество гласных `a e i o u` (в любом регистре).",
       "starterCode": "",
-      "hint": "",
+      "hint": "Переведи строку в нижний регистр через .lower() и проверяй каждый символ: c in 'aeiou'.",
       "tests": [
         {
           "input": "Hello World\n",
@@ -89,41 +89,31 @@
       ]
     },
     {
-      "id": "py06-4",
-      "title": "Самая длинная цепочка (задание 24)",
-      "statement": "Дана строка из заглавных латинских букв. Найди длину самой длинной цепочки **одинаковых** символов, стоящих подряд.",
+      "id": "py07-4",
+      "title": "Количество слов",
+      "statement": "Дана строка, слова в ней разделены одним или несколькими пробелами. Выведи количество слов.",
       "starterCode": "",
-      "hint": "",
+      "hint": "split() разрезает строку на список слов, а len считает элементы списка.",
       "tests": [
         {
-          "input": "ABBBCCD\n",
+          "input": "Я учу Python\n",
           "hidden": false,
           "output": "3"
         },
         {
-          "input": "A\n",
+          "input": "one\n",
           "hidden": true,
           "output": "1"
         },
         {
-          "input": "ABCDEF\n",
+          "input": "  много   пробелов  тут \n",
           "hidden": true,
-          "output": "1"
-        },
-        {
-          "input": "ZZZZZ\n",
-          "hidden": true,
-          "output": "5"
-        },
-        {
-          "input": "AABABABBABBBBBABABBBABABBBBABBABBBBBBAAAAABBABAABBBBBBBBABBAAABBBABBBBBABBBABBBABBABBBAABABAAABAAAAABBAABBAABABABAABBBAABAABAABBAABBBBBABBAAABBBAABAAAAABABAAAAAABBBBABBABABBBBBBABBBABAAAAABBBAABABAABABBAABABAAABAABBABBABBAABBBAAAAABAABBBABBABBABBBBBABABBBABBBABAAAAAAAABBABABBBBABAAAABBAAAABBBBBAAAABBBAAABAAABBABBABBBBBBAABABABBAAABBBAAAABABBAAAABBBBAAABBBBABAABBBAAABAAAAABABBAAAAABBAABBBABBBAABBBAAABBBAABBBBBBBAABABBBBAABABBBABBBBABABAABBBBBABBBABABBBABAABBABBBBBAAAABBAABBBAAAAABABAABABAAABBAAABBBBBBBBBBABAABBBBABBBBAABABBABBBBBAAABBAAABAABAABBABBBAAAAAAABBAABBABAAAAABBABABABBABAABAAABBBAAAABBAAAABABABBBBABBBAAAAABAAAABABAABBBBABBBBBAAAABBBABBABBBABBAAAABABBBAABAAABAABAAAABABBABBABABBABAABAABBBABABABABABBBABAABAAABBAABBAAAABABBABAAAABABBAABABAAABAABABBAAABABABBAAAABBABAAAAABBBABAABAAABABABAAABABBBBAABAABABABAABABAABABAAAABABBABBABABAAABBABBBBBBBBBBBAAAAABBABAAABABBABBBBBAABAABABABBBABABBBABBBBAABBBBABBAAAAABBBABABAAAAABABBABABBAAABABBAAABBAAABAABBABAAABBABBABBBAABABABABABAAABBBAABABABBBBAABBABBBBBABABBBBAAAABBABBBBBABBBBBBABBBBBABBBAABAABBBBBBAAAAAAAABBAABAABAAAAABAABABBBBAABBABABAABBBBAABAABABBAABABAAABBABBAABABAABBABAAABBAAAABABBBBAAABBAABABABBABABBBAABABBABBBBAAABBAAAAABAABABBBBAABBBBABBABBBAABBAABABBABABAABAABABAAABBABAABABBBBBBAABBBABBBABAABAABAAABBBBABBAABBBABBBBAABAAAABBABBABABBBBAABBBAABABBAAAAAABAAABAAABAAABAAABBAAABBBABBAABBABAAAAAAAAABAAAABABABABBABBAAAAABBAAABBABBAAAAAABAABABABAAABBABBBBBBABBABABBBABBABAABABABBABBAAAAAABAAABABAABABABAABABABABAAAAABABBBABABBAAABAAAABBABAAAAABBBABAABBBBBAAABAAABABABAAABAABABBBABAABBAABAAAAAABAAABAABAABABAABAAAABAABAAAAAABABBBBABABBABBBBABABBBAABBBBBBABBAAABABBABBBBABABBBAAABABBBAABBBBBBAABAABBAABBABBBBBABBABAAABAAABBBABAAAABBAAAAAABAABABBABAABABBAABBBBBBAAAABBBBAABABABBBBBABAAAAAAAABBBAABAAAAABBABAABAAABBABBBBABABBABBABABBBAAABBBBABBBBAABBBABAAAAAABBABAABABBAAAAABBBBBABABBBAAAAABBAAAABBAABAABAABBBABBBABBBBABBABBBBBABABBBABABABBAABBBABBABBABAAABABAABBBBBBABAABBABAABABBBAABABBBAABBBBABABBBBAAAAABBABAABBBABBBBBABBBBBBBBABBBAB\n",
-          "hidden": true,
-          "output": "11"
+          "output": "3"
         }
       ]
     },
     {
-      "id": "py06-5",
+      "id": "py07-5",
       "title": "Редактор (задание 12)",
       "statement": "Строка состоит из `n` единиц. Пока в строке есть `11`, заменяем **первое** вхождение `11` на `2`. Дано `n`, выведи получившуюся строку.",
       "starterCode": "",
@@ -157,35 +147,45 @@
       ]
     },
     {
-      "id": "py06-6",
-      "title": "Количество слов",
-      "statement": "Дана строка, слова в ней разделены одним или несколькими пробелами. Выведи количество слов.",
+      "id": "py07-6",
+      "title": "Самая длинная цепочка (задание 24)",
+      "statement": "Дана строка из заглавных латинских букв. Найди длину самой длинной цепочки **одинаковых** символов, стоящих подряд.",
       "starterCode": "",
-      "hint": "",
+      "hint": "Шаблон с cur и best из раздела 9 урока.",
       "tests": [
         {
-          "input": "Я учу Python\n",
+          "input": "ABBBCCD\n",
           "hidden": false,
           "output": "3"
         },
         {
-          "input": "one\n",
+          "input": "A\n",
           "hidden": true,
           "output": "1"
         },
         {
-          "input": "  много   пробелов  тут \n",
+          "input": "ABCDEF\n",
           "hidden": true,
-          "output": "3"
+          "output": "1"
+        },
+        {
+          "input": "ZZZZZ\n",
+          "hidden": true,
+          "output": "5"
+        },
+        {
+          "input": "AABABABBABBBBBABABBBABABBBBABBABBBBBBAAAAABBABAABBBBBBBBABBAAABBBABBBBBABBBABBBABBABBBAABABAAABAAAAABBAABBAABABABAABBBAABAABAABBAABBBBBABBAAABBBAABAAAAABABAAAAAABBBBABBABABBBBBBABBBABAAAAABBBAABABAABABBAABABAAABAABBABBABBAABBBAAAAABAABBBABBABBABBBBBABABBBABBBABAAAAAAAABBABABBBBABAAAABBAAAABBBBBAAAABBBAAABAAABBABBABBBBBBAABABABBAAABBBAAAABABBAAAABBBBAAABBBBABAABBBAAABAAAAABABBAAAAABBAABBBABBBAABBBAAABBBAABBBBBBBAABABBBBAABABBBABBBBABABAABBBBBABBBABABBBABAABBABBBBBAAAABBAABBBAAAAABABAABABAAABBAAABBBBBBBBBBABAABBBBABBBBAABABBABBBBBAAABBAAABAABAABBABBBAAAAAAABBAABBABAAAAABBABABABBABAABAAABBBAAAABBAAAABABABBBBABBBAAAAABAAAABABAABBBBABBBBBAAAABBBABBABBBABBAAAABABBBAABAAABAABAAAABABBABBABABBABAABAABBBABABABABABBBABAABAAABBAABBAAAABABBABAAAABABBAABABAAABAABABBAAABABABBAAAABBABAAAAABBBABAABAAABABABAAABABBBBAABAABABABAABABAABABAAAABABBABBABABAAABBABBBBBBBBBBBAAAAABBABAAABABBABBBBBAABAABABABBBABABBBABBBBAABBBBABBAAAAABBBABABAAAAABABBABABBAAABABBAAABBAAABAABBABAAABBABBABBBAABABABABABAAABBBAABABABBBBAABBABBBBBABABBBBAAAABBABBBBBABBBBBBABBBBBABBBAABAABBBBBBAAAAAAAABBAABAABAAAAABAABABBBBAABBABABAABBBBAABAABABBAABABAAABBABBAABABAABBABAAABBAAAABABBBBAAABBAABABABBABABBBAABABBABBBBAAABBAAAAABAABABBBBAABBBBABBABBBAABBAABABBABABAABAABABAAABBABAABABBBBBBAABBBABBBABAABAABAAABBBBABBAABBBABBBBAABAAAABBABBABABBBBAABBBAABABBAAAAAABAAABAAABAAABAAABBAAABBBABBAABBABAAAAAAAAABAAAABABABABBABBAAAAABBAAABBABBAAAAAABAABABABAAABBABBBBBBABBABABBBABBABAABABABBABBAAAAAABAAABABAABABABAABABABABAAAAABABBBABABBAAABAAAABBABAAAAABBBABAABBBBBAAABAAABABABAAABAABABBBABAABBAABAAAAAABAAABAABAABABAABAAAABAABAAAAAABABBBBABABBABBBBABABBBAABBBBBBABBAAABABBABBBBABABBBAAABABBBAABBBBBBAABAABBAABBABBBBBABBABAAABAAABBBABAAAABBAAAAAABAABABBABAABABBAABBBBBBAAAABBBBAABABABBBBBABAAAAAAAABBBAABAAAAABBABAABAAABBABBBBABABBABBABABBBAAABBBBABBBBAABBBABAAAAAABBABAABABBAAAAABBBBBABABBBAAAAABBAAAABBAABAABAABBBABBBABBBBABBABBBBBABABBBABABABBAABBBABBABBABAAABABAABBBBBBABAABBABAABABBBAABABBBAABBBBABABBBBAAAAABBABAABBBABBBBBABBBBBBBBABBBAB\n",
+          "hidden": true,
+          "output": "11"
         }
       ]
     },
     {
-      "id": "py06-7",
+      "id": "py07-7",
       "title": "Без одинаковых соседей (задание 24)",
       "statement": "Дана строка из заглавных латинских букв. Найди максимальную длину подстроки, в которой **никакие два соседних символа не совпадают**.",
       "starterCode": "",
-      "hint": "",
+      "hint": "Тот же шаблон, что в предыдущей задаче, только цепочка продолжается, когда соседи разные.",
       "tests": [
         {
           "input": "AABCDDE\n",

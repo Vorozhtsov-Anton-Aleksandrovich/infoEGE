@@ -1,2 +1,3 @@
-name = input()
-print('Привет, ' + name + '!')
+print('Я')
+print('учу')
+print('Python')

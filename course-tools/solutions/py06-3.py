@@ -1,6 +1,6 @@
-s = input()
-cnt = 0
-for c in s.lower():
-    if c in 'aeiou':
-        cnt += 1
-print(cnt)
+n = int(input())
+s = 0
+while n > 0:
+    s += n % 10
+    n //= 10
+print(s)

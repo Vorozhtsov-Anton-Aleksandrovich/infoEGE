@@ -1,8 +1,6 @@
-a = list(map(int, input().split()))
-s = sum(a)
-n = len(a)
+s = input()
 cnt = 0
-for x in a:
-    if x * n > s:
+for c in s.lower():
+    if c in 'aeiou':
         cnt += 1
 print(cnt)

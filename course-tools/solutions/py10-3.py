@@ -1,10 +1,6 @@
-n, b, d = map(int, input().split())
-if n == 0:
-    print(1 if d == 0 else 0)
-else:
-    cnt = 0
-    while n > 0:
-        if n % b == d:
-            cnt += 1
-        n //= b
-    print(cnt)
+cnt = 0
+for line in open('9.txt'):
+    a = sorted(map(int, line.split()))
+    if len(set(a)) == 4 and a[0] + a[3] > a[1] + a[2]:
+        cnt += 1
+print(cnt)

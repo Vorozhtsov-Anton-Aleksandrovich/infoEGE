@@ -1,4 +1,9 @@
-n = int(input())
-a = [int(input()) for i in range(n)]
-a.sort(reverse=True)
-print(a[0], a[1], a[2])
+s = input()
+cur = best = 1
+for i in range(1, len(s)):
+    if s[i] != s[i - 1]:
+        cur += 1
+    else:
+        cur = 1
+    best = max(best, cur)
+print(best)

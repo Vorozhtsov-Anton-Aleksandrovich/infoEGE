@@ -1,9 +1,7 @@
-s = open('24.txt').readline().strip()
-cur = best = 0
-for c in s:
-    if c.isdigit():
-        cur += 1
-        best = max(best, cur)
-    else:
-        cur = 0
-print(best)
+def gcd(a, b):
+    while b != 0:
+        a, b = b, a % b
+    return a
+
+a, b = map(int, input().split())
+print(gcd(a, b))

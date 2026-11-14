@@ -26,7 +26,7 @@ def run(code, inp, files):
             Path(d, name).write_text(content, encoding='utf-8')
         p = Path(d, 'main.py')
         p.write_text(code, encoding='utf-8')
-        r = subprocess.run([sys.executable, '-I', str(p)], input=inp, capture_output=True, text=True,
+        r = subprocess.run([sys.executable, '-I', '-X', 'utf8', str(p)], input=inp, capture_output=True, text=True,
                            cwd=d, timeout=30, encoding='utf-8')
         return r.returncode, r.stdout, r.stderr
 

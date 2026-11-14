@@ -1,6 +1,3 @@
 n = int(input())
-cnt = 1
-while n >= 10:
-    n //= 10
-    cnt += 1
-print(cnt)
+for i in range(1, 11):
+    print(n, 'x', i, '=', n * i)

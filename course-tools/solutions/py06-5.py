@@ -1,5 +1,5 @@
 n = int(input())
-s = '1' * n
-while '11' in s:
-    s = s.replace('11', '2', 1)
-print(s)
+a, b = 1, 1
+for i in range(n - 1):
+    a, b = b, a + b
+print(a)

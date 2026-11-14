@@ -18,17 +18,17 @@ class CourseRegistryTest {
         CourseRegistry registry = load("classpath*:courses/*/course.json");
 
         Course course = registry.course("python-ege").orElseThrow();
-        assertThat(course.lessons()).hasSize(10);
-        assertThat(course.taskCount()).isEqualTo(58);
+        assertThat(course.lessons()).hasSize(13);
+        assertThat(course.taskCount()).isEqualTo(72);
         assertThat(course.lessons().get(0).number()).isEqualTo(1);
-        assertThat(course.task("py09-1").orElseThrow().tests().get(0).files()).containsKey("17.txt");
+        assertThat(course.task("py10-1").orElseThrow().tests().get(0).files()).containsKey("17.txt");
     }
 
     @Test
     void rewritesLessonImagesToCourseAssets() {
         Course course = load("classpath*:courses/*/course.json").course("python-ege").orElseThrow();
 
-        String html = course.lesson("01-install-idle").orElseThrow().html();
+        String html = course.lesson("12-install-idle").orElseThrow().html();
         assertThat(html).contains("src=\"/course-assets/python-ege/images/python-installer.svg\"", "<table>");
         assertThat(html).doesNotContain("src=\"images/");
     }

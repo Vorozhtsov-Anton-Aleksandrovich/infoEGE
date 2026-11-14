@@ -44,14 +44,15 @@ class CourseWebTest extends IntegrationTest {
     void courseAndLessonPages() throws Exception {
         mvc.perform(get("/courses/python-ege").with(asStudent("course-student")))
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("/courses/python-ege/10-ege-tricks")));
+                .andExpect(content().string(containsString("/courses/python-ege/13-pycharm")));
 
-        mvc.perform(get("/courses/python-ege/02-pycharm").with(asStudent("course-student")))
+        mvc.perform(get("/courses/python-ege/05-for-loop").with(asStudent("course-student")))
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("/course-assets/python-ege/images/")))
-                .andExpect(content().string(containsString("/courses/python-ege/01-install-idle")))
-                .andExpect(content().string(containsString("/courses/python-ege/03-io-variables")))
-                // Скрытый тест py02-3 (n = 12345) на странице не показывается.
+                .andExpect(content().string(containsString("/course-assets/python-ege/images/range.svg")))
+                .andExpect(content().string(containsString("<details>")))
+                .andExpect(content().string(containsString("/courses/python-ege/04-conditions")))
+                .andExpect(content().string(containsString("/courses/python-ege/06-while-loop")))
+                // Скрытый тест py05-5 (n = 12345) на странице не показывается.
                 .andExpect(content().string(not(containsString("76205685"))));
     }
 

@@ -1,2 +1,5 @@
-a = sorted(set(map(int, input().split())), reverse=True)
-print(a[1])
+n = int(input())
+s = '1' * n
+while '11' in s:
+    s = s.replace('11', '2', 1)
+print(s)

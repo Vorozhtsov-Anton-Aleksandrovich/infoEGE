@@ -1,9 +1,9 @@
-s = input()
-cur = best = 1
-for i in range(1, len(s)):
-    if s[i] == s[i - 1]:
-        cur += 1
-    else:
-        cur = 1
-    best = max(best, cur)
-print(best)
+n = int(input())
+ok = n > 1
+d = 2
+while d * d <= n:
+    if n % d == 0:
+        ok = False
+        break
+    d += 1
+print('YES' if ok else 'NO')

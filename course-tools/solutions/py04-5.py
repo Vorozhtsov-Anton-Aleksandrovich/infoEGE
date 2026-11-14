@@ -1,9 +1,5 @@
-x, y = map(int, input().split())
-if x > 0 and y > 0:
-    print(1)
-elif x < 0 and y > 0:
-    print(2)
-elif x < 0 and y < 0:
-    print(3)
+a, b, c = map(int, input().split())
+if a < b + c and b < a + c and c < a + b:
+    print('YES')
 else:
-    print(4)
+    print('NO')
