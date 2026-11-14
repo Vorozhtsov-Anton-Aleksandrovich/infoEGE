@@ -222,13 +222,30 @@ textarea.drop-target { outline: 2px dashed #0b5cad; }
 .markdown blockquote p { margin: 4px 0; }
 
 .lesson-tasks { margin-top: 32px; }
-.course-task { margin: 16px 0; padding: 16px 20px; background: #fff; border: 1px solid #dfe3e8; border-radius: 6px; }
+.course-task { margin: 12px 0; background: #fff; border: 1px solid #dfe3e8; border-radius: 6px; overflow: hidden; }
+.course-task > .task-summary { display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 14px 20px; cursor: pointer; color: inherit; font-weight: 600; font-size: 17px; list-style: none; }
+.course-task > .task-summary::-webkit-details-marker { display: none; }
+.course-task > .task-summary::before { content: '▸'; flex: none; color: #8a96a3; transition: transform .15s; }
+.course-task[open] > .task-summary::before { transform: rotate(90deg); }
+.task-summary-title { flex: 1; }
+.course-task[open] > .task-summary { border-bottom: 1px solid #eceff2; }
+.task-body { padding: 12px 20px 16px; }
+/* Статус задачи цветом заголовка: не начата — белый, не решена — жёлтый, решена — зелёный. */
+.course-task.task-new > .task-summary { background: #fff; }
+.course-task.task-tried { border-color: #f0d68a; }
+.course-task.task-tried > .task-summary { background: #fff8e1; }
+.course-task.task-tried .task-status { background: #fff3cd; color: #7a5b00; }
+.course-task.task-solved { border-color: #b7dfc0; }
+.course-task.task-solved > .task-summary { background: #e8f5ec; }
+.course-task.task-solved .task-status { background: #dcefe0; color: #1e6b31; }
 .course-task h3 { margin: 0 0 8px; font-size: 18px; }
 .course-task h4 { margin: 12px 0 6px; font-size: 15px; }
 .course-task details { margin: 10px 0; }
 .course-task summary { cursor: pointer; color: #0b5cad; }
 .example { margin-bottom: 10px; }
 .example-io { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.example-io.output-only { grid-template-columns: 1fr; }
 @media (max-width: 600px) { .example-io { grid-template-columns: 1fr; } }
 .lesson-nav { display: flex; justify-content: space-between; gap: 12px; margin: 28px 0; }
 

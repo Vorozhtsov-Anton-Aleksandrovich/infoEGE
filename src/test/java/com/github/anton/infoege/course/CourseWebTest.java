@@ -57,6 +57,16 @@ class CourseWebTest extends IntegrationTest {
     }
 
     @Test
+    void inputFieldOnlyForTasksThatReadInput() throws Exception {
+        // В уроке 1 программы ничего не читают — поля «Ввод» нет; в уроке 2 оно есть.
+        mvc.perform(get("/courses/python-ege/01-first-program").with(asStudent("course-student")))
+                .andExpect(content().string(not(containsString("class=\"run-input"))))
+                .andExpect(content().string(containsString("<details class=\"course-task task-new\"")));
+        mvc.perform(get("/courses/python-ege/02-variables-input").with(asStudent("course-student")))
+                .andExpect(content().string(containsString("class=\"run-input")));
+    }
+
+    @Test
     void unknownCourseOrLessonIs404() throws Exception {
         mvc.perform(get("/courses/nope").with(asStudent("course-student"))).andExpect(status().isNotFound());
         mvc.perform(get("/courses/python-ege/nope").with(asStudent("course-student"))).andExpect(status().isNotFound());

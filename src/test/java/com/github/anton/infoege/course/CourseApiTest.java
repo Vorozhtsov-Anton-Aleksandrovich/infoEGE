@@ -106,6 +106,7 @@ class CourseApiTest extends IntegrationTest {
         mvc.perform(get("/courses/python-ege/05-for-loop").with(student))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("решена ✅")))
+                .andExpect(content().string(containsString("course-task task-solved")))
                 .andExpect(content().string(containsString("print(&#39;мой код&#39;)")));
     }
 

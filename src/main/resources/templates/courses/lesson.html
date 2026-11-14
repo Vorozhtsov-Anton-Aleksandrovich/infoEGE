@@ -14,14 +14,17 @@
 
     <section class="lesson-tasks" th:unless="${lesson.tasks.isEmpty()}">
         <h2>Задачи урока</h2>
-        <article class="course-task" th:each="t, st : ${lesson.tasks}" th:id="${t.id}"
+        <!-- Задача свёрнута; цвет заголовка — статус: не начата (белый), не решена (жёлтый), решена (зелёный). -->
+        <details class="course-task" th:each="t, st : ${lesson.tasks}" th:id="${t.id}"
                  th:with="status=${statuses.get(t.id)}, solved=${status != null and status.solved}"
+                 th:classappend="${solved} ? 'task-solved' : (${status != null} ? 'task-tried' : 'task-new')"
                  th:attr="data-task-id=${t.id},data-course=${course.slug},data-saved=${status != null},data-has-files=${!t.openTests()[0].files.isEmpty()}">
-            <div class="task-title">
-                <h3 th:text="|Задача ${st.count}. ${t.title}|">Задача</h3>
-                <span class="task-status" th:classappend="${solved} ? 'solved'"
-                      th:text="${solved} ? 'решена ✅' : 'не решена'">не решена</span>
-            </div>
+            <summary class="task-summary">
+                <span class="task-summary-title" th:text="|Задача ${st.count}. ${t.title}|">Задача</span>
+                <span class="task-status"
+                      th:text="${solved} ? 'решена ✅' : (${status != null} ? 'не решена' : 'не начата')">не начата</span>
+            </summary>
+            <div class="task-body">
             <div class="markdown" th:utext="${t.statementHtml}"></div>
 
             <details class="task-hint" th:unless="${#strings.isEmpty(t.hintHtml)}">
@@ -38,8 +41,8 @@
                             <pre th:text="${f.value}"></pre>
                         </div>
                     </div>
-                    <div class="example-io">
-                        <div>
+                    <div class="example-io" th:classappend="${t.needsInput()} ? '' : 'output-only'">
+                        <div th:if="${t.needsInput()}">
                             <div class="hint">Ввод</div>
                             <pre th:text="${#strings.isEmpty(test.input)} ? '(пусто)' : ${test.input}"></pre>
                         </div>
@@ -57,7 +60,7 @@
                 <textarea class="code-input mono" rows="8" spellcheck="false" aria-label="Код программы"
                           th:text="${status != null} ? ${status.lastCode} : ${t.starterCode}"></textarea>
                 <textarea class="code-starter" hidden th:text="${t.starterCode}"></textarea>
-                <label class="run-input-label">Ввод <span class="hint">(что программа прочитает через input(), каждое значение на своей строке)</span>
+                <label class="run-input-label" th:if="${t.needsInput()}">Ввод <span class="hint">(что программа прочитает через input(), каждое значение на своей строке)</span>
                     <textarea class="run-input mono" rows="3" spellcheck="false"></textarea>
                 </label>
                 <div class="workspace-actions">
@@ -69,7 +72,8 @@
                 <div class="run-output" hidden></div>
                 <div class="check-results" hidden aria-live="polite"></div>
             </div>
-        </article>
+            </div>
+        </details>
     </section>
 
     <nav class="lesson-nav">

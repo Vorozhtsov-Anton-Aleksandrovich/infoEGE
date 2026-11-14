@@ -98,6 +98,16 @@
         const output = card.querySelector('.run-output');
         const results = card.querySelector('.check-results');
         const statusBadge = card.querySelector('.task-status');
+
+        // Цвет заголовка: task-new → task-tried после первой проверки → task-solved.
+        function setState(value) {
+            if (card.classList.contains('task-solved')) {
+                return;
+            }
+            card.classList.remove('task-new', 'task-tried');
+            card.classList.add('task-' + value);
+            statusBadge.textContent = value === 'solved' ? 'решена ✅' : 'не решена';
+        }
         const key = draftKey(course, taskId);
         let tests = null;
         let busy = false;
@@ -178,7 +188,7 @@
                     const open = (await loadTests()).find(function (t) { return !t.hidden; });
                     files = open ? open.files : {};
                 }
-                const r = await PyRunner.run(editor.getValue(), inputField.value, files);
+                const r = await PyRunner.run(editor.getValue(), inputField ? inputField.value : '', files);
                 output.replaceChildren();
                 output.appendChild(el('div', 'run-output-title', 'Вывод программы'));
                 output.appendChild(pre(r.stdout));
@@ -238,10 +248,7 @@
                 results.appendChild(row);
             });
             results.hidden = false;
-            if (response.taskSolved) {
-                statusBadge.textContent = 'решена ✅';
-                statusBadge.classList.add('solved');
-            }
+            setState(response.taskSolved ? 'solved' : 'tried');
         }
 
         async function check() {
@@ -292,5 +299,19 @@
         });
     }
 
-    document.querySelectorAll('.course-task[data-task-id]').forEach(setupTask);
+    // Редактор создаётся при первом раскрытии задачи: CodeMirror в свёрнутом блоке не знает своих размеров.
+    document.querySelectorAll('.course-task[data-task-id]').forEach(function (card) {
+        let ready = false;
+        function init() {
+            if (card.open && !ready) {
+                ready = true;
+                setupTask(card);
+            }
+        }
+        card.addEventListener('toggle', init);
+        if (location.hash === '#' + card.id) {
+            card.open = true;
+        }
+        init();
+    });
 })();

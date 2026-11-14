@@ -39,6 +39,11 @@ public record Course(String slug, String title, String description, List<Lesson>
         public List<CourseTest> openTests() {
             return tests.stream().filter(t -> !t.hidden()).toList();
         }
+
+        /** Читает ли программа ввод: хотя бы в одном тесте есть stdin. Иначе поле «Ввод» не показывается. */
+        public boolean needsInput() {
+            return tests.stream().anyMatch(t -> !t.input().isEmpty());
+        }
     }
 
     /** Тест задачи: stdin, ожидаемый stdout и файлы, которые кладутся рядом с программой. */
