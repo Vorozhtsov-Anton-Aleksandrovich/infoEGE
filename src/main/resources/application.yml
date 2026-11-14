@@ -46,6 +46,10 @@ app:
     login: ${TEACHER_LOGIN:}
     password: ${TEACHER_PASSWORD:}
     display-name: ${TEACHER_NAME:Преподаватель}
+  courses:
+    # Версии подставляет Maven из pom.xml (@...@): по ним строятся пути /pyodide/<версия>/ и /webjars/codemirror/<версия>/.
+    pyodide-version: '@pyodide.version@'
+    codemirror-version: '@codemirror.version@'
   storage:
     dir: ${STORAGE_DIR:./data/files}
     max-file-size: ${MAX_FILE_SIZE:20MB}

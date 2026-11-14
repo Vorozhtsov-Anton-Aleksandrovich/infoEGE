@@ -3,7 +3,8 @@
 <head th:replace="~{fragments/layout :: head(${lesson.title})}"></head>
 <body>
 <header th:replace="~{fragments/layout :: header}"></header>
-<main class="course-page">
+<main class="course-page"
+      th:attr="data-pyodide-url=${versions.pyodideUrl()},data-py-worker=@{/js/py-worker.js}">
     <p class="breadcrumbs">
         <a th:href="@{/courses}">Курсы</a> /
         <a th:href="@{/courses/{c}(c=${course.slug})}" th:text="${course.title}">Курс</a>
@@ -13,8 +14,14 @@
 
     <section class="lesson-tasks" th:unless="${lesson.tasks.isEmpty()}">
         <h2>Задачи урока</h2>
-        <article class="course-task" th:each="t, st : ${lesson.tasks}" th:id="${t.id}">
-            <h3 th:text="|Задача ${st.count}. ${t.title}|">Задача</h3>
+        <article class="course-task" th:each="t, st : ${lesson.tasks}" th:id="${t.id}"
+                 th:with="status=${statuses.get(t.id)}, solved=${status != null and status.solved}"
+                 th:attr="data-task-id=${t.id},data-course=${course.slug},data-saved=${status != null},data-has-files=${!t.openTests()[0].files.isEmpty()}">
+            <div class="task-title">
+                <h3 th:text="|Задача ${st.count}. ${t.title}|">Задача</h3>
+                <span class="task-status" th:classappend="${solved} ? 'solved'"
+                      th:text="${solved} ? 'решена ✅' : 'не решена'">не решена</span>
+            </div>
             <div class="markdown" th:utext="${t.statementHtml}"></div>
 
             <details class="task-hint" th:unless="${#strings.isEmpty(t.hintHtml)}">
@@ -44,10 +51,24 @@
                 </div>
             </div>
 
-            <details class="starter-code" th:unless="${#strings.isEmpty(t.starterCode)}">
-                <summary>Начальный код</summary>
-                <pre th:text="${t.starterCode}"></pre>
-            </details>
+            <div class="workspace">
+                <h4>Решение</h4>
+                <!-- Без JavaScript это обычное поле; с ним — редактор CodeMirror. Код: последняя проверка или начальный. -->
+                <textarea class="code-input mono" rows="8" spellcheck="false" aria-label="Код программы"
+                          th:text="${status != null} ? ${status.lastCode} : ${t.starterCode}"></textarea>
+                <textarea class="code-starter" hidden th:text="${t.starterCode}"></textarea>
+                <label class="run-input-label">Ввод <span class="hint">(что программа прочитает через input(), каждое значение на своей строке)</span>
+                    <textarea class="run-input mono" rows="3" spellcheck="false"></textarea>
+                </label>
+                <div class="workspace-actions">
+                    <button type="button" class="run-button" title="Ctrl+Enter">▶ Запустить</button>
+                    <button type="button" class="check-button">✔ Проверить</button>
+                    <button type="button" class="reset-button link-button">↺ Сбросить к начальному коду</button>
+                    <span class="run-state hint" aria-live="polite"></span>
+                </div>
+                <div class="run-output" hidden></div>
+                <div class="check-results" hidden aria-live="polite"></div>
+            </div>
         </article>
     </section>
 
@@ -59,5 +80,10 @@
            th:text="|${next.title} →|">Следующий →</a>
     </nav>
 </main>
+<link rel="stylesheet" th:href="@{${versions.codemirrorUrl()} + 'lib/codemirror.css'}">
+<script th:src="@{${versions.codemirrorUrl()} + 'lib/codemirror.js'}" defer></script>
+<script th:src="@{${versions.codemirrorUrl()} + 'mode/python/python.js'}" defer></script>
+<script th:src="@{/js/py-runner.js}" defer></script>
+<script th:src="@{/js/course-task.js}" defer></script>
 </body>
 </html>

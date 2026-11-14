@@ -30,6 +30,17 @@ http://localhost:8080, вход `teacher` / `teacher` (значения по у�
 Если запущен весь `docker compose up`, порт 8080 занят контейнером приложения: остановите его
 (`docker compose stop app`) перед запуском из IDE.
 
+### Python в браузере (курсы)
+
+Код учеников в задачах курсов выполняется в браузере через [Pyodide](https://pyodide.org) в Web Worker,
+сервер код не исполняет. Pyodide (~13 МБ) не хранится в git: при сборке Maven (фаза `generate-resources`)
+скачивает архив `pyodide-core` нужной версии в `~/.cache/infoege/pyodide/`, сверяет SHA-256 и распаковывает
+в `target/classes/static/pyodide/<версия>/`. Сеть нужна только при первой сборке. Версия и контрольная сумма —
+в `pom.xml` (`pyodide.version`, `pyodide.sha256`).
+
+Если запускаете из IntelliJ без Maven и задачи пишут «Не удалось загрузить Python», один раз выполните
+`./mvnw generate-resources`. Редактор кода — CodeMirror 5 из webjars, тоже без CDN.
+
 ## Тесты
 
 ```bash

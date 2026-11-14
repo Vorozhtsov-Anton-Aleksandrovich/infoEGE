@@ -1,11 +1,13 @@
 package com.github.anton.infoege.course;
 
 import com.github.anton.infoege.course.Course.Lesson;
+import com.github.anton.infoege.user.AppUserDetails;
 import com.github.anton.infoege.web.NotFoundException;
 import org.springframework.core.io.Resource;
 import org.springframework.http.CacheControl;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,9 +31,14 @@ public class CourseController {
             "webp", MediaType.valueOf("image/webp"));
 
     private final CourseRegistry registry;
+    private final CourseProgressRepository progress;
+    private final CourseWebConfig.Versions versions;
 
-    public CourseController(CourseRegistry registry) {
+    public CourseController(CourseRegistry registry, CourseProgressRepository progress,
+                            CourseWebConfig.Versions versions) {
         this.registry = registry;
+        this.progress = progress;
+        this.versions = versions;
     }
 
     @GetMapping("/courses")
@@ -47,7 +54,8 @@ public class CourseController {
     }
 
     @GetMapping("/courses/{courseSlug}/{lessonSlug}")
-    public String lesson(@PathVariable String courseSlug, @PathVariable String lessonSlug, Model model) {
+    public String lesson(@PathVariable String courseSlug, @PathVariable String lessonSlug,
+                         @AuthenticationPrincipal AppUserDetails user, Model model) {
         Course course = course(courseSlug);
         Lesson lesson = course.lesson(lessonSlug).orElseThrow(NotFoundException::new);
         List<Lesson> lessons = course.lessons();
@@ -56,6 +64,8 @@ public class CourseController {
         model.addAttribute("lesson", lesson);
         model.addAttribute("prev", index > 0 ? lessons.get(index - 1) : null);
         model.addAttribute("next", index + 1 < lessons.size() ? lessons.get(index + 1) : null);
+        model.addAttribute("statuses", progress.statuses(user.getId(), courseSlug));
+        model.addAttribute("versions", versions);
         return "courses/lesson";
     }
 

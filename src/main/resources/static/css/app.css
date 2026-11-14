@@ -231,3 +231,37 @@ textarea.drop-target { outline: 2px dashed #0b5cad; }
 .example-io { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 @media (max-width: 600px) { .example-io { grid-template-columns: 1fr; } }
 .lesson-nav { display: flex; justify-content: space-between; gap: 12px; margin: 28px 0; }
+
+/* ===== Задачи курса: редактор, запуск, проверка ===== */
+.task-title { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.task-status { flex: none; font-size: 13px; padding: 2px 10px; border-radius: 10px; background: #eceff2; color: #59636e; }
+.task-status.solved { background: #dcefe0; color: #1e6b31; }
+.workspace { margin-top: 14px; padding-top: 12px; border-top: 1px solid #eceff2; display: flex; flex-direction: column; gap: 8px; }
+.workspace h4 { margin: 0; }
+.workspace .CodeMirror { height: auto; min-height: 120px; border: 1px solid #c4c9d0; border-radius: 4px;
+    font-family: ui-monospace, Consolas, monospace; font-size: 14px; line-height: 1.45; }
+.workspace .CodeMirror-focused { border-color: #0b5cad; }
+.workspace .CodeMirror-scroll { min-height: 120px; }
+.workspace textarea.code-input { width: 100%; box-sizing: border-box; }
+.run-input-label { display: flex; flex-direction: column; gap: 4px; font-weight: 500; }
+.run-input { width: 100%; box-sizing: border-box; }
+.workspace-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.workspace-actions button:disabled { opacity: .6; cursor: default; }
+.check-button { background: #1e6b31; }
+.check-button:hover { background: #185a29; }
+.reset-button { color: #59636e; font-size: 14px; }
+.run-output, .check-results { display: flex; flex-direction: column; gap: 6px; }
+.run-output-title { font-size: 13px; color: #59636e; }
+.run-output pre, .check-results pre { margin: 0; white-space: pre-wrap; word-break: break-word; max-height: 320px; overflow: auto; }
+.py-error { padding: 10px 12px; background: #fde8e8; color: #8a1c1c; border-radius: 4px; }
+.py-error-main { font-family: ui-monospace, Consolas, monospace; font-size: 16px; font-weight: 600; }
+.py-error-hint { margin-top: 4px; color: #5c1414; }
+.py-error details { margin-top: 6px; }
+.py-error pre { background: #fff5f5; }
+.check-summary { font-weight: 600; padding: 8px 12px; border-radius: 4px; background: #fff3cd; color: #7a5b00; }
+.check-summary.solved { background: #dcefe0; color: #1e6b31; }
+.check-test { padding: 8px 12px; border: 1px solid #eceff2; border-radius: 4px; background: #fff; }
+.check-test.failed { border-color: #f1c4c4; }
+.check-test-title { font-weight: 500; }
+.check-io { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 6px; }
+@media (max-width: 700px) { .check-io { grid-template-columns: 1fr; } }
