@@ -63,6 +63,34 @@ class StudentDashboardTest extends AttemptTestSupport {
     }
 
     @Test
+    void courseTasksCountInActivityOncePerDay() throws Exception {
+        User student = student();
+        java.time.Instant now = java.time.Instant.now();
+        // Одна задача проверена трижды, другая — один раз (в другом курсе): за день — две задачи.
+        courseProgress.saveAttempt(student.getId(), "python-ege", "py01-1", "x", 0, 1, false, now.minusSeconds(30));
+        courseProgress.saveAttempt(student.getId(), "python-ege", "py01-1", "y", 0, 1, false, now.minusSeconds(20));
+        courseProgress.saveAttempt(student.getId(), "python-ege", "py01-1", "z", 1, 1, true, now.minusSeconds(10));
+        courseProgress.saveAttempt(student.getId(), "excel-ege", "xl01-2", "27", 1, 1, true, now);
+
+        StudentDashboardService.Dashboard d = dashboardService.dashboard(student.getId());
+        assertThat(d.answered()).as("«Решено заданий» — только работы").isZero();
+        assertThat(d.yearTotal()).isEqualTo(2);
+        assertThat(d.activeDays()).isEqualTo(1);
+        StudentDashboardService.Day today = d.weeks().stream().flatMap(w -> w.days().stream())
+                .filter(day -> day.count() > 0).findFirst().orElseThrow();
+        assertThat(today.count()).isEqualTo(2);
+        assertThat(today.courseCount()).isEqualTo(2);
+        assertThat(today.title()).endsWith("2 задания (в курсах: 2)");
+
+        String page = mvc.perform(get("/student").with(asStudent(student.getLogin())))
+                .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+        assertThat(page).contains("hm-day hm-l1", "(в курсах: 2)");
+    }
+
+    @Autowired
+    com.github.anton.infoege.course.CourseProgressRepository courseProgress;
+
+    @Test
     void emptyDashboardRenders() throws Exception {
         User student = student();
         String page = mvc.perform(get("/student").with(asStudent(student.getLogin())))

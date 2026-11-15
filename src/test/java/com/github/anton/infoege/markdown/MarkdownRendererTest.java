@@ -20,6 +20,23 @@ class MarkdownRendererTest {
     }
 
     @Test
+    void rendersItalicAndUnderline() {
+        assertThat(render("*курсив* и <u>подчёркнутый</u>")).contains("<em>курсив</em>", "<u>подчёркнутый</u>");
+    }
+
+    @Test
+    void singleNewlineBecomesLineBreak() {
+        assertThat(render("первая\nвторая")).contains("первая<br />вторая");
+    }
+
+    @Test
+    void allowsSpoilersWithMarkdownInside() {
+        String html = render("<details>\n<summary>Ответ</summary>\n\n**42**\n\n</details>");
+
+        assertThat(html).contains("<details>", "<summary>Ответ</summary>", "<strong>42</strong>", "</details>");
+    }
+
+    @Test
     void allowsSubAndSup() {
         assertThat(render("2<sup>10</sup> и A<sub>16</sub>")).contains("<sup>10</sup>", "<sub>16</sub>");
     }

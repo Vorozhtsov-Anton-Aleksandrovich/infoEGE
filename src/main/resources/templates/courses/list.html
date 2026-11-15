@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Курсы')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main>
+    <h1>Курсы</h1>
+    <div th:replace="~{courses/cards :: cards(${courses}, ${courseProgress})}"></div>
+</main>
+</body>
+</html>

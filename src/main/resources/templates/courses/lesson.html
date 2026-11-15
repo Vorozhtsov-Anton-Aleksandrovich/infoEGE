@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(${lesson.title})}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main class="course-page"
+      th:attr="data-pyodide-url=${versions.pyodideUrl()},data-py-worker=@{/js/py-worker.js}">
+    <p class="breadcrumbs">
+        <a th:href="@{/courses}">Курсы</a> /
+        <a th:href="@{/courses/{c}(c=${course.slug})}" th:text="${course.title}">Курс</a>
+    </p>
+
+    <article class="markdown course-text" th:utext="${lesson.html}"></article>
+
+    <section class="lesson-tasks" th:unless="${lesson.tasks.isEmpty()}">
+        <h2>Задачи урока</h2>
+        <!-- Задача свёрнута; цвет заголовка — статус: не начата (белый), не решена (жёлтый), решена (зелёный). -->
+        <details class="course-task" th:each="t, st : ${lesson.tasks}" th:id="${t.id}"
+                 th:with="status=${statuses.get(t.id)}, solved=${status != null and status.solved},
+                          failCount=${fails.getOrDefault(t.id, 0)}"
+                 th:classappend="${solved} ? 'task-solved' : (${status != null} ? 'task-tried' : 'task-new')"
+                 th:attr="data-task-id=${t.id},data-course=${course.slug},data-type=${t.typeName()},data-saved=${status != null},data-has-files=${t.hasFiles()}">
+            <summary class="task-summary">
+                <span class="task-summary-title" th:text="|Задача ${st.count}. ${t.title}|">Задача</span>
+                <span class="task-status"
+                      th:text="${solved} ? 'решена' : (${status != null} ? 'не решена' : 'не начата')">не начата</span>
+            </summary>
+            <div class="task-body">
+            <div class="markdown" th:utext="${t.statementHtml}"></div>
+
+            <details class="task-hint" th:unless="${#strings.isEmpty(t.hintHtml)}">
+                <summary>Подсказка</summary>
+                <div class="markdown" th:utext="${t.hintHtml}"></div>
+            </details>
+
+            <div class="task-files" th:unless="${t.files.isEmpty()}">
+                <a class="button download-button" th:each="f : ${t.files}" download
+                   th:href="@{/course-assets/{c}/files/{f}(c=${course.slug}, f=${f})}">⬇ Скачать файл
+                    <span class="mono" th:text="${f}">файл.xlsx</span></a>
+            </div>
+
+            <th:block th:if="${t.isCode()}">
+            <div class="task-examples">
+                <h4>Примеры</h4>
+                <div class="example" th:each="test : ${t.openTests()}">
+                    <div th:unless="${test.files.isEmpty()}" class="example-files">
+                        <div th:each="f : ${test.filePreviews(10)}">
+                            <div class="hint">Файл <code th:text="${f.key}">17.txt</code> (первые строки)</div>
+                            <pre th:text="${f.value}"></pre>
+                        </div>
+                    </div>
+                    <div class="example-io" th:classappend="${t.needsInput()} ? '' : 'output-only'">
+                        <div th:if="${t.needsInput()}">
+                            <div class="hint">Ввод</div>
+                            <pre th:text="${#strings.isEmpty(test.input)} ? '(пусто)' : ${test.input}"></pre>
+                        </div>
+                        <div>
+                            <div class="hint">Вывод</div>
+                            <pre th:text="${test.output}"></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="workspace">
+                <h4>Решение</h4>
+                <!-- Без JavaScript это обычное поле; с ним — редактор CodeMirror. Код: последняя проверка или начальный. -->
+                <textarea class="code-input mono" rows="8" spellcheck="false" aria-label="Код программы"
+                          th:text="${status != null} ? ${status.lastCode} : ${t.starterCode}"></textarea>
+                <textarea class="code-starter" hidden th:text="${t.starterCode}"></textarea>
+                <label class="run-input-label" th:if="${t.needsInput()}">Ввод <span class="hint">(что программа прочитает через input(), каждое значение на своей строке)</span>
+                    <textarea class="run-input mono" rows="3" spellcheck="false"></textarea>
+                </label>
+                <div class="workspace-actions">
+                    <button type="button" class="run-button" title="Ctrl+Enter">Запустить</button>
+                    <button type="button" class="check-button">Проверить</button>
+                    <button type="button" class="reset-button link-button">Сбросить к начальному коду</button>
+                    <span class="run-state hint" aria-live="polite"></span>
+                </div>
+                <div class="run-output" hidden></div>
+                <div class="check-results" hidden aria-live="polite"></div>
+            </div>
+            </th:block>
+
+            <!-- Задачи без кода: ответ проверяет сервер, эталон на страницу не попадает. data-last — последний ответ. -->
+            <div class="answer-workspace" th:unless="${t.isCode()}"
+                 th:attr="data-last=${status != null} ? ${status.lastCode} : ''">
+                <div th:if="${t.typeName() == 'ANSWER'}" class="answer-row">
+                    <label>Ответ
+                        <input type="text" class="answer-input" autocomplete="off" spellcheck="false"
+                               maxlength="200" th:value="${status != null} ? ${status.lastCode} : ''"
+                               th:placeholder="${t.answerPlaceholder()}">
+                    </label>
+                </div>
+
+                <fieldset th:if="${t.typeName() == 'CHOICE'}" class="choice-list">
+                    <legend class="hint">Выбери один вариант</legend>
+                    <label class="choice" th:each="o, os : ${t.optionsHtml}">
+                        <input type="radio" th:name="|${t.id}-choice|" th:value="${os.count}">
+                        <span th:utext="${o}">вариант</span>
+                    </label>
+                </fieldset>
+
+                <div th:if="${t.typeName() == 'TRUTH_TABLE'}" class="tt-wrap">
+                    <p class="tt-formula" th:unless="${#strings.isEmpty(t.expression)}">
+                        <span class="hint">Формула:</span> <code th:text="|F = ${t.expression}|">F</code>
+                    </p>
+                    <p class="hint">Нажимай на клетки столбца F: «?» → 0 → 1 → 0 …</p>
+                    <table class="tt-table">
+                        <thead>
+                        <tr>
+                            <th th:each="v : ${t.variables}" th:text="${v}">x</th>
+                            <th class="tt-f">F</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="row, rs : ${t.truthRows()}">
+                            <td th:each="b : ${row}" th:text="${b}" th:classappend="${b == 1} ? 'tt-one'">0</td>
+                            <td class="tt-f">
+                                <button type="button" class="tt-cell" th:attr="data-index=${rs.index}"
+                                        aria-label="значение F">?</button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div th:if="${t.typeName() == 'MATCH_GRAPH'}" class="mg-wrap">
+                    <p class="hint">Для каждой вершины графа выбери номер пункта из таблицы.</p>
+                    <table class="mg-table">
+                        <tr>
+                            <th>Вершина</th>
+                            <th th:each="v : ${t.variables}" th:text="${v}">А</th>
+                        </tr>
+                        <tr>
+                            <td>Пункт</td>
+                            <td th:each="v, vs : ${t.variables}">
+                                <select class="mg-select" th:attr="data-index=${vs.index},aria-label=|Пункт для вершины ${v}|">
+                                    <option value="">—</option>
+                                    <option th:each="n : ${t.numberList()}" th:value="${n}" th:text="${n}">1</option>
+                                </select>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="workspace-actions">
+                    <button type="button" class="check-button answer-check">Проверить</button>
+                    <span class="answer-state hint" aria-live="polite"></span>
+                </div>
+                <div class="answer-feedback" hidden aria-live="polite"></div>
+            </div>
+
+            <!-- Разбор: в HTML только если уже открыт; иначе придёт в ответе проверки. -->
+            <div class="task-solution" th:if="${t.hasSolution()}">
+                <details class="solution" th:if="${t.solutionOpen(solved, failCount)}">
+                    <summary>Разбор решения</summary>
+                    <div class="markdown" th:utext="${t.solutionHtml}"></div>
+                </details>
+                <p class="hint solution-locked" th:unless="${t.solutionOpen(solved, failCount)}"
+                   th:text="|Разбор откроется, когда решишь задачу или после ${T(com.github.anton.infoege.course.Course.CourseTask).SOLUTION_AFTER_FAILS} неудачных попыток.|">
+                    Разбор откроется позже.</p>
+            </div>
+            </div>
+        </details>
+    </section>
+
+    <nav class="lesson-nav">
+        <a th:if="${prev != null}" class="button" th:href="@{/courses/{c}/{l}(c=${course.slug}, l=${prev.slug})}"
+           th:text="|← ${prev.title}|">← Предыдущий</a>
+        <span></span>
+        <a th:if="${next != null}" class="button" th:href="@{/courses/{c}/{l}(c=${course.slug}, l=${next.slug})}"
+           th:text="|${next.title} →|">Следующий →</a>
+    </nav>
+</main>
+<th:block th:if="${lesson.hasCodeTasks()}">
+<link rel="stylesheet" th:href="@{${versions.codemirrorUrl()} + 'lib/codemirror.css'}">
+<script th:src="@{${versions.codemirrorUrl()} + 'lib/codemirror.js'}" defer></script>
+<script th:src="@{${versions.codemirrorUrl()} + 'mode/python/python.js'}" defer></script>
+<script th:src="@{/js/py-runner.js}" defer></script>
+<script th:src="@{/js/course-task.js}" defer></script>
+</th:block>
+<script th:src="@{/js/course-lesson.js}" defer></script>
+<script th:src="@{/js/course-widgets.js}" defer></script>
+</body>
+</html>

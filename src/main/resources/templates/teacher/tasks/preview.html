@@ -10,7 +10,8 @@
     </div>
 
     <div class="student-frame">
-        <div class="task-header" th:text="'Задание ' + ${task.egeNumber}">Задание 1</div>
+        <div class="task-header"><span th:text="'Задание ' + ${task.egeNumber}">Задание 1</span>
+            <span th:replace="~{fragments/difficulty :: badge(${task.difficulty})}"></span></div>
         <section th:replace="~{fragments/task :: view(${statementHtml}, ${attachments}, ${fileUrlBase}, ${task.answerRows}, ${task.answerCols}, null)}"></section>
     </div>
 

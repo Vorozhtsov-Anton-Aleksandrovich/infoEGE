@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<body>
+<!-- Карточки курсов: раздел «Курсы» и главная ученика. progress — slug курса → CourseProgressService.CourseProgress. -->
+<th:block th:fragment="cards(courses, progress)">
+    <p th:if="${courses.isEmpty()}" class="hint">Курсов пока нет.</p>
+    <div class="cards" th:unless="${courses.isEmpty()}">
+        <article class="card course-card" th:each="c : ${courses}" th:with="p=${progress.get(c.slug)}">
+            <h3><a th:href="@{/courses/{slug}(slug=${c.slug})}" th:text="${c.title}">Курс</a></h3>
+            <p th:text="${c.description}">Описание</p>
+            <div class="course-progress">
+                <progress th:class="|progress-${p.total.level()}|" th:max="${p.total.total}" th:value="${p.total.solved}"
+                          th:attr="aria-label=|Решено ${p.total.solved} из ${p.total.total}|"></progress>
+                <span th:text="|решено ${p.total.solved} из ${p.total.total}|">решено 0 из 0</span>
+            </div>
+            <p th:if="${p.started}" class="hint"
+               th:text="|последний урок: ${p.continueLesson.number}. ${p.continueLesson.title}|">последний урок</p>
+            <p>
+                <a class="button" th:href="@{/courses/{c}/{l}(c=${c.slug}, l=${p.continueLesson.slug})}"
+                   th:text="${p.started} ? 'Продолжить' : 'Начать курс'">Начать курс</a>
+                <a th:href="@{/courses/{slug}(slug=${c.slug})}">Все уроки</a>
+            </p>
+        </article>
+    </div>
+</th:block>
+</body>
+</html>

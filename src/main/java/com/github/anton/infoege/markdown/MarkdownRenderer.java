@@ -14,16 +14,21 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
+import java.util.regex.Pattern;
 
 /**
  * Markdown → безопасный HTML.
  * Картинки из файлов задания пишутся как {@code ![подпись](file:имя.png)}; адрес подставляет
  * вызывающий код через {@code fileUrlResolver}, потому что он разный для преподавателя и ученика.
+ * Подчёркивание пишется HTML-тегом {@code <u>…</u>} (в Markdown своего синтаксиса нет).
  */
 @Component
 public class MarkdownRenderer {
 
     public static final String FILE_PREFIX = "file:";
+
+    /** Классы подсветки: hl-red, hl-blue, … (стили в app.css). */
+    public static final Pattern HIGHLIGHT = Pattern.compile("hl-(red|blue|green|orange|purple|gray|yellow)");
 
     private static final PolicyFactory POLICY = Sanitizers.FORMATTING
             .and(Sanitizers.BLOCKS)
@@ -31,22 +36,39 @@ public class MarkdownRenderer {
             .and(Sanitizers.TABLES)
             .and(Sanitizers.IMAGES)
             .and(new HtmlPolicyBuilder()
-                    .allowElements("pre", "code", "hr", "sub", "sup")
+                    // details/summary — спойлеры «Показать ответ» в уроках курсов.
+                    .allowElements("pre", "code", "hr", "sub", "sup", "details", "summary", "mark", "span")
+                    // Цветная подсветка в уроках: <span class="hl-red">…</span>. Только заранее заданные классы.
+                    .allowAttributes("class").matching(HIGHLIGHT).onElements("span", "mark", "code", "td", "th")
                     .toFactory());
 
     private final Parser parser = Parser.builder().extensions(List.of(TablesExtension.create())).build();
-    private final HtmlRenderer renderer = HtmlRenderer.builder().extensions(List.of(TablesExtension.create())).build();
+    // Одиночный Enter в тексте — перенос строки, как ожидает преподаватель (по стандарту Markdown строки склеились бы).
+    private final HtmlRenderer renderer = HtmlRenderer.builder()
+            .extensions(List.of(TablesExtension.create()))
+            .softbreak("<br />")
+            .build();
 
     public String render(String markdown, Function<String, String> fileUrlResolver) {
+        return renderWithImages(markdown, destination -> destination.startsWith(FILE_PREFIX)
+                ? fileUrlResolver.apply(destination.substring(FILE_PREFIX.length()))
+                : destination);
+    }
+
+    /**
+     * То же, но адрес каждой картинки целиком проходит через {@code imageResolver}:
+     * он возвращает итоговый адрес или null, если картинку нужно убрать (останется подпись).
+     */
+    public String renderWithImages(String markdown, Function<String, String> imageResolver) {
         if (markdown == null || markdown.isBlank()) {
             return "";
         }
         Node document = parser.parse(markdown);
-        resolveFileImages(document, fileUrlResolver);
+        resolveImages(document, imageResolver);
         return POLICY.sanitize(renderer.render(document));
     }
 
-    private void resolveFileImages(Node document, Function<String, String> fileUrlResolver) {
+    private void resolveImages(Node document, Function<String, String> imageResolver) {
         List<Image> images = new ArrayList<>();
         document.accept(new AbstractVisitor() {
             @Override
@@ -55,11 +77,7 @@ public class MarkdownRenderer {
             }
         });
         for (Image image : images) {
-            String destination = image.getDestination();
-            if (!destination.startsWith(FILE_PREFIX)) {
-                continue;
-            }
-            String url = fileUrlResolver.apply(destination.substring(FILE_PREFIX.length()));
+            String url = imageResolver.apply(image.getDestination());
             if (url != null) {
                 image.setDestination(url);
             } else {

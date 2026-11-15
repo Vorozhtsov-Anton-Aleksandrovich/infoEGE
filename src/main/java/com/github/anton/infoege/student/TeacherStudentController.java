@@ -1,5 +1,6 @@
 package com.github.anton.infoege.student;
 
+import com.github.anton.infoege.course.CourseProgressService;
 import com.github.anton.infoege.invite.InviteService;
 import com.github.anton.infoege.result.ResultService;
 import com.github.anton.infoege.user.AppUserDetails;
@@ -22,12 +23,14 @@ public class TeacherStudentController {
     private final StudentService studentService;
     private final InviteService inviteService;
     private final ResultService resultService;
+    private final CourseProgressService courseProgressService;
 
     public TeacherStudentController(StudentService studentService, InviteService inviteService,
-                                    ResultService resultService) {
+                                    ResultService resultService, CourseProgressService courseProgressService) {
         this.studentService = studentService;
         this.inviteService = inviteService;
         this.resultService = resultService;
+        this.courseProgressService = courseProgressService;
     }
 
     @GetMapping
@@ -68,6 +71,7 @@ public class TeacherStudentController {
     @GetMapping("/{id}")
     public String show(@PathVariable Long id, Model model) {
         model.addAttribute("student", studentService.get(id));
+        model.addAttribute("courseProgress", courseProgressService.forUser(id).values());
         model.addAttribute("summary", resultService.studentSummary(id));
         return "teacher/students/show";
     }

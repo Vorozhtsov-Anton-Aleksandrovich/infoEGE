@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 220" width="620" height="220" font-family="Segoe UI, Calibri, Arial, sans-serif">
+<rect width="620" height="220" fill="#ffffff"/>
+<defs><marker id="a-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#1f2328"/></marker><marker id="a-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#c92a2a"/></marker><marker id="a-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#1c62c9"/></marker><marker id="a-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#2b8a3e"/></marker><marker id="a-orange" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#e8590c"/></marker><marker id="a-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#7048e8"/></marker><marker id="a-gray" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#868e96"/></marker></defs>
+<rect x="20.0" y="30.0" width="36.0" height="22.0" rx="0" fill="#f3f3f3" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="56.0" y="30.0" width="90.0" height="22.0" rx="0" fill="#f3f3f3" stroke="#d4d4d4" stroke-width="1"/>
+<text x="101.0" y="46.0" font-size="13" fill="#444" font-weight="normal" text-anchor="middle" xml:space="preserve">A</text>
+<rect x="146.0" y="30.0" width="60.0" height="22.0" rx="0" fill="#f3f3f3" stroke="#d4d4d4" stroke-width="1"/>
+<text x="176.0" y="46.0" font-size="13" fill="#444" font-weight="normal" text-anchor="middle" xml:space="preserve">B</text>
+<rect x="20.0" y="52.0" width="36.0" height="26.0" rx="0" fill="#f3f3f3" stroke="#d4d4d4" stroke-width="1"/>
+<text x="38.0" y="70.0" font-size="13" fill="#444" font-weight="normal" text-anchor="middle" xml:space="preserve">1</text>
+<rect x="20.0" y="78.0" width="36.0" height="26.0" rx="0" fill="#f3f3f3" stroke="#d4d4d4" stroke-width="1"/>
+<text x="38.0" y="96.0" font-size="13" fill="#444" font-weight="normal" text-anchor="middle" xml:space="preserve">2</text>
+<rect x="20.0" y="104.0" width="36.0" height="26.0" rx="0" fill="#f3f3f3" stroke="#d4d4d4" stroke-width="1"/>
+<text x="38.0" y="122.0" font-size="13" fill="#444" font-weight="normal" text-anchor="middle" xml:space="preserve">3</text>
+<rect x="20.0" y="130.0" width="36.0" height="26.0" rx="0" fill="#f3f3f3" stroke="#d4d4d4" stroke-width="1"/>
+<text x="38.0" y="148.0" font-size="13" fill="#444" font-weight="normal" text-anchor="middle" xml:space="preserve">4</text>
+<rect x="20.0" y="156.0" width="36.0" height="26.0" rx="0" fill="#f3f3f3" stroke="#d4d4d4" stroke-width="1"/>
+<text x="38.0" y="174.0" font-size="13" fill="#444" font-weight="normal" text-anchor="middle" xml:space="preserve">5</text>
+<rect x="56.0" y="52.0" width="90.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="146.0" y="52.0" width="60.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="56.0" y="78.0" width="90.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="146.0" y="78.0" width="60.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="56.0" y="104.0" width="90.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="146.0" y="104.0" width="60.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="56.0" y="130.0" width="90.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="146.0" y="130.0" width="60.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="56.0" y="156.0" width="90.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="146.0" y="156.0" width="60.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="56.0" y="78.0" width="90.0" height="104.0" rx="0" fill="#1c62c9" fill-opacity="0.14" stroke="#1c62c9" stroke-width="2"/>
+<text x="62.0" y="96.0" font-size="14" fill="#1f2328" font-weight="normal" text-anchor="start" xml:space="preserve">Вера</text>
+<text x="200.0" y="96.0" font-size="14" fill="#1f2328" font-weight="normal" text-anchor="end" xml:space="preserve">91</text>
+<text x="62.0" y="122.0" font-size="14" fill="#1f2328" font-weight="normal" text-anchor="start" xml:space="preserve">Аня</text>
+<text x="200.0" y="122.0" font-size="14" fill="#1f2328" font-weight="normal" text-anchor="end" xml:space="preserve">72</text>
+<text x="62.0" y="148.0" font-size="14" fill="#1f2328" font-weight="normal" text-anchor="start" xml:space="preserve">Глеб</text>
+<text x="200.0" y="148.0" font-size="14" fill="#1f2328" font-weight="normal" text-anchor="end" xml:space="preserve">64</text>
+<text x="62.0" y="174.0" font-size="14" fill="#1f2328" font-weight="normal" text-anchor="start" xml:space="preserve">Борис</text>
+<text x="200.0" y="174.0" font-size="14" fill="#1f2328" font-weight="normal" text-anchor="end" xml:space="preserve">58</text>
+<text x="62.0" y="70.0" font-size="14" fill="#1f2328" font-weight="bold" text-anchor="start" xml:space="preserve">Ученик</text>
+<text x="152.0" y="70.0" font-size="14" fill="#1f2328" font-weight="bold" text-anchor="start" xml:space="preserve">Балл</text><rect x="300.0" y="30.0" width="36.0" height="22.0" rx="0" fill="#f3f3f3" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="336.0" y="30.0" width="90.0" height="22.0" rx="0" fill="#f3f3f3" stroke="#d4d4d4" stroke-width="1"/>
+<text x="381.0" y="46.0" font-size="13" fill="#444" font-weight="normal" text-anchor="middle" xml:space="preserve">A</text>
+<rect x="426.0" y="30.0" width="60.0" height="22.0" rx="0" fill="#f3f3f3" stroke="#d4d4d4" stroke-width="1"/>
+<text x="456.0" y="46.0" font-size="13" fill="#444" font-weight="normal" text-anchor="middle" xml:space="preserve">B</text>
+<rect x="300.0" y="52.0" width="36.0" height="26.0" rx="0" fill="#f3f3f3" stroke="#d4d4d4" stroke-width="1"/>
+<text x="318.0" y="70.0" font-size="13" fill="#444" font-weight="normal" text-anchor="middle" xml:space="preserve">1</text>
+<rect x="300.0" y="78.0" width="36.0" height="26.0" rx="0" fill="#f3f3f3" stroke="#d4d4d4" stroke-width="1"/>
+<text x="318.0" y="96.0" font-size="13" fill="#444" font-weight="normal" text-anchor="middle" xml:space="preserve">2</text>
+<rect x="300.0" y="104.0" width="36.0" height="26.0" rx="0" fill="#f3f3f3" stroke="#d4d4d4" stroke-width="1"/>
+<text x="318.0" y="122.0" font-size="13" fill="#444" font-weight="normal" text-anchor="middle" xml:space="preserve">3</text>
+<rect x="300.0" y="130.0" width="36.0" height="26.0" rx="0" fill="#f3f3f3" stroke="#d4d4d4" stroke-width="1"/>
+<text x="318.0" y="148.0" font-size="13" fill="#444" font-weight="normal" text-anchor="middle" xml:space="preserve">4</text>
+<rect x="300.0" y="156.0" width="36.0" height="26.0" rx="0" fill="#f3f3f3" stroke="#d4d4d4" stroke-width="1"/>
+<text x="318.0" y="174.0" font-size="13" fill="#444" font-weight="normal" text-anchor="middle" xml:space="preserve">5</text>
+<rect x="336.0" y="52.0" width="90.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="426.0" y="52.0" width="60.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="336.0" y="78.0" width="90.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="426.0" y="78.0" width="60.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="336.0" y="104.0" width="90.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="426.0" y="104.0" width="60.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="336.0" y="130.0" width="90.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="426.0" y="130.0" width="60.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="336.0" y="156.0" width="90.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="426.0" y="156.0" width="60.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="336.0" y="78.0" width="90.0" height="104.0" rx="0" fill="#c92a2a" fill-opacity="0.14" stroke="#c92a2a" stroke-width="2"/>
+<text x="342.0" y="96.0" font-size="14" fill="#c92a2a" font-weight="bold" text-anchor="start" xml:space="preserve">Аня</text>
+<text x="480.0" y="96.0" font-size="14" fill="#1f2328" font-weight="normal" text-anchor="end" xml:space="preserve">91</text>
+<text x="342.0" y="122.0" font-size="14" fill="#c92a2a" font-weight="bold" text-anchor="start" xml:space="preserve">Борис</text>
+<text x="480.0" y="122.0" font-size="14" fill="#1f2328" font-weight="normal" text-anchor="end" xml:space="preserve">72</text>
+<text x="342.0" y="148.0" font-size="14" fill="#c92a2a" font-weight="bold" text-anchor="start" xml:space="preserve">Вера</text>
+<text x="480.0" y="148.0" font-size="14" fill="#1f2328" font-weight="normal" text-anchor="end" xml:space="preserve">64</text>
+<text x="342.0" y="174.0" font-size="14" fill="#c92a2a" font-weight="bold" text-anchor="start" xml:space="preserve">Глеб</text>
+<text x="480.0" y="174.0" font-size="14" fill="#1f2328" font-weight="normal" text-anchor="end" xml:space="preserve">58</text>
+<text x="342.0" y="70.0" font-size="14" fill="#1f2328" font-weight="bold" text-anchor="start" xml:space="preserve">Ученик</text>
+<text x="432.0" y="70.0" font-size="14" fill="#1f2328" font-weight="bold" text-anchor="start" xml:space="preserve">Балл</text><line x1="218.0" y1="117.0" x2="264.0" y2="117.0" stroke="#e8590c" stroke-width="4" marker-end="url(#a-orange)"/><text x="20.0" y="22.0" font-size="15" fill="#868e96" font-weight="bold" text-anchor="start" xml:space="preserve">Выделили только столбец A</text><text x="300.0" y="22.0" font-size="15" fill="#2b8a3e" font-weight="bold" text-anchor="start" xml:space="preserve">Отсортировали — баллы остались на месте!</text><text x="300.0" y="200.0" font-size="14" fill="#c92a2a" font-weight="bold" text-anchor="start" xml:space="preserve">Теперь у Ани 91 балл, хотя было 72. Данные испорчены.</text>
+</svg>

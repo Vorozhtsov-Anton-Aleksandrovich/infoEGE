@@ -27,7 +27,7 @@
         <p class="hint" th:if="${variant}">В варианте задания всегда идут по возрастанию номера ЕГЭ.</p>
         <p th:if="${set.items.isEmpty()}">Заданий пока нет, добавьте их из банка ниже.</p>
         <table class="table" th:unless="${set.items.isEmpty()}">
-            <thead><tr><th>#</th><th>№ ЕГЭ</th><th>Задание</th><th>Баллы</th><th></th></tr></thead>
+            <thead><tr><th>#</th><th>№ ЕГЭ</th><th>Задание</th><th>Сложность</th><th>Баллы</th><th></th></tr></thead>
             <tbody>
             <tr th:each="item, st : ${set.items}">
                 <td th:text="${st.count}">1</td>
@@ -36,6 +36,7 @@
                     <a th:href="@{/teacher/tasks/{id}/preview(id=${item.task.id})}" th:text="${item.task.title}">Задание</a>
                     <span class="badge" th:if="${item.task.archived}">архив</span>
                 </td>
+                <td><span th:replace="~{fragments/difficulty :: badge(${item.task.difficulty})}"></span></td>
                 <td th:text="${item.task.maxPoints}">1</td>
                 <td class="actions">
                     <th:block th:unless="${variant}">
@@ -81,7 +82,7 @@
                     <td th:text="${t.egeNumber}">1</td>
                     <td><label th:for="'task-' + ${t.id}" th:text="${t.title}">Задание</label></td>
                     <td th:text="${t.topic}">Тема</td>
-                    <td th:text="${t.difficulty}">3</td>
+                    <td><span th:replace="~{fragments/difficulty :: badge(${t.difficulty})}"></span></td>
                 </tr>
                 </tbody>
             </table>

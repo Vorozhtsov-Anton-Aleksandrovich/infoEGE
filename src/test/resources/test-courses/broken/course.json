@@ -1,0 +1,9 @@
+{
+  "slug": "broken",
+  "title": "Битый курс для теста",
+  "description": "",
+  "lessons": [
+    {"slug": "ok", "title": "Урок с ошибками в задачах", "file": "lessons/ok.md", "tasks": "tasks/ok.json"},
+    {"slug": "missing", "title": "Урок без файла", "file": "lessons/missing.md", "tasks": "tasks/ok.json"}
+  ]
+}

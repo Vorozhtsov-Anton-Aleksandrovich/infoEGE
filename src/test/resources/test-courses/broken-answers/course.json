@@ -1,0 +1,7 @@
+{
+  "slug": "broken-answers",
+  "title": "Курс с ошибками в ответах",
+  "lessons": [
+    {"slug": "l1", "title": "Урок", "file": "lessons/l1.md", "tasks": "tasks/l1.json"}
+  ]
+}

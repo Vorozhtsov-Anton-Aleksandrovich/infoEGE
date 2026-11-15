@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 240" width="720" height="240" font-family="Segoe UI, Calibri, Arial, sans-serif">
+<rect width="720" height="240" fill="#ffffff"/>
+<defs><marker id="a-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#1f2328"/></marker><marker id="a-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#c92a2a"/></marker><marker id="a-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#1c62c9"/></marker><marker id="a-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#2b8a3e"/></marker><marker id="a-orange" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#e8590c"/></marker><marker id="a-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#7048e8"/></marker><marker id="a-gray" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#868e96"/></marker></defs>
+<rect x="20.0" y="20.0" width="36.0" height="22.0" rx="0" fill="#f3f3f3" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="56.0" y="20.0" width="60.0" height="22.0" rx="0" fill="#f3f3f3" stroke="#d4d4d4" stroke-width="1"/>
+<text x="86.0" y="36.0" font-size="13" fill="#444" font-weight="normal" text-anchor="middle" xml:space="preserve">A</text>
+<rect x="116.0" y="20.0" width="100.0" height="22.0" rx="0" fill="#f3f3f3" stroke="#d4d4d4" stroke-width="1"/>
+<text x="166.0" y="36.0" font-size="13" fill="#444" font-weight="normal" text-anchor="middle" xml:space="preserve">B</text>
+<rect x="216.0" y="20.0" width="100.0" height="22.0" rx="0" fill="#f3f3f3" stroke="#d4d4d4" stroke-width="1"/>
+<text x="266.0" y="36.0" font-size="13" fill="#444" font-weight="normal" text-anchor="middle" xml:space="preserve">C</text>
+<rect x="316.0" y="20.0" width="80.0" height="22.0" rx="0" fill="#f3f3f3" stroke="#d4d4d4" stroke-width="1"/>
+<text x="356.0" y="36.0" font-size="13" fill="#444" font-weight="normal" text-anchor="middle" xml:space="preserve">D</text>
+<rect x="20.0" y="42.0" width="36.0" height="26.0" rx="0" fill="#f3f3f3" stroke="#d4d4d4" stroke-width="1"/>
+<text x="38.0" y="60.0" font-size="13" fill="#444" font-weight="normal" text-anchor="middle" xml:space="preserve">1</text>
+<rect x="20.0" y="68.0" width="36.0" height="26.0" rx="0" fill="#f3f3f3" stroke="#d4d4d4" stroke-width="1"/>
+<text x="38.0" y="86.0" font-size="13" fill="#444" font-weight="normal" text-anchor="middle" xml:space="preserve">2</text>
+<rect x="20.0" y="94.0" width="36.0" height="26.0" rx="0" fill="#f3f3f3" stroke="#d4d4d4" stroke-width="1"/>
+<text x="38.0" y="112.0" font-size="13" fill="#444" font-weight="normal" text-anchor="middle" xml:space="preserve">3</text>
+<rect x="20.0" y="120.0" width="36.0" height="26.0" rx="0" fill="#f3f3f3" stroke="#d4d4d4" stroke-width="1"/>
+<text x="38.0" y="138.0" font-size="13" fill="#444" font-weight="normal" text-anchor="middle" xml:space="preserve">4</text>
+<rect x="20.0" y="146.0" width="36.0" height="26.0" rx="0" fill="#f3f3f3" stroke="#d4d4d4" stroke-width="1"/>
+<text x="38.0" y="164.0" font-size="13" fill="#444" font-weight="normal" text-anchor="middle" xml:space="preserve">5</text>
+<rect x="20.0" y="172.0" width="36.0" height="26.0" rx="0" fill="#f3f3f3" stroke="#d4d4d4" stroke-width="1"/>
+<text x="38.0" y="190.0" font-size="13" fill="#444" font-weight="normal" text-anchor="middle" xml:space="preserve">6</text>
+<rect x="56.0" y="42.0" width="60.0" height="26.0" rx="0" fill="#e7f0fb" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="116.0" y="42.0" width="100.0" height="26.0" rx="0" fill="#e7f0fb" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="216.0" y="42.0" width="100.0" height="26.0" rx="0" fill="#e7f0fb" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="316.0" y="42.0" width="80.0" height="26.0" rx="0" fill="#e7f0fb" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="56.0" y="68.0" width="60.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="116.0" y="68.0" width="100.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="216.0" y="68.0" width="100.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="316.0" y="68.0" width="80.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="56.0" y="94.0" width="60.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="116.0" y="94.0" width="100.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="216.0" y="94.0" width="100.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="316.0" y="94.0" width="80.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="56.0" y="120.0" width="60.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="116.0" y="120.0" width="100.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="216.0" y="120.0" width="100.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="316.0" y="120.0" width="80.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="56.0" y="146.0" width="60.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="116.0" y="146.0" width="100.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="216.0" y="146.0" width="100.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="316.0" y="146.0" width="80.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="56.0" y="172.0" width="60.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="116.0" y="172.0" width="100.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="216.0" y="172.0" width="100.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="316.0" y="172.0" width="80.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="316.0" y="68.0" width="80.0" height="104.0" rx="0" fill="#2b8a3e" fill-opacity="0.14" stroke="#2b8a3e" stroke-width="2"/>
+<text x="62.0" y="60.0" font-size="14" fill="#1f2328" font-weight="bold" text-anchor="start" xml:space="preserve">ID</text>
+<text x="122.0" y="60.0" font-size="14" fill="#1f2328" font-weight="bold" text-anchor="start" xml:space="preserve">Город ▾</text>
+<text x="222.0" y="60.0" font-size="14" fill="#1f2328" font-weight="bold" text-anchor="start" xml:space="preserve">Менеджер ▾</text>
+<text x="322.0" y="60.0" font-size="14" fill="#1f2328" font-weight="bold" text-anchor="start" xml:space="preserve">Сумма ▾</text>
+<text x="110.0" y="86.0" font-size="14" fill="#1f2328" font-weight="normal" text-anchor="end" xml:space="preserve">3</text>
+<text x="122.0" y="86.0" font-size="14" fill="#1f2328" font-weight="normal" text-anchor="start" xml:space="preserve">Казань</text>
+<text x="222.0" y="86.0" font-size="14" fill="#1f2328" font-weight="normal" text-anchor="start" xml:space="preserve">Орлов</text>
+<text x="390.0" y="86.0" font-size="14" fill="#1f2328" font-weight="normal" text-anchor="end" xml:space="preserve">7200</text>
+<text x="110.0" y="112.0" font-size="14" fill="#1f2328" font-weight="normal" text-anchor="end" xml:space="preserve">7</text>
+<text x="122.0" y="112.0" font-size="14" fill="#1f2328" font-weight="normal" text-anchor="start" xml:space="preserve">Казань</text>
+<text x="222.0" y="112.0" font-size="14" fill="#1f2328" font-weight="normal" text-anchor="start" xml:space="preserve">Ильина</text>
+<text x="390.0" y="112.0" font-size="14" fill="#1f2328" font-weight="normal" text-anchor="end" xml:space="preserve">5400</text>
+<text x="110.0" y="138.0" font-size="14" fill="#1f2328" font-weight="normal" text-anchor="end" xml:space="preserve">12</text>
+<text x="122.0" y="138.0" font-size="14" fill="#1f2328" font-weight="normal" text-anchor="start" xml:space="preserve">Казань</text>
+<text x="222.0" y="138.0" font-size="14" fill="#1f2328" font-weight="normal" text-anchor="start" xml:space="preserve">Орлов</text>
+<text x="390.0" y="138.0" font-size="14" fill="#1f2328" font-weight="normal" text-anchor="end" xml:space="preserve">9100</text>
+<text x="110.0" y="164.0" font-size="14" fill="#1f2328" font-weight="normal" text-anchor="end" xml:space="preserve">15</text>
+<text x="122.0" y="164.0" font-size="14" fill="#1f2328" font-weight="normal" text-anchor="start" xml:space="preserve">Казань</text>
+<text x="222.0" y="164.0" font-size="14" fill="#1f2328" font-weight="normal" text-anchor="start" xml:space="preserve">Ким</text>
+<text x="390.0" y="164.0" font-size="14" fill="#1f2328" font-weight="normal" text-anchor="end" xml:space="preserve">6300</text><line x1="420.0" y1="64.0" x2="380.0" y2="34.0" stroke="#1c62c9" stroke-width="2" marker-end="url(#a-blue)"/><rect x="416.0" y="51.0" width="145.8" height="26.0" rx="6" fill="#1c62c9" stroke="#1c62c9" stroke-width="1"/><text x="426.0" y="70.0" font-size="13" fill="#fff" font-weight="bold" text-anchor="start" xml:space="preserve">кнопки ▾ — фильтр</text><rect x="416.0" y="121.0" width="234.6" height="26.0" rx="6" fill="#868e96" stroke="#868e96" stroke-width="1"/><text x="426.0" y="140.0" font-size="13" fill="#fff" font-weight="bold" text-anchor="start" xml:space="preserve">показаны только строки Казани</text><rect x="20.0" y="200.0" width="400.0" height="24.0" rx="0" fill="#f3f3f3" stroke="#d0d0d0" stroke-width="1"/><text x="30.0" y="217.0" font-size="13" fill="#1f2328" font-weight="normal" text-anchor="start" xml:space="preserve">Среднее: 7000   Количество: 4   Сумма: 28000</text><line x1="440.0" y1="208.0" x2="420.0" y2="212.0" stroke="#2b8a3e" stroke-width="2" marker-end="url(#a-green)"/><rect x="436.0" y="195.0" width="138.4" height="26.0" rx="6" fill="#2b8a3e" stroke="#2b8a3e" stroke-width="1"/><text x="446.0" y="214.0" font-size="13" fill="#fff" font-weight="bold" text-anchor="start" xml:space="preserve">строка состояния</text>
+</svg>

@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 200" width="700" height="200" font-family="Segoe UI, Calibri, Arial, sans-serif">
+<rect width="700" height="200" fill="#ffffff"/>
+<defs><marker id="a-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#1f2328"/></marker><marker id="a-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#c92a2a"/></marker><marker id="a-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#1c62c9"/></marker><marker id="a-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#2b8a3e"/></marker><marker id="a-orange" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#e8590c"/></marker><marker id="a-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#7048e8"/></marker><marker id="a-gray" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#868e96"/></marker></defs>
+<rect x="20.0" y="20.0" width="70.0" height="26.0" rx="0" fill="#fff" stroke="#b5b5b5" stroke-width="1"/>
+<text x="28.0" y="38.0" font-size="13" fill="#1f2328" font-weight="normal" text-anchor="start" font-family="Consolas, 'Courier New', monospace" xml:space="preserve">C3</text>
+<text x="104.0" y="38.0" font-size="14" fill="#868e96" font-weight="bold" text-anchor="start" font-family="Cambria, serif" xml:space="preserve">fx</text>
+<rect x="128.0" y="20.0" width="228.0" height="26.0" rx="0" fill="#fff" stroke="#b5b5b5" stroke-width="1"/>
+<text x="136.0" y="38.0" font-size="13" fill="#1f2328" font-weight="normal" text-anchor="start" font-family="Consolas, 'Courier New', monospace" xml:space="preserve">=$A3*C$1</text>
+<rect x="20.0" y="54.0" width="36.0" height="22.0" rx="0" fill="#f3f3f3" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="56.0" y="54.0" width="50.0" height="22.0" rx="0" fill="#f3f3f3" stroke="#d4d4d4" stroke-width="1"/>
+<text x="81.0" y="70.0" font-size="13" fill="#444" font-weight="normal" text-anchor="middle" xml:space="preserve">A</text>
+<rect x="106.0" y="54.0" width="50.0" height="22.0" rx="0" fill="#f3f3f3" stroke="#d4d4d4" stroke-width="1"/>
+<text x="131.0" y="70.0" font-size="13" fill="#444" font-weight="normal" text-anchor="middle" xml:space="preserve">B</text>
+<rect x="156.0" y="54.0" width="50.0" height="22.0" rx="0" fill="#d2e7d9" stroke="#d4d4d4" stroke-width="1"/>
+<text x="181.0" y="70.0" font-size="13" fill="#107c41" font-weight="bold" text-anchor="middle" xml:space="preserve">C</text>
+<rect x="206.0" y="54.0" width="50.0" height="22.0" rx="0" fill="#f3f3f3" stroke="#d4d4d4" stroke-width="1"/>
+<text x="231.0" y="70.0" font-size="13" fill="#444" font-weight="normal" text-anchor="middle" xml:space="preserve">D</text>
+<rect x="256.0" y="54.0" width="50.0" height="22.0" rx="0" fill="#f3f3f3" stroke="#d4d4d4" stroke-width="1"/>
+<text x="281.0" y="70.0" font-size="13" fill="#444" font-weight="normal" text-anchor="middle" xml:space="preserve">E</text>
+<rect x="306.0" y="54.0" width="50.0" height="22.0" rx="0" fill="#f3f3f3" stroke="#d4d4d4" stroke-width="1"/>
+<text x="331.0" y="70.0" font-size="13" fill="#444" font-weight="normal" text-anchor="middle" xml:space="preserve">F</text>
+<rect x="20.0" y="76.0" width="36.0" height="26.0" rx="0" fill="#f3f3f3" stroke="#d4d4d4" stroke-width="1"/>
+<text x="38.0" y="94.0" font-size="13" fill="#444" font-weight="normal" text-anchor="middle" xml:space="preserve">1</text>
+<rect x="20.0" y="102.0" width="36.0" height="26.0" rx="0" fill="#f3f3f3" stroke="#d4d4d4" stroke-width="1"/>
+<text x="38.0" y="120.0" font-size="13" fill="#444" font-weight="normal" text-anchor="middle" xml:space="preserve">2</text>
+<rect x="20.0" y="128.0" width="36.0" height="26.0" rx="0" fill="#d2e7d9" stroke="#d4d4d4" stroke-width="1"/>
+<text x="38.0" y="146.0" font-size="13" fill="#107c41" font-weight="bold" text-anchor="middle" xml:space="preserve">3</text>
+<rect x="20.0" y="154.0" width="36.0" height="26.0" rx="0" fill="#f3f3f3" stroke="#d4d4d4" stroke-width="1"/>
+<text x="38.0" y="172.0" font-size="13" fill="#444" font-weight="normal" text-anchor="middle" xml:space="preserve">4</text>
+<rect x="20.0" y="180.0" width="36.0" height="26.0" rx="0" fill="#f3f3f3" stroke="#d4d4d4" stroke-width="1"/>
+<text x="38.0" y="198.0" font-size="13" fill="#444" font-weight="normal" text-anchor="middle" xml:space="preserve">5</text>
+<rect x="20.0" y="206.0" width="36.0" height="26.0" rx="0" fill="#f3f3f3" stroke="#d4d4d4" stroke-width="1"/>
+<text x="38.0" y="224.0" font-size="13" fill="#444" font-weight="normal" text-anchor="middle" xml:space="preserve">6</text>
+<rect x="56.0" y="76.0" width="50.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="106.0" y="76.0" width="50.0" height="26.0" rx="0" fill="#e7f0fb" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="156.0" y="76.0" width="50.0" height="26.0" rx="0" fill="#e7f0fb" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="206.0" y="76.0" width="50.0" height="26.0" rx="0" fill="#e7f0fb" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="256.0" y="76.0" width="50.0" height="26.0" rx="0" fill="#e7f0fb" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="306.0" y="76.0" width="50.0" height="26.0" rx="0" fill="#e7f0fb" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="56.0" y="102.0" width="50.0" height="26.0" rx="0" fill="#fff4e6" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="106.0" y="102.0" width="50.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="156.0" y="102.0" width="50.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="206.0" y="102.0" width="50.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="256.0" y="102.0" width="50.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="306.0" y="102.0" width="50.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="56.0" y="128.0" width="50.0" height="26.0" rx="0" fill="#fff4e6" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="106.0" y="128.0" width="50.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="156.0" y="128.0" width="50.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="206.0" y="128.0" width="50.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="256.0" y="128.0" width="50.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="306.0" y="128.0" width="50.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="56.0" y="154.0" width="50.0" height="26.0" rx="0" fill="#fff4e6" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="106.0" y="154.0" width="50.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="156.0" y="154.0" width="50.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="206.0" y="154.0" width="50.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="256.0" y="154.0" width="50.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="306.0" y="154.0" width="50.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="56.0" y="180.0" width="50.0" height="26.0" rx="0" fill="#fff4e6" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="106.0" y="180.0" width="50.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="156.0" y="180.0" width="50.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="206.0" y="180.0" width="50.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="256.0" y="180.0" width="50.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="306.0" y="180.0" width="50.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="56.0" y="206.0" width="50.0" height="26.0" rx="0" fill="#fff4e6" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="106.0" y="206.0" width="50.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="156.0" y="206.0" width="50.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="206.0" y="206.0" width="50.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="256.0" y="206.0" width="50.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="306.0" y="206.0" width="50.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<text x="150.0" y="94.0" font-size="14" fill="#1c62c9" font-weight="bold" text-anchor="end" xml:space="preserve">1</text>
+<text x="100.0" y="120.0" font-size="14" fill="#e8590c" font-weight="bold" text-anchor="end" xml:space="preserve">1</text>
+<text x="200.0" y="94.0" font-size="14" fill="#1c62c9" font-weight="bold" text-anchor="end" xml:space="preserve">2</text>
+<text x="100.0" y="146.0" font-size="14" fill="#e8590c" font-weight="bold" text-anchor="end" xml:space="preserve">2</text>
+<text x="250.0" y="94.0" font-size="14" fill="#1c62c9" font-weight="bold" text-anchor="end" xml:space="preserve">3</text>
+<text x="100.0" y="172.0" font-size="14" fill="#e8590c" font-weight="bold" text-anchor="end" xml:space="preserve">3</text>
+<text x="300.0" y="94.0" font-size="14" fill="#1c62c9" font-weight="bold" text-anchor="end" xml:space="preserve">4</text>
+<text x="100.0" y="198.0" font-size="14" fill="#e8590c" font-weight="bold" text-anchor="end" xml:space="preserve">4</text>
+<text x="350.0" y="94.0" font-size="14" fill="#1c62c9" font-weight="bold" text-anchor="end" xml:space="preserve">5</text>
+<text x="100.0" y="224.0" font-size="14" fill="#e8590c" font-weight="bold" text-anchor="end" xml:space="preserve">5</text>
+<text x="150.0" y="120.0" font-size="14" fill="#1f2328" font-weight="normal" text-anchor="end" xml:space="preserve">1</text>
+<text x="200.0" y="120.0" font-size="14" fill="#1f2328" font-weight="normal" text-anchor="end" xml:space="preserve">2</text>
+<text x="250.0" y="120.0" font-size="14" fill="#1f2328" font-weight="normal" text-anchor="end" xml:space="preserve">3</text>
+<text x="300.0" y="120.0" font-size="14" fill="#1f2328" font-weight="normal" text-anchor="end" xml:space="preserve">4</text>
+<text x="350.0" y="120.0" font-size="14" fill="#1f2328" font-weight="normal" text-anchor="end" xml:space="preserve">5</text>
+<text x="150.0" y="146.0" font-size="14" fill="#1f2328" font-weight="normal" text-anchor="end" xml:space="preserve">2</text>
+<text x="200.0" y="146.0" font-size="14" fill="#1f2328" font-weight="normal" text-anchor="end" xml:space="preserve">4</text>
+<text x="250.0" y="146.0" font-size="14" fill="#1f2328" font-weight="normal" text-anchor="end" xml:space="preserve">6</text>
+<text x="300.0" y="146.0" font-size="14" fill="#1f2328" font-weight="normal" text-anchor="end" xml:space="preserve">8</text>
+<text x="350.0" y="146.0" font-size="14" fill="#1f2328" font-weight="normal" text-anchor="end" xml:space="preserve">10</text>
+<text x="150.0" y="172.0" font-size="14" fill="#1f2328" font-weight="normal" text-anchor="end" xml:space="preserve">3</text>
+<text x="200.0" y="172.0" font-size="14" fill="#1f2328" font-weight="normal" text-anchor="end" xml:space="preserve">6</text>
+<text x="250.0" y="172.0" font-size="14" fill="#1f2328" font-weight="normal" text-anchor="end" xml:space="preserve">9</text>
+<text x="300.0" y="172.0" font-size="14" fill="#1f2328" font-weight="normal" text-anchor="end" xml:space="preserve">12</text>
+<text x="350.0" y="172.0" font-size="14" fill="#1f2328" font-weight="normal" text-anchor="end" xml:space="preserve">15</text>
+<text x="150.0" y="198.0" font-size="14" fill="#1f2328" font-weight="normal" text-anchor="end" xml:space="preserve">4</text>
+<text x="200.0" y="198.0" font-size="14" fill="#1f2328" font-weight="normal" text-anchor="end" xml:space="preserve">8</text>
+<text x="250.0" y="198.0" font-size="14" fill="#1f2328" font-weight="normal" text-anchor="end" xml:space="preserve">12</text>
+<text x="300.0" y="198.0" font-size="14" fill="#1f2328" font-weight="normal" text-anchor="end" xml:space="preserve">16</text>
+<text x="350.0" y="198.0" font-size="14" fill="#1f2328" font-weight="normal" text-anchor="end" xml:space="preserve">20</text>
+<text x="150.0" y="224.0" font-size="14" fill="#1f2328" font-weight="normal" text-anchor="end" xml:space="preserve">5</text>
+<text x="200.0" y="224.0" font-size="14" fill="#1f2328" font-weight="normal" text-anchor="end" xml:space="preserve">10</text>
+<text x="250.0" y="224.0" font-size="14" fill="#1f2328" font-weight="normal" text-anchor="end" xml:space="preserve">15</text>
+<text x="300.0" y="224.0" font-size="14" fill="#1f2328" font-weight="normal" text-anchor="end" xml:space="preserve">20</text>
+<text x="350.0" y="224.0" font-size="14" fill="#1f2328" font-weight="normal" text-anchor="end" xml:space="preserve">25</text>
+<rect x="156.0" y="128.0" width="50.0" height="26.0" rx="0" fill="none" stroke="#107c41" stroke-width="3"/>
+<rect x="202.0" y="150.0" width="7.0" height="7.0" rx="0" fill="#107c41" stroke="#fff" stroke-width="1"/>
+<path d="M 81.0 131.0 Q 131.0 83.0 181.0 129.0" fill="none" stroke="#e8590c" stroke-width="2.2" marker-end="url(#a-orange)"/><circle cx="81.0" cy="131.0" r="3.5" fill="#e8590c"/>
+<path d="M 203.0 89.0 Q 254.6 115.0 205.0 141.0" fill="none" stroke="#1c62c9" stroke-width="2.2" marker-end="url(#a-blue)"/><circle cx="203.0" cy="89.0" r="3.5" fill="#1c62c9"/><line x1="400.0" y1="54.0" x2="100.0" y2="141.0" stroke="#e8590c" stroke-width="2" marker-end="url(#a-orange)"/><rect x="396.0" y="41.0" width="197.6" height="26.0" rx="6" fill="#e8590c" stroke="#e8590c" stroke-width="1"/><text x="406.0" y="60.0" font-size="13" fill="#fff" font-weight="bold" text-anchor="start" xml:space="preserve">$A3: столбец A закреплён</text><line x1="400.0" y1="104.0" x2="206.0" y2="89.0" stroke="#1c62c9" stroke-width="2" marker-end="url(#a-blue)"/><rect x="396.0" y="91.0" width="197.6" height="26.0" rx="6" fill="#1c62c9" stroke="#1c62c9" stroke-width="1"/><text x="406.0" y="110.0" font-size="13" fill="#fff" font-weight="bold" text-anchor="start" xml:space="preserve">C$1: строка 1 закреплена</text><rect x="396.0" y="141.0" width="219.8" height="26.0" rx="6" fill="#2b8a3e" stroke="#2b8a3e" stroke-width="1"/><text x="406.0" y="160.0" font-size="13" fill="#fff" font-weight="bold" text-anchor="start" xml:space="preserve">одна формула на всю таблицу</text>
+</svg>

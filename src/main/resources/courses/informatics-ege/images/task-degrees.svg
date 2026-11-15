@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 410 220" width="410" height="220" font-family="Segoe UI, Arial, sans-serif">
+<rect width="410" height="220" fill="#ffffff"/>
+<defs><marker id="a" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#495057"/></marker></defs>
+<line x1="44.6" y1="99.4" x2="125.4" y2="40.6" stroke="#495057" stroke-width="2.2"/>
+<line x1="44.6" y1="120.6" x2="125.4" y2="179.4" stroke="#495057" stroke-width="2.2"/>
+<line x1="140.0" y1="48.0" x2="140.0" y2="172.0" stroke="#495057" stroke-width="2.2"/>
+<line x1="158.0" y1="30.0" x2="252.0" y2="30.0" stroke="#495057" stroke-width="2.2"/>
+<line x1="158.0" y1="190.0" x2="252.0" y2="190.0" stroke="#495057" stroke-width="2.2"/>
+<line x1="270.0" y1="48.0" x2="270.0" y2="172.0" stroke="#495057" stroke-width="2.2"/>
+<line x1="284.6" y1="40.6" x2="365.4" y2="99.4" stroke="#495057" stroke-width="2.2"/>
+<line x1="284.6" y1="179.4" x2="365.4" y2="120.6" stroke="#495057" stroke-width="2.2"/>
+<line x1="151.4" y1="44.0" x2="258.6" y2="176.0" stroke="#495057" stroke-width="2.2"/>
+<circle cx="30" cy="110" r="18" fill="#ffffff" stroke="#1d3557" stroke-width="2.2"/>
+<text x="30" y="116" font-size="16" font-weight="bold" text-anchor="middle" fill="#1d3557">А</text>
+<circle cx="140" cy="30" r="18" fill="#ffffff" stroke="#1d3557" stroke-width="2.2"/>
+<text x="140" y="36" font-size="16" font-weight="bold" text-anchor="middle" fill="#1d3557">Б</text>
+<circle cx="140" cy="190" r="18" fill="#ffffff" stroke="#1d3557" stroke-width="2.2"/>
+<text x="140" y="196" font-size="16" font-weight="bold" text-anchor="middle" fill="#1d3557">В</text>
+<circle cx="270" cy="30" r="18" fill="#ffffff" stroke="#1d3557" stroke-width="2.2"/>
+<text x="270" y="36" font-size="16" font-weight="bold" text-anchor="middle" fill="#1d3557">Г</text>
+<circle cx="270" cy="190" r="18" fill="#ffffff" stroke="#1d3557" stroke-width="2.2"/>
+<text x="270" y="196" font-size="16" font-weight="bold" text-anchor="middle" fill="#1d3557">Д</text>
+<circle cx="380" cy="110" r="18" fill="#ffffff" stroke="#1d3557" stroke-width="2.2"/>
+<text x="380" y="116" font-size="16" font-weight="bold" text-anchor="middle" fill="#1d3557">Е</text>
+</svg>

@@ -1,0 +1,14 @@
+{
+  "lesson": "l1",
+  "tasks": [
+    {"id": "bad-type", "type": "ESSAY", "title": "Сочинение", "statement": "Напиши", "answers": ["x"], "solution": "x"},
+    {"id": "no-answer", "type": "ANSWER", "title": "Без ответа", "statement": "Сколько?", "solution": "x"},
+    {"id": "bad-choice", "type": "CHOICE", "title": "Выбор", "statement": "Что?", "options": ["а", "б"], "answers": ["3"], "solution": "x"},
+    {"id": "bad-table", "type": "TRUTH_TABLE", "title": "Таблица", "statement": "F", "variables": ["x", "y"], "answers": ["010"], "solution": "x"},
+    {"id": "bad-graph", "type": "MATCH_GRAPH", "title": "Граф", "statement": "Г", "variables": ["А", "Б"], "numbers": 2, "answers": ["1,3"], "solution": "x"},
+    {"id": "no-solution", "type": "ANSWER", "title": "Без разбора", "statement": "Сколько?", "answers": ["5"]},
+    {"id": "bad-format", "type": "ANSWER", "title": "Формат", "statement": "Сколько?", "answer": "двенадцать", "answerFormat": "INT", "solution": "x"},
+    {"id": "no-file", "type": "ANSWER", "title": "Без файла", "statement": "Скачай", "answer": "1", "answerFormat": "INT", "files": ["missing.xlsx"], "solution": "x"},
+    {"id": "bad-file-name", "type": "ANSWER", "title": "Плохое имя", "statement": "Скачай", "answer": "1", "answerFormat": "INT", "files": ["../secret.xlsx"], "solution": "x"}
+  ]
+}

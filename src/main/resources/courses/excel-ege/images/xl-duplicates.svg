@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 250" width="560" height="250" font-family="Segoe UI, Calibri, Arial, sans-serif">
+<rect width="560" height="250" fill="#ffffff"/>
+<defs><marker id="a-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#1f2328"/></marker><marker id="a-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#c92a2a"/></marker><marker id="a-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#1c62c9"/></marker><marker id="a-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#2b8a3e"/></marker><marker id="a-orange" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#e8590c"/></marker><marker id="a-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#7048e8"/></marker><marker id="a-gray" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#868e96"/></marker></defs>
+<rect x="20.0" y="20.0" width="36.0" height="22.0" rx="0" fill="#f3f3f3" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="56.0" y="20.0" width="60.0" height="22.0" rx="0" fill="#f3f3f3" stroke="#d4d4d4" stroke-width="1"/>
+<text x="86.0" y="36.0" font-size="13" fill="#444" font-weight="normal" text-anchor="middle" xml:space="preserve">A</text>
+<rect x="116.0" y="20.0" width="80.0" height="22.0" rx="0" fill="#f3f3f3" stroke="#d4d4d4" stroke-width="1"/>
+<text x="156.0" y="36.0" font-size="13" fill="#444" font-weight="normal" text-anchor="middle" xml:space="preserve">B</text>
+<rect x="20.0" y="42.0" width="36.0" height="26.0" rx="0" fill="#f3f3f3" stroke="#d4d4d4" stroke-width="1"/>
+<text x="38.0" y="60.0" font-size="13" fill="#444" font-weight="normal" text-anchor="middle" xml:space="preserve">1</text>
+<rect x="20.0" y="68.0" width="36.0" height="26.0" rx="0" fill="#f3f3f3" stroke="#d4d4d4" stroke-width="1"/>
+<text x="38.0" y="86.0" font-size="13" fill="#444" font-weight="normal" text-anchor="middle" xml:space="preserve">2</text>
+<rect x="20.0" y="94.0" width="36.0" height="26.0" rx="0" fill="#f3f3f3" stroke="#d4d4d4" stroke-width="1"/>
+<text x="38.0" y="112.0" font-size="13" fill="#444" font-weight="normal" text-anchor="middle" xml:space="preserve">3</text>
+<rect x="20.0" y="120.0" width="36.0" height="26.0" rx="0" fill="#f3f3f3" stroke="#d4d4d4" stroke-width="1"/>
+<text x="38.0" y="138.0" font-size="13" fill="#444" font-weight="normal" text-anchor="middle" xml:space="preserve">4</text>
+<rect x="20.0" y="146.0" width="36.0" height="26.0" rx="0" fill="#f3f3f3" stroke="#d4d4d4" stroke-width="1"/>
+<text x="38.0" y="164.0" font-size="13" fill="#444" font-weight="normal" text-anchor="middle" xml:space="preserve">5</text>
+<rect x="20.0" y="172.0" width="36.0" height="26.0" rx="0" fill="#f3f3f3" stroke="#d4d4d4" stroke-width="1"/>
+<text x="38.0" y="190.0" font-size="13" fill="#444" font-weight="normal" text-anchor="middle" xml:space="preserve">6</text>
+<rect x="20.0" y="198.0" width="36.0" height="26.0" rx="0" fill="#f3f3f3" stroke="#d4d4d4" stroke-width="1"/>
+<text x="38.0" y="216.0" font-size="13" fill="#444" font-weight="normal" text-anchor="middle" xml:space="preserve">7</text>
+<rect x="20.0" y="224.0" width="36.0" height="26.0" rx="0" fill="#f3f3f3" stroke="#d4d4d4" stroke-width="1"/>
+<text x="38.0" y="242.0" font-size="13" fill="#444" font-weight="normal" text-anchor="middle" xml:space="preserve">8</text>
+<rect x="56.0" y="42.0" width="60.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="116.0" y="42.0" width="80.0" height="26.0" rx="0" fill="#ffc7ce" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="56.0" y="68.0" width="60.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="116.0" y="68.0" width="80.0" height="26.0" rx="0" fill="#ffc7ce" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="56.0" y="94.0" width="60.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="116.0" y="94.0" width="80.0" height="26.0" rx="0" fill="#ffc7ce" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="56.0" y="120.0" width="60.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="116.0" y="120.0" width="80.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="56.0" y="146.0" width="60.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="116.0" y="146.0" width="80.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="56.0" y="172.0" width="60.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="116.0" y="172.0" width="80.0" height="26.0" rx="0" fill="#ffc7ce" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="56.0" y="198.0" width="60.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="116.0" y="198.0" width="80.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="56.0" y="224.0" width="60.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="116.0" y="224.0" width="80.0" height="26.0" rx="0" fill="#ffc7ce" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="116.0" y="42.0" width="80.0" height="208.0" rx="0" fill="#1c62c9" fill-opacity="0.14" stroke="#1c62c9" stroke-width="2"/>
+<text x="190.0" y="60.0" font-size="14" fill="#9c0006" font-weight="bold" text-anchor="end" xml:space="preserve">14</text>
+<text x="190.0" y="86.0" font-size="14" fill="#9c0006" font-weight="bold" text-anchor="end" xml:space="preserve">22</text>
+<text x="190.0" y="112.0" font-size="14" fill="#9c0006" font-weight="bold" text-anchor="end" xml:space="preserve">14</text>
+<text x="190.0" y="138.0" font-size="14" fill="#1f2328" font-weight="normal" text-anchor="end" xml:space="preserve">9</text>
+<text x="190.0" y="164.0" font-size="14" fill="#1f2328" font-weight="normal" text-anchor="end" xml:space="preserve">31</text>
+<text x="190.0" y="190.0" font-size="14" fill="#9c0006" font-weight="bold" text-anchor="end" xml:space="preserve">22</text>
+<text x="190.0" y="216.0" font-size="14" fill="#1f2328" font-weight="normal" text-anchor="end" xml:space="preserve">5</text>
+<text x="190.0" y="242.0" font-size="14" fill="#9c0006" font-weight="bold" text-anchor="end" xml:space="preserve">14</text><line x1="220.0" y1="74.0" x2="190.0" y2="60.0" stroke="#c92a2a" stroke-width="2" marker-end="url(#a-red)"/><rect x="216.0" y="61.0" width="212.4" height="26.0" rx="6" fill="#c92a2a" stroke="#c92a2a" stroke-width="1"/><text x="226.0" y="80.0" font-size="13" fill="#fff" font-weight="bold" text-anchor="start" xml:space="preserve">повторы подсвечены красным</text><rect x="216.0" y="131.0" width="264.2" height="26.0" rx="6" fill="#1c62c9" stroke="#1c62c9" stroke-width="1"/><text x="226.0" y="150.0" font-size="13" fill="#fff" font-weight="bold" text-anchor="start" xml:space="preserve">Главная → Условное форматирование</text>
+</svg>

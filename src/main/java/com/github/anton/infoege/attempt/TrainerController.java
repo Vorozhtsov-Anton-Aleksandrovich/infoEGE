@@ -6,6 +6,7 @@ import com.github.anton.infoege.task.TaskFile;
 import com.github.anton.infoege.task.TaskService;
 import com.github.anton.infoege.taskset.TaskSet;
 import com.github.anton.infoege.taskset.TaskSetService;
+import com.github.anton.infoege.taskset.TaskSetType;
 import com.github.anton.infoege.user.AppUserDetails;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.ResponseEntity;
@@ -47,7 +48,7 @@ public class TrainerController {
      */
     public record TrainerTask(int number, Long taskId, int egeNumber, String statementHtml, List<TaskFile> attachments,
                               int rows, int cols, List<List<String>> answer, String status,
-                              String verdict, int checks) {
+                              String verdict, int checks, int difficulty) {
     }
 
     @GetMapping
@@ -68,6 +69,8 @@ public class TrainerController {
         model.addAttribute("instant", instant);
         model.addAttribute("allowPause", attempt.getAssignment().isAllowPause());
         model.addAttribute("tasks", trainerTasks(attemptId, instant));
+        // В варианте сложность не показываем: он имитирует экзамен, там её не видно.
+        model.addAttribute("showDifficulty", set.getType() != TaskSetType.VARIANT);
         return "trainer/trainer";
     }
 
@@ -93,7 +96,7 @@ public class TrainerController {
             result.add(new TrainerTask(result.size() + 1, task.getId(), task.getEgeNumber(), html,
                     taskFiles.stream().filter(f -> !f.isImage()).toList(),
                     answer.rows(), answer.cols(), answer.getAnswer(), status,
-                    instant ? AttemptService.verdict(answer) : null, answer.getCheckCount()));
+                    instant ? AttemptService.verdict(answer) : null, answer.getCheckCount(), task.getDifficulty()));
         }
         return result;
     }

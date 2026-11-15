@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/layout :: head(${course.title})}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main class="course-page">
+    <p class="breadcrumbs"><a th:href="@{/courses}">Курсы</a></p>
+    <div class="page-title">
+        <h1 th:text="${course.title}">Курс</h1>
+        <a sec:authorize="hasRole('TEACHER')" class="button"
+           th:href="@{/teacher/courses/{c}(c=${course.slug})}">Прогресс учеников</a>
+    </div>
+    <p class="course-description" th:text="${course.description}">Описание</p>
+
+    <div class="course-progress">
+        <progress th:class="|progress-${progress.total.level()}|" th:max="${progress.total.total}"
+                  th:value="${progress.total.solved}"
+                  th:attr="aria-label=|Решено ${progress.total.solved} из ${progress.total.total}|"></progress>
+        <span th:text="|решено ${progress.total.solved} из ${progress.total.total}|">решено 0 из 0</span>
+        <a class="button" th:href="@{/courses/{c}/{l}(c=${course.slug}, l=${progress.continueLesson.slug})}"
+           th:text="${progress.started} ? 'Продолжить' : 'Начать курс'">Начать курс</a>
+    </div>
+
+    <ol class="lesson-list">
+        <li th:each="l : ${course.lessons}" th:with="lp=${progress.lesson(l.slug)}">
+            <a th:href="@{/courses/{c}/{l}(c=${course.slug}, l=${l.slug})}" th:classappend="${lp.complete()} ? 'done'">
+                <span class="lesson-number" th:text="${lp.complete()} ? '✓' : ${l.number}">1</span>
+                <span class="lesson-title" th:text="${l.title}">Урок</span>
+                <span class="lesson-solved" th:classappend="${lp.complete()} ? 'done'"
+                      th:text="|решено задач ${lp.label()}|">решено задач 0/0</span>
+            </a>
+        </li>
+    </ol>
+</main>
+</body>
+</html>

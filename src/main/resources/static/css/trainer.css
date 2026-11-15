@@ -184,3 +184,31 @@ dialog h2 { margin-top: 0; }
 .answer-state[data-state="partial"] { color: #a35f00; font-weight: 600; }
 .answer-state[data-state="wrong"] { color: #b00020; font-weight: 600; }
 .check-count { font-size: 14px; color: #555; }
+
+/* ===== Сложность задания: 1 — зелёный … 5 — красный ===== */
+.difficulty { display: inline-flex; align-items: center; gap: 6px; padding: 1px 8px 1px 6px; border-radius: 10px;
+    font-size: 13px; font-weight: 600; line-height: 18px; vertical-align: middle; white-space: nowrap; }
+.difficulty-dots { display: inline-flex; gap: 2px; }
+.difficulty-dots span { width: 7px; height: 7px; border-radius: 50%; background: currentColor; opacity: .25; }
+.difficulty-dots span.on { opacity: 1; }
+.difficulty-1 { background: #d3f9d8; color: #2b8a3e; }
+.difficulty-2 { background: #e9fac8; color: #5c940d; }
+.difficulty-3 { background: #fff3bf; color: #b07d00; }
+.difficulty-4 { background: #ffe8cc; color: #d9480f; }
+.difficulty-5 { background: #ffe3e3; color: #c92a2a; }
+.task-title .difficulty { margin-left: 10px; font-size: 14px; }
+/* Цветная полоска сверху кнопки задания (снизу — отметка «изменён, не сохранён»). */
+.task-btn[class*="diff-"] { border-top-width: 4px; }
+.task-btn.diff-1 { border-top-color: #40c057; }
+.task-btn.diff-2 { border-top-color: #94d82d; }
+.task-btn.diff-3 { border-top-color: #fcc419; }
+.task-btn.diff-4 { border-top-color: #fd7e14; }
+.task-btn.diff-5 { border-top-color: #fa5252; }
+.difficulty-legend .legend-item { border-top: 4px solid transparent; padding: 0 6px; }
+.difficulty-legend .legend-item.diff-1 { border-top-color: #40c057; }
+.difficulty-legend .legend-item.diff-2 { border-top-color: #94d82d; }
+.difficulty-legend .legend-item.diff-3 { border-top-color: #fcc419; }
+.difficulty-legend .legend-item.diff-4 { border-top-color: #fd7e14; }
+.difficulty-legend .legend-item.diff-5 { border-top-color: #fa5252; }
+.difficulty-legend { gap: 4px; align-items: center; }
+.difficulty-legend .legend-item::before { display: none; }

@@ -1,0 +1,18 @@
+{
+  "slug": "informatics-ege",
+  "order": 1,
+  "title": "Основы информатики для ЕГЭ",
+  "description": "Теория ЕГЭ с нуля для тех, кто открывает тему впервые: единицы информации, системы счисления, логика, коды Фано, объём паролей, картинок и звука, графы и IP-адреса. Каждое правило сначала показано на картинке и примере, а в уроках есть интерактивные тренажёры, мини-вопросы «Попробуй сам», шпаргалки и задачи от простых до формата ЕГЭ с разбором.",
+  "lessons": [
+    {"slug": "01-information",    "title": "Информация и её измерение",          "file": "lessons/01-information.md",    "tasks": "tasks/01-information.json"},
+    {"slug": "02-number-systems", "title": "Системы счисления",                  "file": "lessons/02-number-systems.md", "tasks": "tasks/02-number-systems.json"},
+    {"slug": "03-logic-basics",   "title": "Булева логика: основы",              "file": "lessons/03-logic-basics.md",   "tasks": "tasks/03-logic-basics.json"},
+    {"slug": "04-logic-laws",     "title": "Законы логики и задание 2",          "file": "lessons/04-logic-laws.md",     "tasks": "tasks/04-logic-laws.json"},
+    {"slug": "05-logic-segments", "title": "Отрезки и делимость (задание 15)",   "file": "lessons/05-logic-segments.md", "tasks": "tasks/05-logic-segments.json"},
+    {"slug": "06-fano",           "title": "Кодирование и условие Фано (задание 4)", "file": "lessons/06-fano.md",       "tasks": "tasks/06-fano.json"},
+    {"slug": "07-passwords",      "title": "Пароли и сообщения (задание 11)",    "file": "lessons/07-passwords.md",      "tasks": "tasks/07-passwords.json"},
+    {"slug": "08-media",          "title": "Изображения и звук (задание 7)",     "file": "lessons/08-media.md",          "tasks": "tasks/08-media.json"},
+    {"slug": "09-graphs",         "title": "Графы и таблицы (задание 1)",        "file": "lessons/09-graphs.md",         "tasks": "tasks/09-graphs.json"},
+    {"slug": "10-ip",             "title": "IP-адреса и маски (задание 13)",     "file": "lessons/10-ip.md",             "tasks": "tasks/10-ip.json"}
+  ]
+}

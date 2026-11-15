@@ -1,0 +1,218 @@
+{
+  "lesson": "07-strings",
+  "tasks": [
+    {
+      "id": "py07-1",
+      "title": "Задом наперёд",
+      "statement": "Дана строка. Выведи её задом наперёд.",
+      "starterCode": "",
+      "hint": "Срез s[::-1] переворачивает строку.",
+      "tests": [
+        {
+          "input": "PYTHON\n",
+          "hidden": false,
+          "output": "NOHTYP"
+        },
+        {
+          "input": "a\n",
+          "hidden": true,
+          "output": "a"
+        },
+        {
+          "input": "А роза упала на лапу Азора\n",
+          "hidden": true,
+          "output": "арозА упал ан алапу азор А"
+        }
+      ]
+    },
+    {
+      "id": "py07-2",
+      "title": "Палиндром",
+      "statement": "Дана строка без пробелов. Выведи `YES`, если она читается одинаково слева направо и справа налево, иначе `NO`.",
+      "starterCode": "",
+      "hint": "Сравни строку с ней же, перевёрнутой: s == s[::-1].",
+      "tests": [
+        {
+          "input": "level\n",
+          "hidden": false,
+          "output": "YES"
+        },
+        {
+          "input": "python\n",
+          "hidden": false,
+          "output": "NO"
+        },
+        {
+          "input": "a\n",
+          "hidden": true,
+          "output": "YES"
+        },
+        {
+          "input": "abba\n",
+          "hidden": true,
+          "output": "YES"
+        },
+        {
+          "input": "abca\n",
+          "hidden": true,
+          "output": "NO"
+        }
+      ]
+    },
+    {
+      "id": "py07-3",
+      "title": "Гласные",
+      "statement": "Дана строка из латинских букв и пробелов. Посчитай количество гласных `a e i o u` (в любом регистре).",
+      "starterCode": "",
+      "hint": "Переведи строку в нижний регистр через .lower() и проверяй каждый символ: c in 'aeiou'.",
+      "tests": [
+        {
+          "input": "Hello World\n",
+          "hidden": false,
+          "output": "3"
+        },
+        {
+          "input": "xyz\n",
+          "hidden": true,
+          "output": "0"
+        },
+        {
+          "input": "AEIOU aeiou\n",
+          "hidden": true,
+          "output": "10"
+        },
+        {
+          "input": "Programming In Python Is Fun\n",
+          "hidden": true,
+          "output": "7"
+        }
+      ]
+    },
+    {
+      "id": "py07-4",
+      "title": "Количество слов",
+      "statement": "Дана строка, слова в ней разделены одним или несколькими пробелами. Выведи количество слов.",
+      "starterCode": "",
+      "hint": "split() разрезает строку на список слов, а len считает элементы списка.",
+      "tests": [
+        {
+          "input": "Я учу Python\n",
+          "hidden": false,
+          "output": "3"
+        },
+        {
+          "input": "one\n",
+          "hidden": true,
+          "output": "1"
+        },
+        {
+          "input": "  много   пробелов  тут \n",
+          "hidden": true,
+          "output": "3"
+        }
+      ]
+    },
+    {
+      "id": "py07-5",
+      "title": "Редактор (задание 12)",
+      "statement": "Строка состоит из `n` единиц. Пока в строке есть `11`, заменяем **первое** вхождение `11` на `2`. Дано `n`, выведи получившуюся строку.",
+      "starterCode": "",
+      "hint": "s.replace('11', '2', 1) — третий аргумент 1 значит «заменить только первое».",
+      "tests": [
+        {
+          "input": "7\n",
+          "hidden": false,
+          "output": "2221"
+        },
+        {
+          "input": "1\n",
+          "hidden": true,
+          "output": "1"
+        },
+        {
+          "input": "2\n",
+          "hidden": true,
+          "output": "2"
+        },
+        {
+          "input": "20\n",
+          "hidden": true,
+          "output": "2222222222"
+        },
+        {
+          "input": "101\n",
+          "hidden": true,
+          "output": "222222222222222222222222222222222222222222222222221"
+        }
+      ]
+    },
+    {
+      "id": "py07-6",
+      "title": "Самая длинная цепочка (задание 24)",
+      "statement": "Дана строка из заглавных латинских букв. Найди длину самой длинной цепочки **одинаковых** символов, стоящих подряд.",
+      "starterCode": "",
+      "hint": "Шаблон с cur и best из раздела 9 урока.",
+      "tests": [
+        {
+          "input": "ABBBCCD\n",
+          "hidden": false,
+          "output": "3"
+        },
+        {
+          "input": "A\n",
+          "hidden": true,
+          "output": "1"
+        },
+        {
+          "input": "ABCDEF\n",
+          "hidden": true,
+          "output": "1"
+        },
+        {
+          "input": "ZZZZZ\n",
+          "hidden": true,
+          "output": "5"
+        },
+        {
+          "input": "AABABABBABBBBBABABBBABABBBBABBABBBBBBAAAAABBABAABBBBBBBBABBAAABBBABBBBBABBBABBBABBABBBAABABAAABAAAAABBAABBAABABABAABBBAABAABAABBAABBBBBABBAAABBBAABAAAAABABAAAAAABBBBABBABABBBBBBABBBABAAAAABBBAABABAABABBAABABAAABAABBABBABBAABBBAAAAABAABBBABBABBABBBBBABABBBABBBABAAAAAAAABBABABBBBABAAAABBAAAABBBBBAAAABBBAAABAAABBABBABBBBBBAABABABBAAABBBAAAABABBAAAABBBBAAABBBBABAABBBAAABAAAAABABBAAAAABBAABBBABBBAABBBAAABBBAABBBBBBBAABABBBBAABABBBABBBBABABAABBBBBABBBABABBBABAABBABBBBBAAAABBAABBBAAAAABABAABABAAABBAAABBBBBBBBBBABAABBBBABBBBAABABBABBBBBAAABBAAABAABAABBABBBAAAAAAABBAABBABAAAAABBABABABBABAABAAABBBAAAABBAAAABABABBBBABBBAAAAABAAAABABAABBBBABBBBBAAAABBBABBABBBABBAAAABABBBAABAAABAABAAAABABBABBABABBABAABAABBBABABABABABBBABAABAAABBAABBAAAABABBABAAAABABBAABABAAABAABABBAAABABABBAAAABBABAAAAABBBABAABAAABABABAAABABBBBAABAABABABAABABAABABAAAABABBABBABABAAABBABBBBBBBBBBBAAAAABBABAAABABBABBBBBAABAABABABBBABABBBABBBBAABBBBABBAAAAABBBABABAAAAABABBABABBAAABABBAAABBAAABAABBABAAABBABBABBBAABABABABABAAABBBAABABABBBBAABBABBBBBABABBBBAAAABBABBBBBABBBBBBABBBBBABBBAABAABBBBBBAAAAAAAABBAABAABAAAAABAABABBBBAABBABABAABBBBAABAABABBAABABAAABBABBAABABAABBABAAABBAAAABABBBBAAABBAABABABBABABBBAABABBABBBBAAABBAAAAABAABABBBBAABBBBABBABBBAABBAABABBABABAABAABABAAABBABAABABBBBBBAABBBABBBABAABAABAAABBBBABBAABBBABBBBAABAAAABBABBABABBBBAABBBAABABBAAAAAABAAABAAABAAABAAABBAAABBBABBAABBABAAAAAAAAABAAAABABABABBABBAAAAABBAAABBABBAAAAAABAABABABAAABBABBBBBBABBABABBBABBABAABABABBABBAAAAAABAAABABAABABABAABABABABAAAAABABBBABABBAAABAAAABBABAAAAABBBABAABBBBBAAABAAABABABAAABAABABBBABAABBAABAAAAAABAAABAABAABABAABAAAABAABAAAAAABABBBBABABBABBBBABABBBAABBBBBBABBAAABABBABBBBABABBBAAABABBBAABBBBBBAABAABBAABBABBBBBABBABAAABAAABBBABAAAABBAAAAAABAABABBABAABABBAABBBBBBAAAABBBBAABABABBBBBABAAAAAAAABBBAABAAAAABBABAABAAABBABBBBABABBABBABABBBAAABBBBABBBBAABBBABAAAAAABBABAABABBAAAAABBBBBABABBBAAAAABBAAAABBAABAABAABBBABBBABBBBABBABBBBBABABBBABABABBAABBBABBABBABAAABABAABBBBBBABAABBABAABABBBAABABBBAABBBBABABBBBAAAAABBABAABBBABBBBBABBBBBBBBABBBAB\n",
+          "hidden": true,
+          "output": "11"
+        }
+      ]
+    },
+    {
+      "id": "py07-7",
+      "title": "Без одинаковых соседей (задание 24)",
+      "statement": "Дана строка из заглавных латинских букв. Найди максимальную длину подстроки, в которой **никакие два соседних символа не совпадают**.",
+      "starterCode": "",
+      "hint": "Тот же шаблон, что в предыдущей задаче, только цепочка продолжается, когда соседи разные.",
+      "tests": [
+        {
+          "input": "AABCDDE\n",
+          "hidden": false,
+          "output": "4"
+        },
+        {
+          "input": "A\n",
+          "hidden": true,
+          "output": "1"
+        },
+        {
+          "input": "AAAA\n",
+          "hidden": true,
+          "output": "1"
+        },
+        {
+          "input": "ABABAB\n",
+          "hidden": true,
+          "output": "6"
+        },
+        {
+          "input": "BACCCBCBAABABBCBABBBCABCBAAAAACABAACAABBBABCABBBCBCBBBCAAABCCACACCCAABABBBACBABAABCABCCBABBBCBBABBAAAAABBACBBAAACBBBABAACBBACABAABAABCACACACBCCBBBBABCBBACBAABCAACCBCABBAACCCBABCBCABCCAABAACBACBBCCBBABBACCAAACABABBBBBBACAABCCCAAAABCBBCACCCAAACBAABCCACBACAABBBABBCABBBBBCBACCBCBCCACCACCABACACBACACCBAACABBABCABBCBABCACCCACCBBAABACCCABBBCABACCBAACACACBABBAABBBBABBABCCABAAABCCABABABCCAABABAABCBBBBCBCABABCCCACCCBCCACAACCCABBACAAABBBABAABCBBBBBBCBCABBCCCABCBCBCAABAABBCCBCBAABCCABBBCBBABBBBCAACABBCABCBCAABBBACAACAAABCAABBACCCBCABAAABCCBABCCBBCCACCABABBBAABCABBCBCCBBABBBACBAAAAACABBABCBABBCBBBCBABCCBAABBCCACCCBACCACBCCBBCBAABBCCCAABBACBCCCABCABCBBABACBBBAABAACBABBACBBABACCABBACBBACABBABCCCBCCABACABCABCAACBCABCCCBBBCBCCACCCCBCBAAACBACBABACBBABABACABAABCACCBBCACBAAABCAAABABBCBBAAABAACCBCCBBBBCCBCAACAACAAAAAACCAABBBBBAAABBACCBCAACBBAAABACCABBAABBAAAAAACACBBBAAACBBCCACACABABCCAABBBBBAABBCABCAACCCAABCCBCAAAABCCCACABABCAACACBAAAACBCCABBAABAAABBCBAAACACBBCCCCBACCBAACBBAACAAABCBCACCBBAACBBBAABAAACACABCBBBBCCCBCACBBACABACCACCBACCBCACACABAABBCBCCCAABABCCCACABCABCAACACBBAAAACBBCBAAABABBBABABCBBABAABBBACCAAAAACBBAABACACCABCABCAAABABABAABCBCCBCABBACCACAAAACAACCCABBCBACCACBCBCABABBAAABCCBCBCBCCCBCCBCABCBBBAAACABBACBBBBCACAACAAABBBCABACBBABBBACBBABABCACABCBBCCAAACBCABBAAACCACCBBCCCAABABBBBACBCBCCCBAAAABABCABBBBABCABBACBAAACCBCCCCBBACBBCAABBCBCCABABBBBACABCBCAAABACCCBCAAABCBCBAABABCACCBBCBBCACCCACBACBCCCACAABCAAACBACABCACABBBAABAABBCBAABACCCCCCCCCBCCBBBCBAABBBCCBCBBCAAACCCBABCABCCBCBBCCCBABAABACBCABCBABCCBCCAABBABACBCBBCBABCCACCCCAAABCBACBAAAABCABCAABBABCACAACCABAACABABBBBBCCBABACBBBBCAACBBACCCCABBAAABBBACAAABCBABBBBCCAABACABBCBCCAACAABACBBCCBCCCCBCBBAABBACCBCBACBCBCBCCCAAABBCCCACBCBAAACBBBBCCBBCBCCBACBBABCAAABCBACAACBABBBCCCBABACCABCBCACABABBBACCCCAAABABCCABACAACABACABABACACCCCBCCCBBAACBBACBABBBBBACACCBABACACAACAAAABACACBBBCBACBCBCAABCCCCBACABCAAABABBACBCCABCACCBBAAAAABCBCABABAAABBCCBBBBAACACABCBCACABABAACBABBBCCCBACCACCACACCAAACBBBBABBACBBABAAAAACBCAACBAACABBBBBACACCAACCCACABBBCBAAAACAAACBCCABCAABBCBAACAABCACBBCBBCACBBBAACCACCACBABBBACAAABBBCABBBABCCCCBABCBABACBBABBBABCACBABAABABBCAABACBAAAAAAAABBBCBBCCCCBACABBBAAACBCBAACCCBBBBBCABABAABAAAACCABAAAACBAACBCACABCCAACCBCBCBCBCABBCCAABAABBCCBACBBBBACBBBBCBCBBBABBCCAAACACABCCACCCBABBBBBBAAACBCACAAABCBABABBCCAABAAACABABAAACBBACCCBBCBABBACCBCABBCABBACCBAACBBBBCAACBCCBBAAAAAACCBCCCCBAACCACAABCBCCCACBBCABBCBABCAABABAACCBCBBCCCCBABCABCCCACCACACBACBCBAABACCCBABBBCAABBBBCBAABAABBBCABAACAABCACBABABCCACBBCBBACCCBACCCBAACABBACAAACACAACACCBCABBBCBACBAAAABBCBCBACCACBAAACACBABCBCBCCABCABACBACBABABABCCBACAABBCCBBACAABCCAABABAAAABABCAABCBAAACCCCBBBAABBBBCCBAACBCCABCAAABCABACBCABABABBBCABCCABBBABABABBACAABACBCBACCBBAAACBBABACBAABCABACBBBCCCCAABBCBABBACCBCBABCACBACCACBBCCCCACBCCBACCCBCBBCAABBBACABBCABBBBABCCBBACBBCBABACCCBCBBABBCBCCAAACBCBACCCABACBBAACBACCACBBABAAACBBCCAAAACBBCBCBBBBBCBBBCAACBBCBAACBCCBAAABAACCACCABABBBCBBBCBBCAAACBACBBCCCCACCACACACABCCAACBAAAAABBABCBBCCCBAAABBACAABBBAACBAAAAAAABBACBBABBABCCBACACBBAACBAAAAACBAAABABBBBBBCCBBCB\n",
+          "hidden": true,
+          "output": "19"
+        }
+      ]
+    }
+  ]
+}
