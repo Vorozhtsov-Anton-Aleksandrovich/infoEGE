@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
+import java.util.regex.Pattern;
 
 /**
  * Markdown → безопасный HTML.
@@ -26,6 +27,9 @@ public class MarkdownRenderer {
 
     public static final String FILE_PREFIX = "file:";
 
+    /** Классы подсветки: hl-red, hl-blue, … (стили в app.css). */
+    public static final Pattern HIGHLIGHT = Pattern.compile("hl-(red|blue|green|orange|purple|gray|yellow)");
+
     private static final PolicyFactory POLICY = Sanitizers.FORMATTING
             .and(Sanitizers.BLOCKS)
             .and(Sanitizers.LINKS)
@@ -33,7 +37,9 @@ public class MarkdownRenderer {
             .and(Sanitizers.IMAGES)
             .and(new HtmlPolicyBuilder()
                     // details/summary — спойлеры «Показать ответ» в уроках курсов.
-                    .allowElements("pre", "code", "hr", "sub", "sup", "details", "summary")
+                    .allowElements("pre", "code", "hr", "sub", "sup", "details", "summary", "mark", "span")
+                    // Цветная подсветка в уроках: <span class="hl-red">…</span>. Только заранее заданные классы.
+                    .allowAttributes("class").matching(HIGHLIGHT).onElements("span", "mark", "code", "td", "th")
                     .toFactory());
 
     private final Parser parser = Parser.builder().extensions(List.of(TablesExtension.create())).build();

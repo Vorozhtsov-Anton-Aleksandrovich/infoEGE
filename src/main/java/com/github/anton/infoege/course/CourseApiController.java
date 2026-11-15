@@ -42,9 +42,15 @@ public class CourseApiController {
     public record CheckRequest(String code, List<String> outputs, List<String> statuses) {
     }
 
+    public record AnswerRequest(String answer) {
+    }
+
     @GetMapping("/tests")
     public List<ClientTest> tests(@PathVariable String courseSlug, @PathVariable String taskId) {
         CourseTask task = task(courseSlug, taskId);
+        if (!task.isCode()) {
+            throw new NotFoundException();
+        }
         return IntStream.range(0, task.tests().size())
                 .mapToObj(i -> {
                     Course.CourseTest t = task.tests().get(i);
@@ -59,6 +65,30 @@ public class CourseApiController {
                                                 @AuthenticationPrincipal AppUserDetails user) {
         CourseTask task = task(courseSlug, taskId);
         return checkService.check(user.getId(), courseSlug, task, request.code(), request.outputs(), request.statuses());
+    }
+
+    /** Ответ задачи без кода (ANSWER, CHOICE, TRUTH_TABLE, MATCH_GRAPH): сверяется с эталоном на сервере. */
+    @PostMapping("/answer")
+    public CourseCheckService.AnswerResult answer(@PathVariable String courseSlug, @PathVariable String taskId,
+                                                  @RequestBody AnswerRequest request,
+                                                  @AuthenticationPrincipal AppUserDetails user) {
+        CourseTask task = task(courseSlug, taskId);
+        return checkService.checkAnswer(user.getId(), courseSlug, task, request.answer());
+    }
+
+    /** HTML разбора — только после решения или {@link CourseTask#SOLUTION_AFTER_FAILS} неудачных попыток, иначе 403. */
+    @GetMapping("/solution")
+    public ResponseEntity<Map<String, String>> solution(@PathVariable String courseSlug, @PathVariable String taskId,
+                                                        @AuthenticationPrincipal AppUserDetails user) {
+        CourseTask task = task(courseSlug, taskId);
+        if (!task.hasSolution()) {
+            throw new NotFoundException();
+        }
+        return checkService.solution(user.getId(), task)
+                .map(html -> ResponseEntity.ok(Map.of("html", html)))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(Map.of("error", "Разбор откроется после решения или после "
+                                + CourseTask.SOLUTION_AFTER_FAILS + " неудачных попыток")));
     }
 
     private CourseTask task(String courseSlug, String taskId) {

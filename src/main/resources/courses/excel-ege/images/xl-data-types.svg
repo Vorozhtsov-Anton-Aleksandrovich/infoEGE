@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 210" width="680" height="210" font-family="Segoe UI, Calibri, Arial, sans-serif">
+<rect width="680" height="210" fill="#ffffff"/>
+<defs><marker id="a-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#1f2328"/></marker><marker id="a-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#c92a2a"/></marker><marker id="a-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#1c62c9"/></marker><marker id="a-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#2b8a3e"/></marker><marker id="a-orange" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#e8590c"/></marker><marker id="a-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#7048e8"/></marker><marker id="a-gray" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#868e96"/></marker></defs>
+<rect x="20.0" y="20.0" width="70.0" height="26.0" rx="0" fill="#fff" stroke="#b5b5b5" stroke-width="1"/>
+<text x="28.0" y="38.0" font-size="13" fill="#1f2328" font-weight="normal" text-anchor="start" font-family="Consolas, 'Courier New', monospace" xml:space="preserve">A1</text>
+<text x="104.0" y="38.0" font-size="14" fill="#868e96" font-weight="bold" text-anchor="start" font-family="Cambria, serif" xml:space="preserve">fx</text>
+<rect x="128.0" y="20.0" width="218.0" height="26.0" rx="0" fill="#fff" stroke="#b5b5b5" stroke-width="1"/>
+<text x="136.0" y="38.0" font-size="13" fill="#1f2328" font-weight="normal" text-anchor="start" font-family="Consolas, 'Courier New', monospace" xml:space="preserve"></text>
+<rect x="20.0" y="54.0" width="36.0" height="22.0" rx="0" fill="#f3f3f3" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="56.0" y="54.0" width="110.0" height="22.0" rx="0" fill="#d2e7d9" stroke="#d4d4d4" stroke-width="1"/>
+<text x="111.0" y="70.0" font-size="13" fill="#107c41" font-weight="bold" text-anchor="middle" xml:space="preserve">A</text>
+<rect x="166.0" y="54.0" width="90.0" height="22.0" rx="0" fill="#f3f3f3" stroke="#d4d4d4" stroke-width="1"/>
+<text x="211.0" y="70.0" font-size="13" fill="#444" font-weight="normal" text-anchor="middle" xml:space="preserve">B</text>
+<rect x="256.0" y="54.0" width="90.0" height="22.0" rx="0" fill="#f3f3f3" stroke="#d4d4d4" stroke-width="1"/>
+<text x="301.0" y="70.0" font-size="13" fill="#444" font-weight="normal" text-anchor="middle" xml:space="preserve">C</text>
+<rect x="20.0" y="76.0" width="36.0" height="26.0" rx="0" fill="#d2e7d9" stroke="#d4d4d4" stroke-width="1"/>
+<text x="38.0" y="94.0" font-size="13" fill="#107c41" font-weight="bold" text-anchor="middle" xml:space="preserve">1</text>
+<rect x="20.0" y="102.0" width="36.0" height="26.0" rx="0" fill="#f3f3f3" stroke="#d4d4d4" stroke-width="1"/>
+<text x="38.0" y="120.0" font-size="13" fill="#444" font-weight="normal" text-anchor="middle" xml:space="preserve">2</text>
+<rect x="20.0" y="128.0" width="36.0" height="26.0" rx="0" fill="#f3f3f3" stroke="#d4d4d4" stroke-width="1"/>
+<text x="38.0" y="146.0" font-size="13" fill="#444" font-weight="normal" text-anchor="middle" xml:space="preserve">3</text>
+<rect x="20.0" y="154.0" width="36.0" height="26.0" rx="0" fill="#f3f3f3" stroke="#d4d4d4" stroke-width="1"/>
+<text x="38.0" y="172.0" font-size="13" fill="#444" font-weight="normal" text-anchor="middle" xml:space="preserve">4</text>
+<rect x="56.0" y="76.0" width="110.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="166.0" y="76.0" width="90.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="256.0" y="76.0" width="90.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="56.0" y="102.0" width="110.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="166.0" y="102.0" width="90.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="256.0" y="102.0" width="90.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="56.0" y="128.0" width="110.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="166.0" y="128.0" width="90.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="256.0" y="128.0" width="90.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="56.0" y="154.0" width="110.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="166.0" y="154.0" width="90.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="256.0" y="154.0" width="90.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<text x="62.0" y="94.0" font-size="14" fill="#1f2328" font-weight="normal" text-anchor="start" xml:space="preserve">Москва</text>
+<text x="160.0" y="120.0" font-size="14" fill="#1f2328" font-weight="normal" text-anchor="end" xml:space="preserve">2026</text>
+<text x="160.0" y="146.0" font-size="14" fill="#1f2328" font-weight="normal" text-anchor="end" xml:space="preserve">15.11.2026</text>
+<text x="62.0" y="172.0" font-size="14" fill="#1f2328" font-weight="normal" text-anchor="start" xml:space="preserve">1+2</text>
+<rect x="56.0" y="76.0" width="110.0" height="26.0" rx="0" fill="none" stroke="#107c41" stroke-width="3"/>
+<rect x="162.0" y="98.0" width="7.0" height="7.0" rx="0" fill="#107c41" stroke="#fff" stroke-width="1"/><line x1="380.0" y1="64.0" x2="160.0" y2="78.0" stroke="#1c62c9" stroke-width="2" marker-end="url(#a-blue)"/><rect x="376.0" y="51.0" width="175.4" height="26.0" rx="6" fill="#1c62c9" stroke="#1c62c9" stroke-width="1"/><text x="386.0" y="70.0" font-size="13" fill="#fff" font-weight="bold" text-anchor="start" xml:space="preserve">текст — к левому краю</text><line x1="380.0" y1="104.0" x2="160.0" y2="104.0" stroke="#2b8a3e" stroke-width="2" marker-end="url(#a-green)"/><rect x="376.0" y="91.0" width="145.8" height="26.0" rx="6" fill="#2b8a3e" stroke="#2b8a3e" stroke-width="1"/><text x="386.0" y="110.0" font-size="13" fill="#fff" font-weight="bold" text-anchor="start" xml:space="preserve">число — к правому</text><line x1="380.0" y1="144.0" x2="160.0" y2="130.0" stroke="#e8590c" stroke-width="2" marker-end="url(#a-orange)"/><rect x="376.0" y="131.0" width="175.4" height="26.0" rx="6" fill="#e8590c" stroke="#e8590c" stroke-width="1"/><text x="386.0" y="150.0" font-size="13" fill="#fff" font-weight="bold" text-anchor="start" xml:space="preserve">дата — это тоже число</text><line x1="380.0" y1="184.0" x2="160.0" y2="156.0" stroke="#c92a2a" stroke-width="2" marker-end="url(#a-red)"/><rect x="376.0" y="171.0" width="197.6" height="26.0" rx="6" fill="#c92a2a" stroke="#c92a2a" stroke-width="1"/><text x="386.0" y="190.0" font-size="13" fill="#fff" font-weight="bold" text-anchor="start" xml:space="preserve">без «=» это просто текст</text>
+</svg>

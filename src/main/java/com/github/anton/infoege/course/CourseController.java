@@ -5,6 +5,8 @@ import com.github.anton.infoege.user.AppUserDetails;
 import com.github.anton.infoege.web.NotFoundException;
 import org.springframework.core.io.Resource;
 import org.springframework.http.CacheControl;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -29,6 +31,11 @@ public class CourseController {
             "png", MediaType.IMAGE_PNG,
             "jpg", MediaType.IMAGE_JPEG,
             "webp", MediaType.valueOf("image/webp"));
+
+    private static final Map<String, MediaType> FILE_TYPES = Map.of(
+            "xlsx", MediaType.valueOf("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"),
+            "csv", MediaType.valueOf("text/csv;charset=UTF-8"),
+            "txt", MediaType.valueOf("text/plain;charset=UTF-8"));
 
     private final CourseRegistry registry;
     private final CourseProgressRepository progress;
@@ -70,6 +77,7 @@ public class CourseController {
         model.addAttribute("prev", index > 0 ? lessons.get(index - 1) : null);
         model.addAttribute("next", index + 1 < lessons.size() ? lessons.get(index + 1) : null);
         model.addAttribute("statuses", progress.statuses(user.getId(), courseSlug));
+        model.addAttribute("fails", progress.failCounts(user.getId(), courseSlug));
         model.addAttribute("versions", versions);
         return "courses/lesson";
     }
@@ -85,6 +93,22 @@ public class CourseController {
                 .contentType(IMAGE_TYPES.get(extension))
                 .cacheControl(CacheControl.maxAge(Duration.ofDays(1)))
                 .body(image);
+    }
+
+    /** Файл к задаче курса: всегда скачивается (attachment), имя проверено по {@link CourseRegistry#FILE_NAME}. */
+    @GetMapping("/course-assets/{courseSlug}/files/{fileName}")
+    public ResponseEntity<Resource> file(@PathVariable String courseSlug, @PathVariable String fileName) {
+        if (!CourseRegistry.FILE_NAME.matcher(fileName).matches()) {
+            throw new NotFoundException();
+        }
+        Resource file = registry.file(courseSlug, fileName).orElseThrow(NotFoundException::new);
+        String extension = fileName.substring(fileName.lastIndexOf('.') + 1);
+        return ResponseEntity.ok()
+                .contentType(FILE_TYPES.get(extension))
+                .header(HttpHeaders.CONTENT_DISPOSITION,
+                        ContentDisposition.attachment().filename(fileName).build().toString())
+                .cacheControl(CacheControl.maxAge(Duration.ofHours(1)))
+                .body(file);
     }
 
     private Course course(String slug) {

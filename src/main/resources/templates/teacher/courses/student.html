@@ -30,7 +30,7 @@
             <th:block th:if="${row.status != null}">
                 <div class="hint" th:text="|проверок: ${row.attempts}|">проверок: 0</div>
                 <details>
-                    <summary>Последний код</summary>
+                    <summary th:text="${row.task.isCode()} ? 'Последний код' : 'Последний ответ'">Последний код</summary>
                     <pre class="code-view" th:text="${row.status.lastCode}"></pre>
                 </details>
             </th:block>

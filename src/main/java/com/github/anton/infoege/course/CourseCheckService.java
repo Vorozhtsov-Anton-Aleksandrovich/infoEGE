@@ -26,6 +26,8 @@ public class CourseCheckService {
     /** Столько же ограничивает воркер в браузере, плюс запас на многобайтовые символы и маркер обрезки. */
     public static final int MAX_OUTPUT_LENGTH = 110_000;
     public static final Duration MIN_INTERVAL = Duration.ofSeconds(2);
+    /** Ответ проверяется мгновенно, поэтому интервал короче, чем у кода. */
+    public static final Duration MIN_ANSWER_INTERVAL = Duration.ofMillis(700);
 
     public static final String OK = "ok";
     public static final String ERROR = "error";
@@ -36,8 +38,21 @@ public class CourseCheckService {
     public record TestResult(int index, boolean hidden, boolean passed, String status) {
     }
 
-    /** solved — прошла ли эта проверка; taskSolved — решена ли задача вообще (с учётом прошлых проверок). */
-    public record CheckResult(boolean solved, boolean taskSolved, int passed, int total, List<TestResult> results) {
+    /**
+     * solved — прошла ли эта проверка; taskSolved — решена ли задача вообще (с учётом прошлых проверок);
+     * solutionHtml — разбор, если он уже открыт (иначе null).
+     */
+    public record CheckResult(boolean solved, boolean taskSolved, int passed, int total, List<TestResult> results,
+                              String solutionHtml) {
+    }
+
+    /**
+     * Результат проверки ответа задачи без кода. mismatches — сколько строк таблицы или вершин неверно (-1, если
+     * не считается); fails — сколько всего неудачных попыток; failsToSolution — сколько ещё ошибок до разбора;
+     * solutionHtml — разбор, если он уже открыт.
+     */
+    public record AnswerResult(boolean correct, boolean taskSolved, int mismatches, int fails, int failsToSolution,
+                               String solutionHtml) {
     }
 
     public static class TooManyRequestsException extends RuntimeException {
@@ -65,7 +80,7 @@ public class CourseCheckService {
                              List<String> outputs, List<String> statuses) {
         validate(task, code, outputs, statuses);
         Instant now = clock.instant();
-        throttle(userId, now);
+        throttle(userId, now, MIN_INTERVAL);
 
         List<CourseTest> tests = task.tests();
         List<TestResult> results = new ArrayList<>(tests.size());
@@ -82,7 +97,43 @@ public class CourseCheckService {
         boolean solved = passed == tests.size();
         progress.saveAttempt(userId, courseSlug, task.id(), code, passed, tests.size(), solved, now);
         boolean taskSolved = progress.upsertStatus(userId, courseSlug, task.id(), code, solved, now);
-        return new CheckResult(solved, taskSolved, passed, tests.size(), results);
+        int fails = progress.failCount(userId, task.id());
+        return new CheckResult(solved, taskSolved, passed, tests.size(), results,
+                task.solutionOpen(taskSolved, fails) ? task.solutionHtml() : null);
+    }
+
+    /** Разбор задачи, если он уже открыт ученику (решил или ошибся достаточно раз), иначе пусто. */
+    @Transactional(readOnly = true)
+    public java.util.Optional<String> solution(long userId, CourseTask task) {
+        boolean open = task.solutionOpen(progress.isSolved(userId, task.id()), progress.failCount(userId, task.id()));
+        return open ? java.util.Optional.of(task.solutionHtml()) : java.util.Optional.empty();
+    }
+
+    /** Проверка ответа задачи без кода. Ответ сохраняется как «последний код», чтобы вернуть его на страницу. */
+    @Transactional
+    public AnswerResult checkAnswer(long userId, String courseSlug, CourseTask task, String answer) {
+        if (task.isCode()) {
+            throw new IllegalArgumentException("Эта задача проверяется запуском программы");
+        }
+        if (answer == null || answer.isBlank()) {
+            throw new IllegalArgumentException("Введите ответ");
+        }
+        if (answer.length() > CourseAnswers.MAX_LENGTH) {
+            throw new IllegalArgumentException("Слишком длинный ответ");
+        }
+        Instant now = clock.instant();
+        throttle(userId, now, MIN_ANSWER_INTERVAL);
+
+        String normalized = CourseAnswers.normalize(task.type(), task.answerFormat(), answer);
+        boolean correct = CourseAnswers.matches(task.type(), task.answerFormat(), task.answers(), answer);
+        int mismatches = correct ? 0 : CourseAnswers.mismatches(task.type(), normalized, task.answers().get(0));
+        String saved = answer.strip();
+        progress.saveAttempt(userId, courseSlug, task.id(), saved, correct ? 1 : 0, 1, correct, now);
+        boolean taskSolved = progress.upsertStatus(userId, courseSlug, task.id(), saved, correct, now);
+        int fails = progress.failCount(userId, task.id());
+        return new AnswerResult(correct, taskSolved, mismatches, fails,
+                Math.max(0, CourseTask.SOLUTION_AFTER_FAILS - fails),
+                task.solutionOpen(taskSolved, fails) ? task.solutionHtml() : null);
     }
 
     private static void validate(CourseTask task, String code, List<String> outputs, List<String> statuses) {
@@ -104,11 +155,11 @@ public class CourseCheckService {
         }
     }
 
-    /** Не чаще одной проверки в 2 секунды на пользователя. Счётчики в памяти: перезапуск их сбрасывает. */
-    private void throttle(long userId, Instant now) {
+    /** Не чаще одной проверки в interval на пользователя. Счётчики в памяти: перезапуск их сбрасывает. */
+    private void throttle(long userId, Instant now, Duration interval) {
         boolean[] allowed = {false};
         lastCheck.compute(userId, (id, last) -> {
-            if (last == null || !now.isBefore(last.plus(MIN_INTERVAL))) {
+            if (last == null || !now.isBefore(last.plus(interval))) {
                 allowed[0] = true;
                 return now;
             }

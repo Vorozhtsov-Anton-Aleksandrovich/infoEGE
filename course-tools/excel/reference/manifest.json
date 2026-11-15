@@ -1,0 +1,337 @@
+{
+  "xl01-1": {
+    "method": "manual",
+    "reason": "адрес на картинке задаётся в gen_excel_images.py: s.render(active=\"C4\")"
+  },
+  "xl01-2": {
+    "method": "libreoffice",
+    "file": "xl01-2.xlsx",
+    "check": "value"
+  },
+  "xl01-3": {
+    "method": "libreoffice",
+    "file": "xl01-3.xlsx",
+    "check": "value"
+  },
+  "xl01-4": {
+    "method": "libreoffice",
+    "file": "xl01-4.xlsx",
+    "check": "value"
+  },
+  "xl01-5": {
+    "method": "libreoffice",
+    "file": "xl01-5.xlsx",
+    "check": "value"
+  },
+  "xl01-6": {
+    "method": "libreoffice",
+    "file": "xl01-6.xlsx",
+    "check": "value"
+  },
+  "xl01-7": {
+    "method": "manual",
+    "reason": "вопрос о сочетании клавиш, вычислять нечего"
+  },
+  "xl02-1": {
+    "method": "libreoffice",
+    "file": "xl02-1.xlsx",
+    "check": "value"
+  },
+  "xl02-2": {
+    "method": "libreoffice",
+    "file": "xl02-2.xlsx",
+    "check": "option"
+  },
+  "xl02-3": {
+    "method": "manual",
+    "reason": "вопрос о смысле сообщения об ошибке"
+  },
+  "xl02-4": {
+    "method": "manual",
+    "reason": "вопрос о записи формулы"
+  },
+  "xl02-5": {
+    "method": "libreoffice",
+    "file": "xl02-5.xlsx",
+    "check": "value"
+  },
+  "xl02-6": {
+    "method": "libreoffice",
+    "file": "xl02-6.xlsx",
+    "check": "value"
+  },
+  "xl02-7": {
+    "method": "libreoffice",
+    "file": "xl02-7.xlsx",
+    "check": "value"
+  },
+  "xl03-1": {
+    "method": "translate",
+    "formula": "=A1+$B2",
+    "origin": "C3",
+    "target": "E5"
+  },
+  "xl03-2": {
+    "method": "translate",
+    "formula": "=$A$1*B$2",
+    "origin": "D4",
+    "target": "F7"
+  },
+  "xl03-3": {
+    "method": "translate",
+    "formula": "=SUM($A1:B$3)",
+    "origin": "C5",
+    "target": "D6"
+  },
+  "xl03-4": {
+    "method": "libreoffice",
+    "file": "xl03-4.xlsx",
+    "check": "value"
+  },
+  "xl03-5": {
+    "method": "libreoffice",
+    "file": "xl03-5.xlsx",
+    "check": "value"
+  },
+  "xl03-6": {
+    "method": "libreoffice",
+    "file": "xl03-6.xlsx",
+    "check": "value"
+  },
+  "xl03-7": {
+    "method": "translate",
+    "formula": "=B2*$C$1",
+    "origin": "D2",
+    "target": "D7"
+  },
+  "xl04-1": {
+    "method": "libreoffice",
+    "file": "xl04-1.xlsx",
+    "check": "value"
+  },
+  "xl04-2": {
+    "method": "libreoffice",
+    "file": "xl04-2.xlsx",
+    "check": "value"
+  },
+  "xl04-3": {
+    "method": "libreoffice",
+    "file": "xl04-3.xlsx",
+    "check": "value"
+  },
+  "xl04-4": {
+    "method": "libreoffice",
+    "file": "xl04-4.xlsx",
+    "check": "value"
+  },
+  "xl04-5": {
+    "method": "libreoffice",
+    "file": "xl04-5.xlsx",
+    "check": "value"
+  },
+  "xl04-6": {
+    "method": "libreoffice",
+    "file": "xl04-6.xlsx",
+    "check": "value"
+  },
+  "xl04-7": {
+    "method": "libreoffice",
+    "file": "xl04-7.xlsx",
+    "check": "value"
+  },
+  "xl04-8": {
+    "method": "libreoffice",
+    "file": "xl04-8.xlsx",
+    "check": "value"
+  },
+  "xl05-1": {
+    "method": "libreoffice",
+    "file": "xl05-1.xlsx",
+    "check": "value"
+  },
+  "xl05-2": {
+    "method": "libreoffice",
+    "file": "xl05-2.xlsx",
+    "check": "value"
+  },
+  "xl05-3": {
+    "method": "libreoffice",
+    "file": "xl05-3.xlsx",
+    "check": "value"
+  },
+  "xl05-4": {
+    "method": "libreoffice",
+    "file": "xl05-4.xlsx",
+    "check": "value"
+  },
+  "xl05-5": {
+    "method": "libreoffice",
+    "file": "xl05-5.xlsx",
+    "check": "value"
+  },
+  "xl05-6": {
+    "method": "libreoffice",
+    "file": "xl05-6.xlsx",
+    "check": "value"
+  },
+  "xl05-7": {
+    "method": "libreoffice",
+    "file": "xl05-7.xlsx",
+    "check": "option"
+  },
+  "xl06-1": {
+    "method": "libreoffice",
+    "file": "xl06-1.xlsx",
+    "check": "value"
+  },
+  "xl06-2": {
+    "method": "libreoffice",
+    "file": "xl06-2.xlsx",
+    "check": "value"
+  },
+  "xl06-3": {
+    "method": "libreoffice",
+    "file": "xl06-3.xlsx",
+    "check": "value"
+  },
+  "xl06-4": {
+    "method": "libreoffice",
+    "file": "xl06-4.xlsx",
+    "check": "value"
+  },
+  "xl06-5": {
+    "method": "libreoffice",
+    "file": "xl06-5.xlsx",
+    "check": "value"
+  },
+  "xl06-6": {
+    "method": "libreoffice",
+    "file": "xl06-6.xlsx",
+    "check": "value"
+  },
+  "xl06-7": {
+    "method": "libreoffice",
+    "file": "xl06-7.xlsx",
+    "check": "value"
+  },
+  "xl07-1": {
+    "method": "libreoffice",
+    "file": "xl07-1.xlsx",
+    "check": "value"
+  },
+  "xl07-2": {
+    "method": "libreoffice",
+    "file": "xl07-2.xlsx",
+    "check": "value"
+  },
+  "xl07-3": {
+    "method": "libreoffice",
+    "file": "xl07-3.xlsx",
+    "check": "value"
+  },
+  "xl07-4": {
+    "method": "libreoffice",
+    "file": "xl07-4.xlsx",
+    "check": "value"
+  },
+  "xl07-5": {
+    "method": "libreoffice",
+    "file": "xl07-5.xlsx",
+    "check": "value"
+  },
+  "xl07-6": {
+    "method": "libreoffice",
+    "file": "xl07-6.xlsx",
+    "check": "value"
+  },
+  "xl08-1": {
+    "method": "libreoffice",
+    "file": "xl08-1.xlsx",
+    "check": "value"
+  },
+  "xl08-2": {
+    "method": "libreoffice",
+    "file": "xl08-2.xlsx",
+    "check": "value"
+  },
+  "xl08-3": {
+    "method": "libreoffice",
+    "file": "xl08-3.xlsx",
+    "check": "value"
+  },
+  "xl08-4": {
+    "method": "libreoffice",
+    "file": "xl08-4.xlsx",
+    "check": "value"
+  },
+  "xl08-5": {
+    "method": "libreoffice",
+    "file": "xl08-5.xlsx",
+    "check": "value"
+  },
+  "xl08-6": {
+    "method": "libreoffice",
+    "file": "xl08-6.xlsx",
+    "check": "value"
+  },
+  "xl09-1": {
+    "method": "libreoffice",
+    "file": "xl09-1.xlsx",
+    "check": "value"
+  },
+  "xl09-2": {
+    "method": "libreoffice",
+    "file": "xl09-2.xlsx",
+    "check": "value"
+  },
+  "xl09-3": {
+    "method": "libreoffice",
+    "file": "xl09-3.xlsx",
+    "check": "value"
+  },
+  "xl09-4": {
+    "method": "libreoffice",
+    "file": "xl09-4.xlsx",
+    "check": "value"
+  },
+  "xl09-5": {
+    "method": "libreoffice",
+    "file": "xl09-5.xlsx",
+    "check": "value"
+  },
+  "xl09-6": {
+    "method": "libreoffice",
+    "file": "xl09-6.xlsx",
+    "check": "value"
+  },
+  "xl10-1": {
+    "method": "libreoffice",
+    "file": "xl10-1.xlsx",
+    "check": "value"
+  },
+  "xl10-2": {
+    "method": "libreoffice",
+    "file": "xl10-2.xlsx",
+    "check": "value"
+  },
+  "xl10-3": {
+    "method": "libreoffice",
+    "file": "xl10-3.xlsx",
+    "check": "value"
+  },
+  "xl10-4": {
+    "method": "libreoffice",
+    "file": "xl10-4.xlsx",
+    "check": "value"
+  },
+  "xl10-5": {
+    "method": "libreoffice",
+    "file": "xl10-5.xlsx",
+    "check": "value"
+  },
+  "xl10-6": {
+    "method": "libreoffice",
+    "file": "xl10-6.xlsx",
+    "check": "value"
+  }
+}

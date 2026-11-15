@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 140" width="640" height="140" font-family="Segoe UI, Calibri, Arial, sans-serif">
+<rect width="640" height="140" fill="#ffffff"/>
+<defs><marker id="a-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#1f2328"/></marker><marker id="a-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#c92a2a"/></marker><marker id="a-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#1c62c9"/></marker><marker id="a-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#2b8a3e"/></marker><marker id="a-orange" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#e8590c"/></marker><marker id="a-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#7048e8"/></marker><marker id="a-gray" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#868e96"/></marker></defs>
+<rect x="20.0" y="20.0" width="70.0" height="26.0" rx="0" fill="#fff" stroke="#b5b5b5" stroke-width="1"/>
+<text x="28.0" y="38.0" font-size="13" fill="#1f2328" font-weight="normal" text-anchor="start" font-family="Consolas, 'Courier New', monospace" xml:space="preserve">C1</text>
+<text x="104.0" y="38.0" font-size="14" fill="#868e96" font-weight="bold" text-anchor="start" font-family="Cambria, serif" xml:space="preserve">fx</text>
+<rect x="128.0" y="20.0" width="224.0" height="26.0" rx="0" fill="#fff" stroke="#b5b5b5" stroke-width="1"/>
+<text x="136.0" y="38.0" font-size="13" fill="#1f2328" font-weight="normal" text-anchor="start" font-family="Consolas, 'Courier New', monospace" xml:space="preserve">=A1+B1</text>
+<rect x="20.0" y="54.0" width="36.0" height="22.0" rx="0" fill="#f3f3f3" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="56.0" y="54.0" width="74.0" height="22.0" rx="0" fill="#f3f3f3" stroke="#d4d4d4" stroke-width="1"/>
+<text x="93.0" y="70.0" font-size="13" fill="#444" font-weight="normal" text-anchor="middle" xml:space="preserve">A</text>
+<rect x="130.0" y="54.0" width="74.0" height="22.0" rx="0" fill="#f3f3f3" stroke="#d4d4d4" stroke-width="1"/>
+<text x="167.0" y="70.0" font-size="13" fill="#444" font-weight="normal" text-anchor="middle" xml:space="preserve">B</text>
+<rect x="204.0" y="54.0" width="74.0" height="22.0" rx="0" fill="#d2e7d9" stroke="#d4d4d4" stroke-width="1"/>
+<text x="241.0" y="70.0" font-size="13" fill="#107c41" font-weight="bold" text-anchor="middle" xml:space="preserve">C</text>
+<rect x="278.0" y="54.0" width="74.0" height="22.0" rx="0" fill="#f3f3f3" stroke="#d4d4d4" stroke-width="1"/>
+<text x="315.0" y="70.0" font-size="13" fill="#444" font-weight="normal" text-anchor="middle" xml:space="preserve">D</text>
+<rect x="20.0" y="76.0" width="36.0" height="26.0" rx="0" fill="#d2e7d9" stroke="#d4d4d4" stroke-width="1"/>
+<text x="38.0" y="94.0" font-size="13" fill="#107c41" font-weight="bold" text-anchor="middle" xml:space="preserve">1</text>
+<rect x="20.0" y="102.0" width="36.0" height="26.0" rx="0" fill="#f3f3f3" stroke="#d4d4d4" stroke-width="1"/>
+<text x="38.0" y="120.0" font-size="13" fill="#444" font-weight="normal" text-anchor="middle" xml:space="preserve">2</text>
+<rect x="20.0" y="128.0" width="36.0" height="26.0" rx="0" fill="#f3f3f3" stroke="#d4d4d4" stroke-width="1"/>
+<text x="38.0" y="146.0" font-size="13" fill="#444" font-weight="normal" text-anchor="middle" xml:space="preserve">3</text>
+<rect x="56.0" y="76.0" width="74.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="130.0" y="76.0" width="74.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="204.0" y="76.0" width="74.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="278.0" y="76.0" width="74.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="56.0" y="102.0" width="74.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="130.0" y="102.0" width="74.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="204.0" y="102.0" width="74.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="278.0" y="102.0" width="74.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="56.0" y="128.0" width="74.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="130.0" y="128.0" width="74.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="204.0" y="128.0" width="74.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<rect x="278.0" y="128.0" width="74.0" height="26.0" rx="0" fill="#fff" stroke="#d4d4d4" stroke-width="1"/>
+<text x="124.0" y="94.0" font-size="14" fill="#1f2328" font-weight="normal" text-anchor="end" xml:space="preserve">7</text>
+<text x="198.0" y="94.0" font-size="14" fill="#1f2328" font-weight="normal" text-anchor="end" xml:space="preserve">8</text>
+<text x="272.0" y="94.0" font-size="14" fill="#1f2328" font-weight="normal" text-anchor="end" xml:space="preserve">15</text>
+<rect x="204.0" y="76.0" width="74.0" height="26.0" rx="0" fill="none" stroke="#107c41" stroke-width="3"/>
+<rect x="274.0" y="98.0" width="7.0" height="7.0" rx="0" fill="#107c41" stroke="#fff" stroke-width="1"/>
+<path d="M 93.0 79.0 Q 167.0 23.3 241.0 77.0" fill="none" stroke="#1c62c9" stroke-width="2.2" marker-end="url(#a-blue)"/><circle cx="93.0" cy="79.0" r="3.5" fill="#1c62c9"/>
+<line x1="204.0" y1="89.0" x2="204.0" y2="89.0" stroke="#1c62c9" stroke-width="2.2" marker-end="url(#a-blue)"/><circle cx="204.0" cy="89.0" r="3.5" fill="#1c62c9"/><line x1="380.0" y1="34.0" x2="300.0" y2="34.0" stroke="#7048e8" stroke-width="2" marker-end="url(#a-purple)"/><rect x="376.0" y="21.0" width="205.0" height="26.0" rx="6" fill="#7048e8" stroke="#7048e8" stroke-width="1"/><text x="386.0" y="40.0" font-size="13" fill="#fff" font-weight="bold" text-anchor="start" xml:space="preserve">в строке формул — формула</text><line x1="380.0" y1="114.0" x2="280.0" y2="74.0" stroke="#2b8a3e" stroke-width="2" marker-end="url(#a-green)"/><rect x="376.0" y="101.0" width="168.0" height="26.0" rx="6" fill="#2b8a3e" stroke="#2b8a3e" stroke-width="1"/><text x="386.0" y="120.0" font-size="13" fill="#fff" font-weight="bold" text-anchor="start" xml:space="preserve">в ячейке — результат</text>
+</svg>

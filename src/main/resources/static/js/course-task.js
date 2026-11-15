@@ -249,6 +249,9 @@
             });
             results.hidden = false;
             setState(response.taskSolved ? 'solved' : 'tried');
+            if (response.solutionHtml && window.CourseLesson) {
+                window.CourseLesson.showSolution(card, response.solutionHtml);
+            }
         }
 
         async function check() {
@@ -300,7 +303,7 @@
     }
 
     // Редактор создаётся при первом раскрытии задачи: CodeMirror в свёрнутом блоке не знает своих размеров.
-    document.querySelectorAll('.course-task[data-task-id]').forEach(function (card) {
+    document.querySelectorAll('.course-task[data-type="CODE"]').forEach(function (card) {
         let ready = false;
         function init() {
             if (card.open && !ready) {

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.anton.infoege.course.Course.CourseTask;
 import com.github.anton.infoege.course.Course.CourseTest;
 import com.github.anton.infoege.course.Course.Lesson;
+import com.github.anton.infoege.course.Course.TaskType;
 import com.github.anton.infoege.markdown.MarkdownRenderer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -41,8 +43,14 @@ public class CourseRegistry {
     public static final Pattern SLUG = Pattern.compile("[a-z0-9-]+");
     public static final Pattern IMAGE_NAME = Pattern.compile("[a-z0-9-]+\\.(svg|png|jpg|webp)");
     private static final Pattern IMAGE_REF = Pattern.compile("images/(" + IMAGE_NAME.pattern() + ")");
+    /** Файлы задач (скачиваются учениками): files/имя.xlsx|csv|txt. */
+    public static final Pattern FILE_NAME = Pattern.compile("[a-z0-9-]+\\.(xlsx|csv|txt)");
+
+    private static final Pattern BINARY = Pattern.compile("[01]+");
+    private static final Pattern NUMBER_LIST = Pattern.compile("\\d+(,\\d+)*");
 
     private final MarkdownRenderer markdownRenderer;
+    private final CourseMarkdown courseMarkdown;
     private final ObjectMapper objectMapper;
     private final Map<String, Course> courses = new LinkedHashMap<>();
     /** course.json каждого курса: от него отсчитываются пути к урокам, задачам и картинкам. */
@@ -51,6 +59,7 @@ public class CourseRegistry {
     public CourseRegistry(MarkdownRenderer markdownRenderer, ObjectMapper objectMapper,
                           @Value("${app.courses.location:classpath*:courses/*/course.json}") String location) {
         this.markdownRenderer = markdownRenderer;
+        this.courseMarkdown = new CourseMarkdown(markdownRenderer);
         this.objectMapper = objectMapper;
         load(location);
     }
@@ -77,9 +86,24 @@ public class CourseRegistry {
         }
     }
 
+    /** Файл задачи или пусто, если курса или файла нет. */
+    public Optional<Resource> file(String courseSlug, String fileName) {
+        Resource manifest = manifests.get(courseSlug);
+        if (manifest == null || !FILE_NAME.matcher(fileName).matches()) {
+            return Optional.empty();
+        }
+        try {
+            Resource file = manifest.createRelative("files/" + fileName);
+            return file.exists() ? Optional.of(file) : Optional.empty();
+        } catch (IOException e) {
+            return Optional.empty();
+        }
+    }
+
     // ---------- Загрузка ----------
 
-    record CourseJson(String slug, String title, String description, List<LessonJson> lessons) {
+    /** order — место курса в списке (меньше — выше), без него курс идёт в конце. */
+    record CourseJson(String slug, String title, String description, Integer order, List<LessonJson> lessons) {
     }
 
     record LessonJson(String slug, String title, String file, String tasks) {
@@ -88,7 +112,10 @@ public class CourseRegistry {
     record TaskFileJson(String lesson, List<TaskJson> tasks) {
     }
 
-    record TaskJson(String id, String title, String statement, String starterCode, String hint, List<TestJson> tests) {
+    record TaskJson(String id, String type, String title, String statement, String starterCode, String hint,
+                    List<TestJson> tests, List<String> answers, List<String> options, List<String> variables,
+                    String expression, Integer numbers, String solution, String answer, String answerFormat,
+                    List<String> files) {
     }
 
     record TestJson(String input, String output, Boolean hidden, Map<String, String> files) {
@@ -105,21 +132,33 @@ public class CourseRegistry {
         // Порядок курсов — по адресу папки, чтобы он не зависел от порядка в classpath.
         Arrays.sort(manifests, Comparator.comparing(CourseRegistry::describe));
         Set<String> taskIds = new HashSet<>();
+        List<CourseMarkdown.TaskLink> links = new ArrayList<>();
+        List<Course> loaded = new ArrayList<>();
         for (Resource manifest : manifests) {
             String where = describe(manifest);
             try {
                 CourseJson json = objectMapper.readValue(read(manifest), CourseJson.class);
-                Course course = loadCourse(json, manifest, where, taskIds, errors);
+                Course course = loadCourse(json, manifest, where, taskIds, links, errors);
                 if (course != null) {
-                    if (courses.containsKey(course.slug())) {
+                    if (this.manifests.containsKey(course.slug())) {
                         errors.add(where + ": курс с slug «" + course.slug() + "» уже есть");
                     } else {
-                        courses.put(course.slug(), course);
+                        loaded.add(course);
                         this.manifests.put(course.slug(), manifest);
                     }
                 }
             } catch (IOException e) {
                 errors.add(where + ": не удалось прочитать (" + e.getMessage() + ")");
+            }
+        }
+        loaded.sort(Comparator.comparingInt(Course::order));   // сортировка устойчива: при равном order — по папке
+        loaded.forEach(c -> courses.put(c.slug(), c));
+        for (CourseMarkdown.TaskLink link : links) {
+            boolean exists = course(link.course()).flatMap(c -> c.lesson(link.lesson()))
+                    .map(l -> l.tasks().stream().anyMatch(t -> t.id().equals(link.task()))).orElse(false);
+            if (!exists) {
+                errors.add(link.where() + ": ссылка :::python на несуществующую задачу "
+                        + link.course() + "/" + link.lesson() + "/" + link.task());
             }
         }
         if (!errors.isEmpty()) {
@@ -129,7 +168,7 @@ public class CourseRegistry {
     }
 
     private Course loadCourse(CourseJson json, Resource manifest, String where, Set<String> taskIds,
-                              List<String> errors) throws IOException {
+                              List<CourseMarkdown.TaskLink> links, List<String> errors) throws IOException {
         int errorsBefore = errors.size();
         if (json.slug() == null || !SLUG.matcher(json.slug()).matches()) {
             errors.add(where + ": slug должен состоять из [a-z0-9-]");
@@ -170,13 +209,15 @@ public class CourseRegistry {
                     tasks.add(task);
                 }
             }
-            String html = renderMarkdown(theory, slug, manifest, lessonWhere, errors);
+            String html = courseMarkdown.render(theory, imageResolver(slug, manifest, lessonWhere, errors),
+                    lessonWhere, errors, links, name -> exists(manifest, name));
             lessons.add(new Lesson(lessons.size() + 1, lj.slug(), lj.title(), html, List.copyOf(tasks)));
         }
         if (errors.size() > errorsBefore) {
             return null;
         }
-        return new Course(slug, json.title(), json.description() == null ? "" : json.description(), List.copyOf(lessons));
+        return new Course(slug, json.title(), json.description() == null ? "" : json.description(),
+                json.order() == null ? Integer.MAX_VALUE : json.order(), List.copyOf(lessons));
     }
 
     private CourseTask loadTask(TaskJson tj, String courseSlug, String lessonSlug, Resource manifest,
@@ -192,6 +233,13 @@ public class CourseRegistry {
         }
         require(tj.title(), where + ": нет title", errors);
         require(tj.statement(), where + ": нет statement", errors);
+        TaskType type;
+        try {
+            type = tj.type() == null ? TaskType.CODE : TaskType.valueOf(tj.type());
+        } catch (IllegalArgumentException e) {
+            errors.add(where + ": неизвестный type «" + tj.type() + "»");
+            return null;
+        }
         List<CourseTest> tests = new ArrayList<>();
         for (TestJson t : tj.tests() == null ? List.<TestJson>of() : tj.tests()) {
             if (t.output() == null) {
@@ -201,19 +249,102 @@ public class CourseRegistry {
             tests.add(new CourseTest(t.input() == null ? "" : t.input(), t.output(), Boolean.TRUE.equals(t.hidden()),
                     t.files() == null ? Map.of() : Collections.unmodifiableMap(new LinkedHashMap<>(t.files()))));
         }
-        if (tests.stream().allMatch(CourseTest::hidden)) {
-            errors.add(where + ": нужен хотя бы один открытый тест");
+        // «answer» — короткая запись для одного ответа, «answers» — несколько допустимых.
+        List<String> answers = new ArrayList<>(tj.answers() == null ? List.of() : tj.answers());
+        if (tj.answer() != null) {
+            answers.add(tj.answer());
         }
-        return new CourseTask(tj.id(), lessonSlug, tj.title(),
+        Course.AnswerFormat format;
+        try {
+            format = tj.answerFormat() == null ? Course.AnswerFormat.FREE : Course.AnswerFormat.valueOf(tj.answerFormat());
+        } catch (IllegalArgumentException e) {
+            errors.add(where + ": неизвестный answerFormat «" + tj.answerFormat() + "»");
+            return null;
+        }
+        if (type != TaskType.ANSWER && format != Course.AnswerFormat.FREE) {
+            errors.add(where + ": answerFormat бывает только у задач ANSWER");
+        }
+        for (String a : answers) {
+            if (type == TaskType.ANSWER && a != null && !CourseAnswers.validFormat(format, CourseAnswers.normalize(type, format, a))) {
+                errors.add(where + ": ответ «" + a + "» не подходит к формату " + format);
+            }
+        }
+        List<String> files = tj.files() == null ? List.of() : List.copyOf(tj.files());
+        for (String f : files) {
+            if (f == null || !FILE_NAME.matcher(f).matches()) {
+                errors.add(where + ": файл «" + f + "» — допускаются только имена [a-z0-9-] с расширением xlsx, csv или txt");
+            } else if (!exists(manifest, "files/" + f)) {
+                errors.add(where + ": нет файла files/" + f);
+            }
+        }
+        List<String> variables = tj.variables() == null ? List.of() : List.copyOf(tj.variables());
+        List<String> options = tj.options() == null ? List.of() : tj.options();
+        int numbers = tj.numbers() == null ? 0 : tj.numbers();
+        if (type == TaskType.CODE) {
+            if (tests.stream().allMatch(CourseTest::hidden)) {
+                errors.add(where + ": нужен хотя бы один открытый тест");
+            }
+        } else {
+            validateAnswers(type, answers, options, variables, numbers, where, errors);
+            if (!tests.isEmpty()) {
+                errors.add(where + ": тесты бывают только у задач CODE");
+            }
+            require(tj.solution(), where + ": у задачи без кода нужен разбор (solution)", errors);
+        }
+        Function<String, String> images = imageResolver(courseSlug, manifest, where, errors);
+        List<String> optionsHtml = options.stream().map(o -> courseMarkdown.inline(o, images)).toList();
+        return new CourseTask(tj.id(), lessonSlug, type, tj.title(),
                 renderMarkdown(tj.statement(), courseSlug, manifest, where, errors),
                 renderMarkdown(tj.hint(), courseSlug, manifest, where, errors),
-                tj.starterCode() == null ? "" : tj.starterCode(), List.copyOf(tests));
+                tj.starterCode() == null ? "" : tj.starterCode(), List.copyOf(tests),
+                answers.stream().map(a -> CourseAnswers.normalize(type, format, a)).toList(), optionsHtml, variables,
+                tj.expression() == null ? "" : tj.expression(), numbers,
+                renderMarkdown(tj.solution(), courseSlug, manifest, where, errors), format, files);
     }
 
-    /** Markdown → HTML; картинки допускаются только из папки images/ курса и должны существовать. */
-    private String renderMarkdown(String markdown, String courseSlug, Resource manifest, String where,
-                                  List<String> errors) {
-        return markdownRenderer.renderWithImages(markdown, destination -> {
+    /** Правильные ответы должны подходить к типу задачи: иначе ученик не сможет их ввести. */
+    private static void validateAnswers(TaskType type, List<String> answers, List<String> options,
+                                        List<String> variables, int numbers, String where, List<String> errors) {
+        if (answers.isEmpty() || answers.stream().anyMatch(a -> a == null || a.isBlank())) {
+            errors.add(where + ": нет правильного ответа (answers)");
+            return;
+        }
+        for (String raw : answers) {
+            String a = CourseAnswers.normalize(type, raw);
+            switch (type) {
+                case CHOICE -> {
+                    if (options.size() < 2) {
+                        errors.add(where + ": у CHOICE нужно не меньше двух вариантов (options)");
+                    } else if (!a.matches("\\d{1,2}") || Integer.parseInt(a) < 1 || Integer.parseInt(a) > options.size()) {
+                        errors.add(where + ": ответ CHOICE — номер варианта от 1 до " + options.size());
+                    }
+                }
+                case TRUTH_TABLE -> {
+                    if (variables.isEmpty() || variables.size() > 5) {
+                        errors.add(where + ": у TRUTH_TABLE должно быть от 1 до 5 переменных (variables)");
+                    } else if (!BINARY.matcher(a).matches() || a.length() != 1 << variables.size()) {
+                        errors.add(where + ": ответ TRUTH_TABLE — " + (1 << variables.size()) + " символов 0/1");
+                    }
+                }
+                case MATCH_GRAPH -> {
+                    if (variables.size() < 2 || numbers < variables.size()) {
+                        errors.add(where + ": у MATCH_GRAPH нужны вершины (variables) и numbers не меньше их числа");
+                    } else if (!NUMBER_LIST.matcher(a).matches() || a.split(",").length != variables.size()
+                            || Arrays.stream(a.split(",")).mapToInt(Integer::parseInt).anyMatch(n -> n < 1 || n > numbers)) {
+                        errors.add(where + ": ответ MATCH_GRAPH — " + variables.size()
+                                + " номеров от 1 до " + numbers + " через запятую");
+                    }
+                }
+                default -> {
+                }
+            }
+        }
+    }
+
+    /** Картинки допускаются только из папки images/ курса и должны существовать. */
+    private Function<String, String> imageResolver(String courseSlug, Resource manifest, String where,
+                                                   List<String> errors) {
+        return destination -> {
             Matcher m = IMAGE_REF.matcher(destination);
             if (!m.matches()) {
                 errors.add(where + ": картинка «" + destination + "» — допускаются только images/имя.(svg|png|jpg|webp)");
@@ -229,7 +360,12 @@ public class CourseRegistry {
                 return null;
             }
             return "/course-assets/" + courseSlug + "/images/" + m.group(1);
-        });
+        };
+    }
+
+    private String renderMarkdown(String markdown, String courseSlug, Resource manifest, String where,
+                                  List<String> errors) {
+        return markdownRenderer.renderWithImages(markdown, imageResolver(courseSlug, manifest, where, errors));
     }
 
     private String readRelative(Resource manifest, String path, String where, List<String> errors) {
@@ -247,6 +383,14 @@ public class CourseRegistry {
         } catch (IOException e) {
             errors.add(where + ": не удалось прочитать " + path);
             return null;
+        }
+    }
+
+    private static boolean exists(Resource manifest, String path) {
+        try {
+            return !path.contains("..") && manifest.createRelative(path).exists();
+        } catch (IOException e) {
+            return false;
         }
     }
 

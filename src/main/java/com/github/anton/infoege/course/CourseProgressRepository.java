@@ -81,6 +81,44 @@ public class CourseProgressRepository {
         return result;
     }
 
+    /** Проверка задачи курса: какая задача и когда — для карты активности. */
+    public record AttemptTime(String taskId, Instant at) {
+    }
+
+    /** Все проверки задач курсов у ученика начиная с момента from (любые курсы). */
+    public java.util.List<AttemptTime> attemptTimes(long userId, Instant from) {
+        return jdbc.query("SELECT task_id, created_at FROM course_task_attempt WHERE user_id = ? AND created_at >= ?",
+                (rs, i) -> new AttemptTime(rs.getString(1), rs.getTimestamp(2).toInstant()),
+                userId, Timestamp.from(from));
+    }
+
+    /** Решена ли задача учеником. */
+    public boolean isSolved(long userId, String taskId) {
+        return Boolean.TRUE.equals(jdbc.query(
+                "SELECT solved FROM course_task_status WHERE user_id = ? AND task_id = ?",
+                rs -> rs.next() && rs.getBoolean(1), userId, taskId));
+    }
+
+    /** Сколько неудачных проверок у ученика по задаче. */
+    public int failCount(long userId, String taskId) {
+        Integer count = jdbc.queryForObject(
+                "SELECT COUNT(*) FROM course_task_attempt WHERE user_id = ? AND task_id = ? AND NOT solved",
+                Integer.class, userId, taskId);
+        return count == null ? 0 : count;
+    }
+
+    /** Неудачные проверки по задачам курса: task_id → число. Нужны, чтобы решить, открыт ли разбор. */
+    public Map<String, Integer> failCounts(long userId, String courseSlug) {
+        Map<String, Integer> result = new HashMap<>();
+        jdbc.query("""
+                SELECT task_id, COUNT(*) FROM course_task_attempt WHERE user_id = ? AND course_slug = ? AND NOT solved
+                GROUP BY task_id""",
+                rs -> {
+                    result.put(rs.getString(1), rs.getInt(2));
+                }, userId, courseSlug);
+        return result;
+    }
+
     /** Статусы задач курса у ученика: task_id → статус. */
     public Map<String, TaskStatus> statuses(long userId, String courseSlug) {
         Map<String, TaskStatus> result = new HashMap<>();

@@ -8,6 +8,7 @@
     <meta name="_csrf_header" th:if="${_csrf != null}" th:content="${_csrf.headerName}">
     <title th:text="${title} + ' — ЕГЭ-тренажёр'">ЕГЭ-тренажёр</title>
     <link rel="stylesheet" th:href="@{/css/app.css}">
+    <link rel="stylesheet" th:href="@{/css/course.css}">
     <!-- htmx не должен вставлять свой <style>: его запрещает CSP. -->
     <meta name="htmx-config" content='{"includeIndicatorStyles": false}'>
     <script th:src="@{/js/htmx.min.js}" defer></script>

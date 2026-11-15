@@ -1,0 +1,18 @@
+{
+  "slug": "excel-ege",
+  "order": 2,
+  "title": "Excel для ЕГЭ",
+  "description": "Электронные таблицы с нуля для тех, кто первый раз открывает Excel: ячейки и формулы, ссылки со знаком $, функции СЧЁТЕСЛИ и ЕСЛИ, сортировка и фильтры, а потом — задания ЕГЭ 3, 9, 18 и 22, которые на экзамене удобнее всего решать в таблице. К каждой задаче есть файл, ответ проверяется сразу, а разбор показывает решение по шагам. Везде указано, чем отличается LibreOffice Calc.",
+  "lessons": [
+    {"slug": "01-basics",       "title": "Знакомство с Excel",                    "file": "lessons/01-basics.md",       "tasks": "tasks/01-basics.json"},
+    {"slug": "02-formulas",     "title": "Формулы",                               "file": "lessons/02-formulas.md",     "tasks": "tasks/02-formulas.json"},
+    {"slug": "03-references",   "title": "Копирование формул и ссылки",           "file": "lessons/03-references.md",   "tasks": "tasks/03-references.json"},
+    {"slug": "04-functions",    "title": "Функции",                               "file": "lessons/04-functions.md",    "tasks": "tasks/04-functions.json"},
+    {"slug": "05-if",           "title": "Логика в таблицах: ЕСЛИ, И, ИЛИ",       "file": "lessons/05-if.md",           "tasks": "tasks/05-if.json"},
+    {"slug": "06-sort-filter",  "title": "Сортировка, фильтры, условное форматирование", "file": "lessons/06-sort-filter.md", "tasks": "tasks/06-sort-filter.json"},
+    {"slug": "07-task9",        "title": "Задание 9: анализ строк таблицы",       "file": "lessons/07-task9.md",        "tasks": "tasks/07-task9.json"},
+    {"slug": "08-task3",        "title": "Задание 3: базы данных",                "file": "lessons/08-task3.md",        "tasks": "tasks/08-task3.json"},
+    {"slug": "09-task18",       "title": "Задание 18: робот на клетчатом поле",   "file": "lessons/09-task18.md",       "tasks": "tasks/09-task18.json"},
+    {"slug": "10-task22",       "title": "Задание 22: параллельные процессы",     "file": "lessons/10-task22.md",       "tasks": "tasks/10-task22.json"}
+  ]
+}
