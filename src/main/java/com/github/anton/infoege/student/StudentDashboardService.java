@@ -7,6 +7,7 @@ import com.github.anton.infoege.attempt.AttemptAnswer;
 import com.github.anton.infoege.attempt.AttemptAnswerRepository;
 import com.github.anton.infoege.attempt.AttemptService;
 import com.github.anton.infoege.attempt.ResultVisibility;
+import com.github.anton.infoege.course.CourseProgressRepository;
 import com.github.anton.infoege.task.Task;
 import com.github.anton.infoege.task.TaskService;
 import com.github.anton.infoege.web.Dates;
@@ -33,6 +34,7 @@ import java.util.stream.Collectors;
  * Дашборд на главной ученика: сколько заданий решено, по каким номерам ЕГЭ, правильность и активность по дням.
  * Правильность берётся только из работ, результаты которых ученику уже можно видеть (настройка showResultsMode),
  * чтобы дашборд не раскрывал то, что преподаватель скрыл.
+ * В карту активности входят и задачи курсов: за день — число разных задач курсов, которые ученик проверял.
  */
 @Service
 public class StudentDashboardService {
@@ -49,9 +51,12 @@ public class StudentDashboardService {
     private final AttemptAnswerRepository answerRepository;
     private final TaskService taskService;
     private final Dates dates;
+    private final CourseProgressRepository courseProgress;
 
     public StudentDashboardService(AssignmentService assignmentService, AttemptService attemptService,
-                                   AttemptAnswerRepository answerRepository, TaskService taskService, Dates dates) {
+                                   AttemptAnswerRepository answerRepository, TaskService taskService, Dates dates,
+                                   CourseProgressRepository courseProgress) {
+        this.courseProgress = courseProgress;
         this.assignmentService = assignmentService;
         this.attemptService = attemptService;
         this.answerRepository = answerRepository;
@@ -84,8 +89,11 @@ public class StudentDashboardService {
     public record Week(String monthLabel, List<Day> days) {
     }
 
-    /** День карты активности. level 0–4 — насыщенность клетки; -1 — клетка вне диапазона (не рисуется). */
-    public record Day(LocalDate date, int count, int level, String title) {
+    /**
+     * День карты активности. count — всё вместе (ответы в работах и задачи курсов), courseCount — из них задачи курсов.
+     * level 0–4 — насыщенность клетки; -1 — клетка вне диапазона (не рисуется).
+     */
+    public record Day(LocalDate date, int count, int courseCount, int level, String title) {
     }
 
     @Transactional(readOnly = true)
@@ -129,15 +137,33 @@ public class StudentDashboardService {
         numbers.forEach((n, r) -> byNumber.add(new NumberRow(n, r[0], r[1], r[2])));
 
         LocalDate today = now.atZone(dates.zone()).toLocalDate();
-        List<Week> weeks = weeks(perDay, today);
+        Map<LocalDate, Integer> coursePerDay = coursePerDay(studentId, today);
+        coursePerDay.forEach((day, n) -> perDay.merge(day, n, Integer::sum));
+        List<Week> weeks = weeks(perDay, coursePerDay, today);
         LocalDate from = today.minusDays(365);
         int yearTotal = perDay.entrySet().stream().filter(e -> e.getKey().isAfter(from)).mapToInt(Map.Entry::getValue).sum();
         int activeDays = (int) perDay.keySet().stream().filter(d -> d.isAfter(from)).count();
         return new Dashboard(answers.size(), checked, correct, byNumber, weeks, yearTotal, activeDays);
     }
 
-    /** Карта активности: WEEKS недель, последняя — текущая; дни после сегодняшнего не рисуются. */
+    /** Задачи курсов по дням: сколько разных задач ученик проверял в этот день (повторные проверки не считаются). */
+    private Map<LocalDate, Integer> coursePerDay(Long studentId, LocalDate today) {
+        Instant from = today.minusWeeks(WEEKS + 1L).atStartOfDay(dates.zone()).toInstant();
+        Map<LocalDate, Set<String>> tasksPerDay = new HashMap<>();
+        for (CourseProgressRepository.AttemptTime a : courseProgress.attemptTimes(studentId, from)) {
+            tasksPerDay.computeIfAbsent(a.at().atZone(dates.zone()).toLocalDate(), d -> new HashSet<>()).add(a.taskId());
+        }
+        Map<LocalDate, Integer> result = new HashMap<>();
+        tasksPerDay.forEach((day, ids) -> result.put(day, ids.size()));
+        return result;
+    }
+
     static List<Week> weeks(Map<LocalDate, Integer> perDay, LocalDate today) {
+        return weeks(perDay, Map.of(), today);
+    }
+
+    /** Карта активности: WEEKS недель, последняя — текущая; дни после сегодняшнего не рисуются. */
+    static List<Week> weeks(Map<LocalDate, Integer> perDay, Map<LocalDate, Integer> coursePerDay, LocalDate today) {
         LocalDate start = today.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY)).minusWeeks(WEEKS - 1L);
         List<Week> weeks = new ArrayList<>();
         int lastMonth = -1;
@@ -147,11 +173,14 @@ public class StudentDashboardService {
             for (int d = 0; d < 7; d++) {
                 LocalDate date = monday.plusDays(d);
                 if (date.isAfter(today)) {
-                    days.add(new Day(date, 0, -1, ""));
+                    days.add(new Day(date, 0, 0, -1, ""));
                     continue;
                 }
                 int count = perDay.getOrDefault(date, 0);
-                days.add(new Day(date, count, level(count), DAY_TITLE.format(date) + ": " + tasksWord(count)));
+                int course = coursePerDay.getOrDefault(date, 0);
+                String title = DAY_TITLE.format(date) + ": " + tasksWord(count)
+                        + (course > 0 ? " (в курсах: " + course + ")" : "");
+                days.add(new Day(date, count, course, level(count), title));
             }
             String label = "";
             if (monday.getMonthValue() != lastMonth) {
