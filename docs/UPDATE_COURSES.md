@@ -67,18 +67,21 @@ docker compose -f docker-compose.prod.yml --env-file .env exec db \
 
 ## 4. Порядок обновления
 
-### Шаг 0. На компьютере разработчика: отправить код на GitHub
-Изменения пока **не закоммичены**. Из папки проекта:
+### Шаг 0. Слить ветку `courses` в `main`
+Все изменения закоммичены и лежат на GitHub в ветке **`courses`** (4 коммита поверх `main`). Сервер забирает код
+из `main`, поэтому ветку нужно слить:
 
-```bash
-./mvnw verify          # должно быть BUILD SUCCESS (нужны JDK 21 и запущенный Docker)
-git add -A
-git commit -m "Курсы: основы информатики и Excel, типы задач без кода, сложность заданий, активность по курсам"
-git push origin main
-```
+- на GitHub: `https://github.com/Vorozhtsov-Anton-Aleksandrovich/infoEGE/pull/new/courses` → создать pull request →
+  дождаться зелёного CI → **Merge**;
+- или локально: `git checkout main && git merge courses && git push origin main`.
 
-Перед `git add -A` проверить `git status`: в коммит не должны попасть `.env`, папка `data/`, бэкапы.
-(Они уже в `.gitignore`.)
+⚠️ **Автодеплой.** В `.github/workflows/deploy.yml` настроено: после успешного CI на `main` образ собирается и сам
+выкатывается на сервер — **если** в Settings → Secrets and variables → Actions задана переменная `DEPLOY_HOST`.
+Тогда слияние в `main` сразу обновит сервер, **без бэкапа**. Поэтому:
+- сначала проверить, задан ли `DEPLOY_HOST` (GitHub → Settings → Secrets and variables → Actions → Variables);
+- если задан — **сначала сделать бэкап на сервере (шаг 1)**, потом сливать; шаги 2–3 выполнит автодеплой,
+  останется проверка (шаг 4);
+- если не задан — сливать можно когда угодно, сервер обновляется вручную шагами 1–4.
 
 ### Шаг 1. На сервере: бэкап (обязательно)
 
