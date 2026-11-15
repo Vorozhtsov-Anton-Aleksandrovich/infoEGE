@@ -315,3 +315,15 @@ textarea.drop-target { outline: 2px dashed #0b5cad; }
 .teacher-task:first-of-type { border-top: 0; }
 .code-view { background: #f3f4f6; border-radius: 4px; padding: 10px 12px; overflow-x: auto;
     font-family: ui-monospace, Consolas, monospace; font-size: 14px; line-height: 1.45; }
+
+/* ===== Сложность задания: 1 — зелёный … 5 — красный ===== */
+.difficulty { display: inline-flex; align-items: center; gap: 6px; padding: 1px 8px 1px 6px; border-radius: 10px;
+    font-size: 13px; font-weight: 600; line-height: 18px; vertical-align: middle; white-space: nowrap; }
+.difficulty-dots { display: inline-flex; gap: 2px; }
+.difficulty-dots span { width: 7px; height: 7px; border-radius: 50%; background: currentColor; opacity: .25; }
+.difficulty-dots span.on { opacity: 1; }
+.difficulty-1 { background: #d3f9d8; color: #2b8a3e; }
+.difficulty-2 { background: #e9fac8; color: #5c940d; }
+.difficulty-3 { background: #fff3bf; color: #b07d00; }
+.difficulty-4 { background: #ffe8cc; color: #d9480f; }
+.difficulty-5 { background: #ffe3e3; color: #c92a2a; }

@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<body>
+<!-- Сложность задания 1–5 цветным значком: 1 — зелёный, 3 — жёлтый, 5 — красный. Стили — в app.css и trainer.css. -->
+<span th:fragment="badge(level)" class="difficulty" th:classappend="|difficulty-${level}|"
+      th:title="|Сложность ${level} из 5|" th:attr="aria-label=|Сложность ${level} из 5|">
+    <span class="difficulty-dots" aria-hidden="true"><span th:each="i : ${#numbers.sequence(1, 5)}"
+          th:classappend="${i <= level} ? 'on'"></span></span>
+    <span class="difficulty-text" th:text="${level}">3</span>
+</span>
+</body>
+</html>

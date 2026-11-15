@@ -60,7 +60,7 @@
                 <span class="badge" th:if="${task.archived}">архив</span>
             </td>
             <td th:text="${task.topic}">Тема</td>
-            <td th:text="${task.difficulty}">3</td>
+            <td><span th:replace="~{fragments/difficulty :: badge(${task.difficulty})}"></span></td>
             <td th:text="${task.maxPoints}">1</td>
             <td th:text="${task.answerRows} + ' × ' + ${task.answerCols}">1 × 1</td>
             <td><a th:href="@{/teacher/tasks/{id}/preview(id=${task.id})}">Предпросмотр</a></td>
